@@ -1,11 +1,81 @@
-# Script for populating the database. You can run it as:
+import Point.Repo
+alias Point.{User, Entity, Account, Currency, ExchangeRate, Movement}
+#------------------------------------------------------------------------------
+# Users
+#------------------------------------------------------------------------------
+root = %User{
+  email: "jangofett@gmail.com", password: "1234A", first_name: "Jango", last_name: "Fett"
+}
+obiwan_kenoby = %User{
+  email: "obiwankenoby@gmail.com", password: "1234B", first_name: "Obi-Wan", last_name: "Kenoby"
+}
+quigon_jinn = %User{
+  email: "quigonjinn@gmail.com", password: "1234B", first_name: "Qui-Gon", last_name: "Jinn"
+}
+insert_all [root, obiwan_kenoby, quigon_jinn]
 #
-#     mix run priv/repo/seeds.exs
 #
-# Inside the script, you can read and write to any of your
-# repositories directly:
 #
-#     Point.Repo.insert!(%Point.SomeModel{})
+#------------------------------------------------------------------------------
+# Entities
+#------------------------------------------------------------------------------
+platform  = %Entity{name: "Point Platform", users: [root]}
+rio       = %Entity{name: "Rio",            users: [obiwan_kenoby]}
+boston    = %Entity{name: "Boston",         users: [quigon_jinn]}
+
+insert_all [platform, rio, boston]
 #
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+#
+#
+#------------------------------------------------------------------------------
+# Currencies
+#------------------------------------------------------------------------------
+# Real
+ars = %Currency{code: "ARS", name: "Pesos", issuer: root}
+# Virtual
+rio_points = %Currency{code: "RIO", name: "Rio Points", issuer: root}
+santander_points = %Currency{code: "STD", name: "Santander Points", issuer: root}
+
+insert_all [ars, rio_points, santander_points]
+#
+#
+#
+#------------------------------------------------------------------------------
+# Exchange rates
+#------------------------------------------------------------------------------
+# Rio points
+insert_all [
+  %ExchangeRate{rate: 1, source: ars,               target: rio_points},
+  %ExchangeRate{rate: 1, source: rio_points,        target: ars},
+# Santander Points
+  %ExchangeRate{rate: 1, source: ars,               target: santander_points},
+  %ExchangeRate{rate: 1, source: santander_points,  target: ars},
+]
+#
+#
+#
+#------------------------------------------------------------------------------
+# Accounts
+#------------------------------------------------------------------------------
+# Backup
+backup_account = %Account{
+  amount: 15000, currency: ars, owner: root, issuer: root
+}
+# Points
+obiwan_acount = %Account{
+  amount: 5000, currency: rio_points, owner: obiwan_kenoby, issuer: root
+}
+quigon_acount = %Account{
+  amount: 10000, currency: santander_points, owner: quigon_jinn, issuer: root
+}
+insert_all [backup_account, obiwan_acount, quigon_acount]
+#
+#
+#
+#------------------------------------------------------------------------------
+# Movements
+#------------------------------------------------------------------------------
+transfer = %Movement{
+  type: "transfer", amount: 10, source: obiwan_acount, target: quigon_acount, rate: 1
+}
+insert_all [transfer]
