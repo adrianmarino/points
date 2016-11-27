@@ -1,14 +1,13 @@
 defmodule Point.Movement do
   use Point.Web, :model
-  alias Point.Account
 
   schema "movements" do
     field :type, :string
     field :amount, :decimal
     field :rate, :decimal
 
-    belongs_to :source, Account
-    belongs_to :target, Account
+    belongs_to :source, Point.Account
+    belongs_to :target, Point.Account
 
     timestamps()
   end

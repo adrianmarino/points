@@ -1,13 +1,12 @@
 defmodule Point.Currency do
   use Point.Web, :model
-  alias Point.{User, Account}
 
   schema "currencies" do
     field :code, :string
     field :name, :string
 
-    belongs_to :issuer, User
-    has_many :accounts, Account
+    belongs_to :issuer, Point.User
+    has_many :accounts, Point.Account
 
     timestamps()
   end

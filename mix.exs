@@ -20,11 +20,11 @@ defmodule Point.Mixfile do
   def application do
     [mod: {Point, []},
      applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :mariaex]]
+                    :phoenix_ecto, :mariaex, :ex_machina]]
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "web", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "web", "spec/factories"]
   defp elixirc_paths(_),     do: ["lib", "web"]
 
   # Specifies your project dependencies.
@@ -38,7 +38,8 @@ defmodule Point.Mixfile do
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
      {:espec_phoenix, "~> 0.6.4", only: :test},
-     {:mariaex, ">= 0.0.0"}]
+     {:mariaex, ">= 0.0.0"},
+     {:ex_machina, "~> 1.0", only: :test}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

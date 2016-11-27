@@ -9,3 +9,5 @@ ESpec.configure fn(config) ->
     Ecto.Adapters.SQL.Sandbox.checkin(YourApp.Repo, [])
   end
 end
+
+{:ok, _} = Application.ensure_all_started(:ex_machina)

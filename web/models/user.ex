@@ -1,6 +1,5 @@
 defmodule Point.User do
   use Point.Web, :model
-  alias Point.{Entity, Currency}
 
   schema "users" do
     field :email, :string
@@ -8,8 +7,8 @@ defmodule Point.User do
     field :first_name, :string
     field :last_name, :string
 
-    many_to_many :entities, Entity, join_through: "users_entities"
-    has_many :currencies, Currency
+    many_to_many :entities, Point.Entity, join_through: "users_entities"
+    has_many :currencies, Point.Currency
 
     timestamps()
   end
