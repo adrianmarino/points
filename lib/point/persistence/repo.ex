@@ -9,7 +9,9 @@ defmodule Point.Repo do
     one Ecto.assoc(model, name)
   end
 
-  def save(model, fields), do: update Model.changeset(model, fields)
+  def changeset(model, fields), do: Model.changeset(model, fields)
+
+  def save(model, fields), do: update changeset(model, fields)
 
   def refresh(model), do: Model.refresh(model)
 end

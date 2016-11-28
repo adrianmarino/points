@@ -7,7 +7,7 @@ defmodule Point.Services.MovementServiceSpec do
   let amount: new 100.1234567891
 
   describe "deposit" do
-    let deposit: described_module.deposit(amount: amount, on: account)
+    let deposit: ok_result(described_module.deposit(amount: amount, on: account))
 
     context "when deposit an amount to issuer backup account" do
       let account: AccountFactory.insert(:backup)
@@ -27,17 +27,15 @@ defmodule Point.Services.MovementServiceSpec do
     context "when deposit an amount to user account" do
       let account: AccountFactory.insert(:obiwan_rio)
 
-      it "should raise and error" do
-        expect fn() -> deposit end |> to(raise_exception())
-      end
+      it "should raise and error", do: expect fn() -> deposit end |> to(raise_exception())
     end
   end
 
   describe "transfer" do
-    context "when transfer an amount between user accounts with same currency" do
-      let transfer: described_module.transfer(from: source, to: target, amount: amount)
-      before do: transfer
+    let transfer: ok_result(described_module.transfer(from: source, to: target, amount: amount))
+    before do: transfer
 
+    context "when transfer an amount between user accounts with same currency" do
       context "when accounts belong to same issuers" do
         let source: AccountFactory.insert(:obiwan_rio)
         let target: AccountFactory.insert(:anakin_rio)
@@ -91,4 +89,6 @@ defmodule Point.Services.MovementServiceSpec do
       end
     end
   end
+
+  defp ok_result({:ok, value } = _), do: value
 end

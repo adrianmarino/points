@@ -2,12 +2,10 @@ defmodule Point.AccountService do
   import Decimal
   import Point.Repo
 
-  def increase(account, amount) do
-    save(account, %{amount: add(account.amount, new(amount))})
-    refresh account
+  def increase_changeset(account, amount) do
+    changeset(account, %{amount: add(account.amount, new(amount))})
   end
-  def decrease(account, amount) do
-    save(account, %{amount: sub(account.amount, new(amount))})
-    refresh account
+  def decrease_changeset(account, amount) do
+    changeset(account, %{amount: sub(account.amount, new(amount))})
   end
 end

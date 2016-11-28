@@ -1,29 +1,38 @@
 defmodule Point.Services.MovementService do
+  alias Ecto.Multi
+  alias Point.Model
+  alias Point.Account
+
   import Logger
   import Point.Repo
   import Point.MovementFactory, only: [deposit: 2, transfer: 3]
-  import Point.AccountService, only: [increase: 2, decrease: 2]
+  import Point.AccountService, only: [increase_changeset: 2, decrease_changeset: 2]
 
-  alias Point.Model
-
-  def transfer( from:   %Point.Account{type: "backup"} = _,
-                to:     %Point.Account{type: "backup"} = _,
+  def transfer( from:   %Account{type: "backup"} = _,
+                to:     %Account{type: "backup"} = _,
                 amount: _), do: raise "Unimplemented!"
-  def transfer( from:    %Point.Account{type: "default"} = source,
-                to:      %Point.Account{type: "default"} = target,
+  def transfer( from:    %Account{type: "default"} = source,
+                to:      %Account{type: "default"} = target,
                 amount:  amount) do
-    logger insert!(transfer(decrease(source, amount), increase(target, amount), amount))
+    get_movement Multi.new
+      |> Multi.update(:increase_amount, increase_changeset(target, amount))
+      |> Multi.update(:decrease_amount, decrease_changeset(source, amount))
+      |> Multi.insert(:movement, transfer(source, target, amount))
+      |> transaction
   end
 
-  def deposit(amount: _, on: %Point.Account{type: "default"} = _) do
-    raise "Deposite only is supported in default accounts!"
-  end
-  def deposit(amount: amount, on: %Point.Account{type: "backup"} = account) do
-    logger insert!(deposit(increase(account, amount), amount))
+  def deposit(amount: _, on: %Account{type: "default"} = _),
+    do: raise "Deposite only is supported in default accounts!"
+  def deposit(amount: amount, on: %Account{type: "backup"} = account) do
+    get_movement Multi.new
+      |> Multi.update(:increase_amount, increase_changeset(account, amount))
+      |> Multi.insert(:movement, deposit(account, amount))
+      |> transaction
   end
 
-  defp logger(model)  do
-    info(Model.to_string model)
-    model
+  defp get_movement({:ok, %{movement: movement}} = _) do
+    info(Model.to_string movement)
+    {:ok, movement}
   end
+  defp get_movement(result), do: result
 end
