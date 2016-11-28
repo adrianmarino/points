@@ -8,8 +8,7 @@ defmodule Point.Services.MovementService do
     raise "Deposite only is supported in default accounts!"
   end
   def deposit(on: %Point.Account{type: "backup"} = account, amount: amount) do
-    balance = add(new(amount), new(account.amount))
-    save(account, %{amount: balance})
+    save(account, %{amount: add(new(amount), account.amount)})
     logger insert!(MovementFactory.deposit(account, amount))
   end
 
