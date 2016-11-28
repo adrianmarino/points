@@ -6,9 +6,10 @@ defmodule Point.Services.MovementServiceSpec do
 
   describe "deposit" do
     let amount: new 10.1234567891
+    let movement: described_module.deposit(on: account, amount: amount)
+
     context "when deposit an amount to issuer backup account" do
       let account: AccountFactory.insert(:backup)
-      let movement: described_module.deposit(on: account, amount: amount)
       before do: movement
 
       it "should increase account balance for deposited amount" do
@@ -23,7 +24,11 @@ defmodule Point.Services.MovementServiceSpec do
     end
 
     context "when deposit an amount to user account" do
-      pending "should increase account's balance to deposited amount"
+      let account: AccountFactory.insert(:obiwan)
+
+      it "should raise and error" do
+        expect fn() -> movement end |> to(raise_exception())
+      end
     end
   end
 

@@ -16,7 +16,7 @@ defmodule Point.AccountFactory do
     %Account{
       type: "default",
       amount: Decimal.new(5000),
-      currency: CurrencyFactory.build(:rio_points),
+      currency: CurrencyFactory.build(:rio_point),
       owner: UserFactory.build(:obiwan_kenoby),
       issuer: UserFactory.build(:root)
     }
@@ -26,7 +26,7 @@ defmodule Point.AccountFactory do
     %Account{
       type: "default",
       amount: Decimal.new(10000),
-      currency: CurrencyFactory.build(:santander_points),
+      currency: CurrencyFactory.build(:santander_point),
       owner: UserFactory.build(:quigon_jinn),
       issuer: UserFactory.build(:root)
     }
