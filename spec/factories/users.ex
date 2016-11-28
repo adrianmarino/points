@@ -10,6 +10,10 @@ defmodule Point.UserFactory do
     %User{email: "obiwankenoby@gmail.com", password: "1234B", first_name: "Obi-Wan", last_name: "Kenoby"}
   end
 
+  def anakin_skywalker_factory do
+    %User{email: "anakinskywalker@gmail.com", password: "1234B", first_name: "Anakin", last_name: "Skywalker"}
+  end
+
   def quigon_jinn_factory do
     %User{email: "quigonjinn@gmail.com", password: "1234B", first_name: "Qui-Gon", last_name: "Jinn"}
   end

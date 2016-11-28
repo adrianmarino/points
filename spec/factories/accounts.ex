@@ -12,7 +12,7 @@ defmodule Point.AccountFactory do
     }
   end
 
-  def obiwan_factory do
+  def obiwan_rio_factory do
     %Account{
       type: "default",
       amount: Decimal.new(5000),
@@ -22,7 +22,17 @@ defmodule Point.AccountFactory do
     }
   end
 
-  def quigon_factory do
+  def anakin_rio_factory do
+    %Account{
+      type: "default",
+      amount: Decimal.new(5000),
+      currency: CurrencyFactory.build(:rio_point),
+      owner: UserFactory.build(:anakin_skywalker),
+      issuer: UserFactory.build(:root)
+    }
+  end
+
+  def quigon_std_factory do
     %Account{
       type: "default",
       amount: Decimal.new(10000),
