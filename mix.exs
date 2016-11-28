@@ -19,8 +19,7 @@ defmodule Point.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Point, []},
-     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :mariaex, :ex_machina]]
+     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :phoenix_ecto, :mariaex]]
   end
 
   # Specifies which paths to compile per environment.

@@ -3,7 +3,7 @@ defmodule Point.Repo.Migrations.CreateAccount do
 
   def change do
     create table(:accounts) do
-      add :amount, :decimal
+      add :amount, :decimal, [precision: 20, scale: 10, null: false]
 
       timestamps()
     end

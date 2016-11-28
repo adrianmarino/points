@@ -17,17 +17,6 @@ insert_all [root, obiwan_kenoby, quigon_jinn]
 #
 #
 #------------------------------------------------------------------------------
-# Entities
-#------------------------------------------------------------------------------
-platform  = %Entity{name: "Point Platform", users: [root]}
-rio       = %Entity{name: "Rio",            users: [obiwan_kenoby]}
-boston    = %Entity{name: "Boston",         users: [quigon_jinn]}
-
-insert_all [platform, rio, boston]
-#
-#
-#
-#------------------------------------------------------------------------------
 # Currencies
 #------------------------------------------------------------------------------
 # Real
@@ -59,16 +48,27 @@ insert_all [
 #------------------------------------------------------------------------------
 # Backup
 backup_account = %Account{
-  amount: 15000, currency: ars, owner: root, issuer: root
+  amount: 15000, type: "backup", currency: ars, owner: root, issuer: root
 }
 # Points
 obiwan_acount = %Account{
-  amount: 5000, currency: rio_points, owner: obiwan_kenoby, issuer: root
+  amount: 5000, type: "default", currency: rio_points, owner: obiwan_kenoby, issuer: root
 }
 quigon_acount = %Account{
-  amount: 10000, currency: santander_points, owner: quigon_jinn, issuer: root
+  amount: 10000, type: "default", currency: santander_points, owner: quigon_jinn, issuer: root
 }
 insert_all [backup_account, obiwan_acount, quigon_acount]
+#
+#
+#
+#------------------------------------------------------------------------------
+# Entities
+#------------------------------------------------------------------------------
+platform  = %Entity{name: "Point Platform", users: [root]}
+rio       = %Entity{name: "Rio",            users: [obiwan_kenoby]}
+boston    = %Entity{name: "Boston",         users: [quigon_jinn]}
+
+insert_all [platform, rio, boston]
 #
 #
 #

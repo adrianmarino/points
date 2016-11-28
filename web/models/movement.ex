@@ -17,7 +17,7 @@ defmodule Point.Movement do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:type, :amount, :exchange_rate])
-    |> validate_required([:type, :amount, :exchange_rate])
+    |> cast(params, [:type, :amount])
+    |> validate_required([:type, :amount])
   end
 end

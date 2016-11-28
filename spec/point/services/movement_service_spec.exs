@@ -1,5 +1,31 @@
-defmodule TransferSpec do
+defmodule Point.Services.MovementServiceSpec do
   use ESpec
+  alias Point.AccountFactory
+  import Point.Repo
+  import Decimal
+
+  describe "deposit" do
+    let amount: new 10.1234567891
+    context "when deposit an amount to issuer backup account" do
+      let account: AccountFactory.insert(:backup)
+      let movement: described_module.deposit(on: account, amount: amount)
+      before do: movement
+
+      it "should increase account balance for deposited amount" do
+        expect(refresh(account).amount).to eq(add account.amount, amount)
+      end
+
+      it "creates a movement with account as target acount" do
+        expect(assoc(movement, :target).id).to eq(account.id)
+      end
+
+      it "creates a movement with deposited amount", do: expect(movement.amount).to eq(amount)
+    end
+
+    context "when deposit an amount to user account" do
+      pending "should increase account's balance to deposited amount"
+    end
+  end
 
   describe "transfer" do
     context "when transfer an amount between user accounts with same currency" do
@@ -22,15 +48,6 @@ defmodule TransferSpec do
         pending "shouldn't modify issuer backup amount"
         pending "should transfers an equivalent amount between users acounts"
       end
-    end
-  end
-
-  describe "deposit" do
-    context "when deposit an amount to issuer backup account" do
-      pending "should increase account's balance to deposited amount"
-    end
-    context "when deposit an amount to user account" do
-      pending "should increase account's balance to deposited amount"
     end
   end
 

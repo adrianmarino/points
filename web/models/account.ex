@@ -3,6 +3,7 @@ defmodule Point.Account do
 
   schema "accounts" do
     field :amount, :decimal
+    field :type, :string
 
     belongs_to :owner, Point.User
     belongs_to :issuer, Point.User
@@ -16,7 +17,7 @@ defmodule Point.Account do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:amount, :owner, :issuer, :currency])
-    |> validate_required([:amount, :owner, :issuer, :currency])
+    |> cast(params, [:type, :amount, :owner_id, :issuer_id, :currency_id])
+    |> validate_required([:type, :amount, :owner_id, :issuer_id, :currency_id])
   end
 end

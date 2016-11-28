@@ -3,7 +3,7 @@ defmodule Point.Repo.Migrations.CreateExchangeRate do
 
   def change do
     create table(:exchange_rates) do
-      add :rate, :decimal
+      add :rate, :decimal, [precision: 20, scale: 20, null: false]
 
       timestamps()
     end
