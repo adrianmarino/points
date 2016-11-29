@@ -36,9 +36,9 @@ defmodule Point.AccountFactory do
     %Account{
       type: "default",
       amount: Decimal.new(10000),
-      currency: CurrencyFactory.build(:santander_point),
-      owner: UserFactory.build(:quigon_jinn),
-      issuer: UserFactory.build(:root)
+      currency: CurrencyFactory.insert(:santander_point),
+      owner: UserFactory.insert(:quigon_jinn),
+      issuer: UserFactory.insert(:root)
     }
   end
 end

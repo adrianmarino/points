@@ -3,6 +3,7 @@ defmodule Point.Services.MovementServiceSpec do
   alias Point.AccountFactory
   import Point.Repo
   import Decimal
+  import Point.AccountService
 
   let amount: new 100.1234567891
 
@@ -26,19 +27,22 @@ defmodule Point.Services.MovementServiceSpec do
 
     context "when deposit an amount to user account" do
       let account: AccountFactory.insert(:obiwan_rio)
-
-      it "should raise and error", do: expect fn() -> deposit end |> to(raise_exception())
+      it "should raise and error", do: expect fn-> deposit end |> to(raise_exception())
     end
   end
 
   describe "transfer" do
     let transfer: ok_result(described_module.transfer(from: source, to: target, amount: amount))
-    before do: transfer
 
     context "when transfer an amount between user accounts with same currency" do
       context "when accounts belong to same issuers" do
         let source: AccountFactory.insert(:obiwan_rio)
         let target: AccountFactory.insert(:anakin_rio)
+
+        before do
+          AccountFactory.insert(:backup, owner: source.issuer)
+          transfer
+        end
 
         it "should increase target account balance to transfered amount" do
           expect(refresh(target).amount).to eq(add target.amount, amount)
@@ -58,7 +62,9 @@ defmodule Point.Services.MovementServiceSpec do
 
         it "creates a movement with trasfered amount", do: expect(transfer.amount).to eq(amount)
 
-        pending "shouldn't modifies issuer account amount"
+        it "shouldn't modifies issuer account amount" do
+          expect fn-> transfer end |> to_not(change fn-> backup_account_of(source).amount end)
+        end
       end
 
       context "when accounts belong to distinct issuers" do
