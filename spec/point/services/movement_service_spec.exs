@@ -15,19 +15,19 @@ defmodule Point.Services.MovementServiceSpec do
       before do: deposit
 
       it "should increase account balance for deposited amount" do
-        expect(refresh(account).amount).to eq(add account.amount, amount)
+        expect(refresh(account).amount).to(eq add(account.amount, amount))
       end
 
       it "creates a movement with account as target acount" do
-        expect(assoc(deposit, :target).id).to eq(account.id)
+        expect(assoc(deposit, :target).id).to(eq account.id)
       end
 
-      it "creates a movement with deposited amount", do: expect(deposit.amount).to eq(amount)
+      it "creates a movement with deposited amount", do: expect(deposit.amount).to(eq amount)
     end
 
     context "when deposit an amount to user account" do
       let account: AccountFactory.insert(:obiwan_rio)
-      it "should raise and error", do: expect fn-> deposit end |> to(raise_exception())
+      it "should raise and error", do: expect fn-> deposit end |> to(raise_exception)
     end
   end
 
@@ -39,28 +39,25 @@ defmodule Point.Services.MovementServiceSpec do
         let source: AccountFactory.insert(:obiwan_rio)
         let target: AccountFactory.insert(:anakin_rio)
 
-        before do
-          AccountFactory.insert(:backup, owner: source.issuer)
-          transfer
-        end
+        before do: AccountFactory.insert(:backup, owner: source.issuer)
 
         it "should increase target account balance to transfered amount" do
-          expect(refresh(target).amount).to eq(add target.amount, amount)
+          expect fn-> transfer end |> to(change fn-> refresh(target).amount end, add(target.amount, amount))
         end
 
         it "should decrease source account balance to transfered amount" do
-          expect(refresh(source).amount).to eq(sub source.amount, amount)
+          expect fn-> transfer end |> to(change fn-> refresh(source).amount end, sub(source.amount, amount))
         end
 
         it "creates a movement with an expected target account" do
-          expect(assoc(transfer, :target).id).to eq(target.id)
+          expect(assoc(transfer, :target).id).to(eq target.id)
         end
 
         it "creates a movement with an expected source account" do
-          expect(assoc(transfer, :source).id).to eq(source.id)
+          expect(assoc(transfer, :source).id).to(eq source.id)
         end
 
-        it "creates a movement with trasfered amount", do: expect(transfer.amount).to eq(amount)
+        it "creates a movement with trasfered amount", do: expect(transfer.amount).to(eq amount)
 
         it "shouldn't modifies issuer account amount" do
           expect fn-> transfer end |> to_not(change fn-> backup_account_of(source).amount end)
