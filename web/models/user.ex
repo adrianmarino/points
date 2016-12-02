@@ -1,4 +1,11 @@
 defmodule Point.User do
+  @moduledoc """
+  Represent a platform user. A user:
+    - Could be a issuer or a normal user.
+    - Belong to entities.
+    - Could issue currency.
+    - Has accounts.
+  """
   use Point.Web, :model
 
   schema "users" do

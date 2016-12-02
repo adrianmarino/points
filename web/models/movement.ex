@@ -1,4 +1,7 @@
 defmodule Point.Movement do
+  @moduledoc """
+  Represent an amount trans
+  """
   use Point.Web, :model
 
   schema "movements" do

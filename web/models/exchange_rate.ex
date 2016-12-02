@@ -1,4 +1,7 @@
 defmodule Point.ExchangeRate do
+  @moduledoc """
+  Allow comvert an amount between to correncies.
+  """
   use Point.Web, :model
 
   schema "exchange_rates" do

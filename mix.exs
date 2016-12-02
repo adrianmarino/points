@@ -38,7 +38,8 @@ defmodule Point.Mixfile do
      {:cowboy, "~> 1.0"},
      {:espec_phoenix, "~> 0.6.4", only: :test},
      {:mariaex, ">= 0.0.0"},
-     {:ex_machina, "~> 1.0", only: :test}]
+     {:ex_machina, "~> 1.0", only: [:test]},
+     {:credo, "~> 0.5", only: [:dev, :test]}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.

@@ -11,7 +11,7 @@ defmodule Point.Services.MovementServiceSpec do
     let deposit: ok_result(described_module.deposit(amount: amount, on: account))
 
     context "when deposit an amount to issuer backup account" do
-      let account: AccountFactory.insert(:backup)
+      let account: AccountFactory.insert(:revel_backup)
       before do: deposit
 
       it "should increase account balance for deposited amount" do
@@ -26,7 +26,7 @@ defmodule Point.Services.MovementServiceSpec do
     end
 
     context "when deposit an amount to user account" do
-      let account: AccountFactory.insert(:obiwan_rio)
+      let account: AccountFactory.insert(:obiwan_kenoby_revel)
       it "should raise and error", do: expect fn-> deposit end |> to(raise_exception)
     end
   end
@@ -36,10 +36,9 @@ defmodule Point.Services.MovementServiceSpec do
 
     context "when transfer an amount between user accounts with same currency" do
       context "when accounts belong to same issuers" do
-        let source: AccountFactory.insert(:obiwan_rio)
-        let target: AccountFactory.insert(:anakin_rio)
-
-        before do: AccountFactory.insert(:backup, owner: source.issuer)
+        let backup: AccountFactory.insert(:revel_backup)
+        let source: AccountFactory.insert(:obiwan_kenoby_revel, issuer: backup.owner)
+        let target: AccountFactory.insert(:han_solo_revel, issuer: backup.owner)
 
         it "should increase target account balance to transfered amount" do
           expect fn-> transfer end |> to(change fn-> refresh(target).amount end, add(target.amount, amount))
@@ -65,6 +64,17 @@ defmodule Point.Services.MovementServiceSpec do
       end
 
       context "when accounts belong to distinct issuers" do
+        let source: AccountFactory.insert(:obiwan_kenoby_revel)
+        let target: AccountFactory.insert(:jango_fett_empire)
+
+        let source_backup: AccountFactory.insert(:revel_backup)
+        let target_backup: AccountFactory.insert(:empire_backup)
+
+        let rate: ExchangeRateFactory.insert(:revel_empire_point)
+
+        it "should increase target account balance to transfered amount" do
+        end
+
         pending "should transfers an equivalent backup amount between issuer acounts"
         pending "should transfers amount between user acounts"
       end

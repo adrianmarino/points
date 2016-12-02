@@ -1,5 +1,6 @@
 defmodule Point do
   use Application
+  alias Point.Endpoint
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -12,7 +13,8 @@ defmodule Point do
       supervisor(Point.Repo, []),
       # Start the endpoint when the application starts
       supervisor(Point.Endpoint, []),
-      # Start your own worker by calling: Point.Worker.start_link(arg1, arg2, arg3)
+      # Start your own worker by calling: Point.Worker
+      #  .start_link(arg1, arg2, arg3)
       # worker(Point.Worker, [arg1, arg2, arg3]),
     ]
 
@@ -25,7 +27,7 @@ defmodule Point do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    Point.Endpoint.config_change(changed, removed)
+    Endpoint.config_change(changed, removed)
     :ok
   end
 end

@@ -2,13 +2,13 @@ defmodule Point.CurrencyFactory do
   use ExMachina.Ecto, repo: Point.Repo
   alias Point.{Currency, UserFactory}
 
-  def ars_factory, do: %Currency{code: "ARS", name: "Pesos", issuer: UserFactory.build(:root)}
+  def ars_factory, do: %Currency{code: "ARS", name: "Pesos", issuer: UserFactory.build(:chewbacca)}
 
-  def rio_point_factory do
-    %Currency{code: "RIO", name: "Rio Points", issuer: UserFactory.build(:root)}
+  def revel_point_factory do
+    %Currency{code: "RVL", name: "Revel Points", issuer: UserFactory.build(:luke_skywalker)}
   end
 
-  def std_point do
-    %Currency{code: "STD", name: "Santander Points", issuer: UserFactory.build(:root)}
+  def empire_point_factory do
+    %Currency{code: "EMP", name: "Empire Points", issuer: UserFactory.build(:anakin_skywalker)}
   end
 end

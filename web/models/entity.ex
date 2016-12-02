@@ -1,4 +1,7 @@
 defmodule Point.Entity do
+  @moduledoc """
+  An entity has many accounts belonging to users.
+  """
   use Point.Web, :model
 
   schema "entities" do
