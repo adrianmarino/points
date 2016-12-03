@@ -4,6 +4,10 @@ defmodule Point.CurrencyFactory do
 
   def ars_factory, do: %Currency{code: "ARS", name: "Pesos", issuer: UserFactory.build(:chewbacca)}
 
+  def shared_point_factory do
+    %Currency{code: "SRD", name: "SHared Points", issuer: UserFactory.build(:chewbacca)}
+  end
+
   def revel_point_factory do
     %Currency{code: "RVL", name: "Revel Points", issuer: UserFactory.build(:luke_skywalker)}
   end

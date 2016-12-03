@@ -4,13 +4,12 @@ defmodule Point.AccountFactory do
 
   def universe_backup_factory do
     %Account{
-      type: "universe-backup",
+      type: "backup",
       amount: Decimal.new(15000),
       currency: CurrencyFactory.build(:ars),
       owner: UserFactory.build(:chewbacca)
     }
   end
-
 
   def revel_backup_factory do
     %Account{
@@ -42,6 +41,15 @@ defmodule Point.AccountFactory do
     }
   end
 
+  def han_solo_revel_shared_factory do
+    %Account{
+      type: "default",
+      amount: Decimal.new(10000),
+      currency: CurrencyFactory.insert(:shared_point),
+      owner: UserFactory.insert(:han_solo),
+      issuer: UserFactory.insert(:luke_skywalker)
+    }
+  end
 
   def empire_backup_factory do
     %Account{
@@ -58,6 +66,16 @@ defmodule Point.AccountFactory do
       type: "default",
       amount: Decimal.new(5000),
       currency: CurrencyFactory.build(:empire_point),
+      owner: UserFactory.build(:jango_fett),
+      issuer: UserFactory.build(:anakin_skywalker)
+    }
+  end
+
+  def jango_fett_empire_shared_factory do
+    %Account{
+      type: "default",
+      amount: Decimal.new(5000),
+      currency: CurrencyFactory.build(:shared_point),
       owner: UserFactory.build(:jango_fett),
       issuer: UserFactory.build(:anakin_skywalker)
     }

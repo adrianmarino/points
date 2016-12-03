@@ -9,6 +9,11 @@ defmodule Point.MovementFactory do
   def extract(account, amount),
     do: %Movement{type: "extract", source: account, amount: amount}
   def transfer(source, target, amount) do
-    %Movement{type: "transfer", source: source, target: target, amount: amount}
+    %Movement{
+      type: "transfer",
+      source: source,
+      target: target,
+      amount: Decimal.new(amount)
+    }
   end
 end

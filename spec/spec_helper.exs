@@ -1,4 +1,5 @@
 Code.require_file("spec/phoenix_helper.exs")
+Code.require_file("spec/point/helper/service_spec_helper.ex")
 
 ESpec.configure fn(config) ->
   config.before fn(_tags) ->

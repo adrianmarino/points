@@ -5,7 +5,7 @@ defmodule Point.ExchangeRate do
   use Point.Web, :model
 
   schema "exchange_rates" do
-    field :rate, :decimal
+    field :value, :decimal
 
     belongs_to :source, Point.Currency
     belongs_to :target, Point.Currency

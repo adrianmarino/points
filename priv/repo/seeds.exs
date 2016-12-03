@@ -34,11 +34,11 @@ insert_all [ars, rio_points, santander_points]
 #------------------------------------------------------------------------------
 # Rio points
 insert_all [
-  %ExchangeRate{rate: 1, source: ars,               target: rio_points},
-  %ExchangeRate{rate: 1, source: rio_points,        target: ars},
+  %ExchangeRate{value: 1, source: ars,               target: rio_points},
+  %ExchangeRate{value: 1, source: rio_points,        target: ars},
 # Santander Points
-  %ExchangeRate{rate: 1, source: ars,               target: santander_points},
-  %ExchangeRate{rate: 1, source: santander_points,  target: ars},
+  %ExchangeRate{value: 1, source: ars,               target: santander_points},
+  %ExchangeRate{value: 1, source: santander_points,  target: ars},
 ]
 #
 #
