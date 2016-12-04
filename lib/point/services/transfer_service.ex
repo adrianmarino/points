@@ -35,7 +35,9 @@ defmodule Point.TransferService do
   defp rate_between(source, target) do
     result = ExchangeRateService.rate_between(source, target)
     case result do
-      {:error, message} -> Decimal.new(1)
+      {:error, message} ->
+        debug(message)
+        Decimal.new(1)
       {:ok, rate} -> rate
     end
   end
