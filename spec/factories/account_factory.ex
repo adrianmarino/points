@@ -24,30 +24,20 @@ defmodule Point.AccountFactory do
   def obiwan_kenoby_revel_factory do
     %Account{
       type: "default",
-      amount: Decimal.new(10000),
-      currency: CurrencyFactory.insert(:revel_point),
-      owner: UserFactory.insert(:obiwan_kenoby),
-      issuer: UserFactory.insert(:luke_skywalker)
+      amount: Decimal.new(15000),
+      currency: CurrencyFactory.build(:revel_point),
+      owner: UserFactory.build(:obiwan_kenoby),
+      issuer: UserFactory.build(:luke_skywalker)
     }
   end
 
   def han_solo_revel_factory do
     %Account{
       type: "default",
-      amount: Decimal.new(10000),
-      currency: CurrencyFactory.insert(:revel_point),
-      owner: UserFactory.insert(:han_solo),
-      issuer: UserFactory.insert(:luke_skywalker)
-    }
-  end
-
-  def han_solo_revel_shared_factory do
-    %Account{
-      type: "default",
-      amount: Decimal.new(10000),
-      currency: CurrencyFactory.insert(:shared_point),
-      owner: UserFactory.insert(:han_solo),
-      issuer: UserFactory.insert(:luke_skywalker)
+      amount: Decimal.new(15000),
+      currency: CurrencyFactory.build(:revel_point),
+      owner: UserFactory.build(:han_solo),
+      issuer: UserFactory.build(:luke_skywalker)
     }
   end
 
@@ -64,18 +54,8 @@ defmodule Point.AccountFactory do
   def jango_fett_empire_factory do
     %Account{
       type: "default",
-      amount: Decimal.new(5000),
+      amount: Decimal.new(15000),
       currency: CurrencyFactory.build(:empire_point),
-      owner: UserFactory.build(:jango_fett),
-      issuer: UserFactory.build(:anakin_skywalker)
-    }
-  end
-
-  def jango_fett_empire_shared_factory do
-    %Account{
-      type: "default",
-      amount: Decimal.new(5000),
-      currency: CurrencyFactory.build(:shared_point),
       owner: UserFactory.build(:jango_fett),
       issuer: UserFactory.build(:anakin_skywalker)
     }

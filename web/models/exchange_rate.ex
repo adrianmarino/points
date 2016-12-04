@@ -2,6 +2,10 @@ defmodule Point.ExchangeRate do
   @moduledoc """
   Allow comvert an amount between to correncies.
   """
+  alias Point.DecimalUtil
+
+  def inverse(rate), do: DecimalUtil.inverse(rate.value)
+
   use Point.Web, :model
 
   schema "exchange_rates" do
@@ -18,7 +22,7 @@ defmodule Point.ExchangeRate do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:source_rate, :source, :target])
-    |> validate_required([:source_rate, :source, :target])
+    |> cast(params, [:value, :source, :target])
+    |> validate_required([:value, :source, :target])
   end
 end

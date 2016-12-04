@@ -1,7 +1,7 @@
 defmodule Point.MovementServiceSpec do
   use ESpec
 
-  let amount: Decimal.new 100.1234567891
+  let amount: Decimal.new 10.1234567891
 
   describe "extract" do
     context "when extract an amount from a issuer backup account" do
