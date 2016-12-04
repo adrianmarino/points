@@ -1,18 +1,19 @@
+IO.puts "EXEC SEEDS!!!!!!"
+
 import Point.Repo
 alias Point.{User, Entity, Account, Currency, ExchangeRate, Movement}
 #------------------------------------------------------------------------------
 # Users
 #------------------------------------------------------------------------------
-root = %User{
+root = insert! %User{
   email: "jangofett@gmail.com", password: "1234A", first_name: "Jango", last_name: "Fett"
 }
-obiwan_kenoby = %User{
+obiwan_kenoby = insert! %User{
   email: "obiwankenoby@gmail.com", password: "1234B", first_name: "Obi-Wan", last_name: "Kenoby"
 }
-quigon_jinn = %User{
+quigon_jinn = insert! %User{
   email: "quigonjinn@gmail.com", password: "1234B", first_name: "Qui-Gon", last_name: "Jinn"
 }
-insert_all [root, obiwan_kenoby, quigon_jinn]
 #
 #
 #
@@ -20,12 +21,10 @@ insert_all [root, obiwan_kenoby, quigon_jinn]
 # Currencies
 #------------------------------------------------------------------------------
 # Real
-ars = %Currency{code: "ARS", name: "Pesos", issuer: root}
+ars = insert! %Currency{code: "ARS", name: "Pesos", issuer: root}
 # Virtual
-rio_points = %Currency{code: "RIO", name: "Rio Points", issuer: root}
-santander_points = %Currency{code: "STD", name: "Santander Points", issuer: root}
-
-insert_all [ars, rio_points, santander_points]
+rio_points = insert! %Currency{code: "RIO", name: "Rio Points", issuer: root}
+santander_points = insert! %Currency{code: "STD", name: "Santander Points", issuer: root}
 #
 #
 #
@@ -47,35 +46,31 @@ insert_all [
 # Accounts
 #------------------------------------------------------------------------------
 # Backup
-backup_account = %Account{
+backup_account = insert! %Account{
   amount: 15000, type: "backup", currency: ars, owner: root, issuer: root
 }
 # Points
-obiwan_acount = %Account{
+obiwan_acount = insert! %Account{
   amount: 5000, type: "default", currency: rio_points, owner: obiwan_kenoby, issuer: root
 }
-quigon_acount = %Account{
+quigon_acount = insert! %Account{
   amount: 10000, type: "default", currency: santander_points, owner: quigon_jinn, issuer: root
 }
-insert_all [backup_account, obiwan_acount, quigon_acount]
 #
 #
 #
 #------------------------------------------------------------------------------
 # Entities
 #------------------------------------------------------------------------------
-platform  = %Entity{name: "Point Platform", users: [root]}
-rio       = %Entity{name: "Rio",            users: [obiwan_kenoby]}
-boston    = %Entity{name: "Boston",         users: [quigon_jinn]}
-
-insert_all [platform, rio, boston]
+platform  = insert! %Entity{name: "Point Platform", users: [root]}
+rio       = insert! %Entity{name: "Rio",            users: [obiwan_kenoby]}
+boston    = insert! %Entity{name: "Boston",         users: [quigon_jinn]}
 #
 #
 #
 #------------------------------------------------------------------------------
 # Movements
 #------------------------------------------------------------------------------
-transfer = %Movement{
+transfer = insert! %Movement{
   type: "transfer", amount: 10, source: obiwan_acount, target: quigon_acount, rate: 1
 }
-insert_all [transfer]
