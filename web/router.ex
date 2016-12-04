@@ -8,6 +8,8 @@ defmodule Point.Router do
   scope "/api", Point do
     pipe_through :api
 
-    resources "/users", UserController
+    scope "/v1" do
+      resources "/users", UserController
+    end
   end
 end
