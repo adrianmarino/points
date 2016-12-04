@@ -5,7 +5,7 @@ defmodule Point.TransferServiceSpec do
   import Point.Repo
   import Decimal
 
-  let amount: new 10.12
+  let amount: Decimal.new 10.12
   let transfer: ok_result(described_module.transfer(from: source, to: target, amount: amount))
 
   context "when transfer amount between accounts with same currency and backup account" do

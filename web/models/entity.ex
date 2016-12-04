@@ -8,6 +8,7 @@ defmodule Point.Entity do
     field :name, :string
 
     many_to_many :users, Point.User, join_through: "users_entities"
+    has_many :accounts, Point.Account
 
     timestamps()
   end

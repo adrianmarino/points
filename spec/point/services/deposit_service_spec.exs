@@ -4,6 +4,7 @@ defmodule Point.DepositServiceSpec do
   import ServiceSpecHelper
   import Point.Repo
   import Decimal
+  import ServiceSpecHelper
 
   let amount: Decimal.new 100.1234567891
 
@@ -12,10 +13,9 @@ defmodule Point.DepositServiceSpec do
 
     context "when deposit an amount to issuer backup account" do
       let account: AccountFactory.insert(:revel_backup)
-      before do: deposit
 
       it "should increases account balance for deposited amount" do
-        expect(refresh(account).amount).to(eq add(account.amount, amount))
+        expect fn-> deposit end |> to(change amount(account), round(add(account.amount, amount),2))
       end
 
       it "creates a movement with account as target acount" do

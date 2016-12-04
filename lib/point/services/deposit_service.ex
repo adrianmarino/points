@@ -12,9 +12,9 @@ defmodule Point.DepositService do
     do: raise "Deposite only is supported in default accounts!"
 
   def deposit(amount: amount, on: %Account{type: "backup"} = account) do
-    {:ok, %{movement: movement}} = Multi.new
+    {:ok, %{deposit: movement}} = Multi.new
       |> Multi.update(:increase_amount, increase_changeset(account, amount))
-      |> Multi.insert(:movement, deposit(account, amount))
+      |> Multi.insert(:deposit, deposit(account, amount))
       |> transaction
 
     debug(Model.to_string movement)
