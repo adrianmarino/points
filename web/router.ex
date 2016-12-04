@@ -7,5 +7,7 @@ defmodule Point.Router do
 
   scope "/api", Point do
     pipe_through :api
+
+    resources "/users", UserController
   end
 end
