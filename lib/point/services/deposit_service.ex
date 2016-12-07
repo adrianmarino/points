@@ -1,6 +1,5 @@
 defmodule Point.DepositService do
-  alias Point.Model
-  alias Point.Account
+  alias Point.{Model, Account}
   alias Ecto.Multi
 
   import Logger

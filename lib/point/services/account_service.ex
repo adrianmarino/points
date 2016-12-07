@@ -1,8 +1,9 @@
 defmodule Point.AccountService do
+  alias Point.Account
+
   import Decimal
   import Point.Repo
   import Ecto.Query
-  alias Point.Account
 
   def backup_account_of(account) do
     one(from a in Account,

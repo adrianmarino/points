@@ -1,8 +1,7 @@
 defmodule Point.ExtractService do
-  alias Point.{Account, Model}
+  alias Point.{Account, Model, ExchangeRateService, DecimalUtil}
   alias Ecto.Multi
-  alias Point.ExchangeRateService
-  alias Point.DecimalUtil
+
   import Logger
   import Point.Repo
   import Ecto.Query
@@ -33,12 +32,7 @@ defmodule Point.ExtractService do
       do: raise "Available account amount is less that to amount to be extracted! (Available) #{available_amount} < #{amount} (To extract)."
   end
 
-  @doc """
-  Option1: Iterate all default accounts of issuer and convert each amount to backup currency.
-  Finally sum all amounts and return.
-  Option2: Use Balance breakpoints.
-  """
-  def calculate_available_amount(backup_account) do
+  defp calculate_available_amount(backup_account) do
     all(from acc in Account, where: acc.type != "backup" and acc.issuer_id == ^backup_account.owner_id)
       |> map(fn(account)->
           {:ok, rate } = ExchangeRateService.rate_between(account, backup_account)

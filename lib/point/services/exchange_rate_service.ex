@@ -1,9 +1,8 @@
 defmodule Point.ExchangeRateService do
-  alias Point.ExchangeRate
-  alias Point.Model
+  alias Point.{ExchangeRate, Model, DecimalUtil}
+
   import Ecto.Query
   import Point.Repo
-  alias Point.DecimalUtil
 
   def rate_between(%{currency_id: source}, %{currency_id: target}) when source == target, do: {:ok, Decimal.new(1)}
   def rate_between(source, target) do

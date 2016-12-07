@@ -3,9 +3,7 @@ defmodule Point.TransferService do
   Transfer an amount between two accounts with same/distinct currency.
   """
   alias Ecto.Multi
-  alias Point.Model
-  alias Point.Account
-  alias Point.ExchangeRateService
+  alias Point.{Model, Account, ExchangeRateService}
 
   import Point.Repo
   import Logger
