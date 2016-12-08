@@ -4,7 +4,6 @@ defmodule Point.DepositServiceSpec do
   alias Point.AccountFactory
   import ServiceSpecHelper
   import Point.Repo
-  import Decimal
 
   let amount: Decimal.new 10.12
   let deposit: ok_result(described_module.deposit(amount: amount, on: account))

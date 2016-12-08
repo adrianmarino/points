@@ -1,7 +1,7 @@
 defmodule Point.UserController do
   use Point.Web, :controller
 
-  alias Point.User
+  alias Point.{User, ChangesetView}
   import Repo
 
   def index(conn, _params), do: render(conn, "index.json", users: all(User))
@@ -10,7 +10,7 @@ defmodule Point.UserController do
   def create(conn, %{"user" => user_params}) do
     changeset = User.registration_changeset(%User{}, user_params)
 
-    case Repo.insert(changeset) do
+    case insert(changeset) do
       {:ok, user} ->
         conn
         |> put_status(:created)
@@ -19,20 +19,20 @@ defmodule Point.UserController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Point.ChangesetView, "error.json", changeset: changeset)
+        |> render(ChangesetView, "error.json", changeset: changeset)
     end
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
     changeset = User.registration_changeset(get!(User, id), user_params)
 
-    case Repo.update(changeset) do
+    case update(changeset) do
       {:ok, user} ->
         render(conn, "show.json", user: user)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Point.ChangesetView, "error.json", changeset: changeset)
+        |> render(ChangesetView, "error.json", changeset: changeset)
     end
   end
 

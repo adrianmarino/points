@@ -2,7 +2,6 @@ defmodule Point.ExtractServiceSpec do
   use ESpec
   import ServiceSpecHelper
   import Point.Repo
-  import Decimal
   alias Point.{ExchangeRate, AccountFactory}
 
   let backup: AccountFactory.insert(:revel_backup)
