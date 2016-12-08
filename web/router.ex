@@ -9,7 +9,7 @@ defmodule Point.Router do
     pipe_through :api
 
     scope "/v1" do
-      resources "/users", UserController
+      resources "/users", UserController, except: [:new, :edit]
     end
   end
 end

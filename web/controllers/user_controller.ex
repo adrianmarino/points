@@ -8,7 +8,7 @@ defmodule Point.UserController do
   def show(conn, %{"id" => id}), do: render(conn, "show.json", user: get!(User, id))
 
   def create(conn, %{"user" => user_params}) do
-    changeset = User.changeset(%User{}, user_params)
+    changeset = User.registration_changeset(%User{}, user_params)
 
     case Repo.insert(changeset) do
       {:ok, user} ->
@@ -24,7 +24,7 @@ defmodule Point.UserController do
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    changeset = User.changeset(get!(User, id), user_params)
+    changeset = User.registration_changeset(get!(User, id), user_params)
 
     case Repo.update(changeset) do
       {:ok, user} ->
