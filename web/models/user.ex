@@ -20,12 +20,28 @@ defmodule Point.User do
     timestamps()
   end
 
-  @doc """
-  Builds a changeset based on the `struct` and `params`.
-  """
-  def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:email, :password, :first_name, :last_name])
-    |> validate_required([:email, :password, :first_name, :last_name])
+  def changeset(model, params \\ %{}) do
+    model
+    |> cast(params, ~w(email first_name last_name))
+    |> validate_required([:email, :first_name, :last_name])
+    |> validate_length(:email, min: 6, max: 255)
+    |> validate_format(:email, ~r/@/)
+  end
+
+  def registration_changeset(model, params \\ %{}) do
+    model
+      |> changeset(params)
+      |> cast(params, ~w(password))
+      |> validate_required([:password])
+      |> validate_length(:password, min: 10)
+      |> put_password_hash
+  end
+
+  defp put_password_hash(changeset) do
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{password: value}} ->
+        put_change(changeset, :password_hash, Comeonin.Bcrypt.hashpwsalt(value))
+      _ -> changeset
+    end
   end
 end

@@ -36,5 +36,7 @@ defmodule Point.Endpoint do
     key: "_point_key",
     signing_salt: "Uj48wjBC"
 
+  plug CORSPlug
+
   plug Point.Router
 end
