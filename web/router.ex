@@ -10,6 +10,7 @@ defmodule Point.Router do
 
     scope "/v1" do
       resources "/users", UserController, except: [:new, :edit]
+      resources "/sessions", SessionController, only: [:create]
     end
   end
 end

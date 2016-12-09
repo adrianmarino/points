@@ -10,7 +10,8 @@ defmodule Point.User do
 
   schema "users" do
     field :email, :string
-    field :password, :string
+    field :password_hash, :string
+    field :password, :string, virtual: true
     field :first_name, :string
     field :last_name, :string
 
@@ -40,9 +41,7 @@ defmodule Point.User do
   defp put_password_hash(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: value}} ->
-        changeset
-          |> put_change(:password_hash, Comeonin.Bcrypt.hashpwsalt(value))
-          |> put_change(:password, nil)
+        changeset |> put_change(:password_hash, Comeonin.Bcrypt.hashpwsalt(value))
       _ -> changeset
     end
   end
