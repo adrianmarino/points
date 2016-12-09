@@ -4,7 +4,7 @@ defmodule Point.SessionController do
   alias Point.{User, Session}
   import Logger
 
-  def create(conn, user_params) do
+  def sign_in(conn, user_params) do
     user = Repo.get_by(User, email: user_params["email"])
     cond do
       user && checkpw(user_params["password"], user.password_hash) ->

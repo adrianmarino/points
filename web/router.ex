@@ -7,13 +7,13 @@ defmodule Point.Router do
     plug Point.Authentication
   end
 
-  scope "/api", Point do
-    scope "/v1" do
-      pipe_through :public_api
-      resources "/sessions", SessionController, only: [:create]
+  scope "/api/v1", Point do
+    pipe_through :public_api
+    post "/sign_in", SessionController, :sign_in
+  end
 
-      pipe_through :private_api
-      resources "/users", UserController, except: [:new, :edit]
-    end
+  scope "/api/v1", Point do
+    pipe_through :private_api
+    resources "/users", UserController, except: [:new, :edit]
   end
 end
