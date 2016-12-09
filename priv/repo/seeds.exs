@@ -1,19 +1,17 @@
-IO.puts "EXEC SEEDS!!!!!!"
-
 import Point.Repo
 alias Point.{User, Entity, Account, Currency, ExchangeRate, Movement}
 #------------------------------------------------------------------------------
 # Users
 #------------------------------------------------------------------------------
-root = insert! %User{
-  email: "jangofett@gmail.com", password: "1234A", first_name: "Jango", last_name: "Fett"
-}
-obiwan_kenoby = insert! %User{
-  email: "obiwankenoby@gmail.com", password: "1234B", first_name: "Obi-Wan", last_name: "Kenoby"
-}
-quigon_jinn = insert! %User{
-  email: "quigonjinn@gmail.com", password: "1234B", first_name: "Qui-Gon", last_name: "Jinn"
-}
+root = insert! User.registration_changeset(%User{}, %{
+  email: "jangofett@gmail.com", password: "12345678910", first_name: "Jango", last_name: "Fett"
+})
+obiwan_kenoby = insert! User.registration_changeset(%User{}, %{
+  email: "obiwankenoby@gmail.com", password: "12345678910", first_name: "Obi-Wan", last_name: "Kenoby"
+})
+quigon_jinn = insert! User.registration_changeset(%User{}, %{
+  email: "quigonjinn@gmail.com", password: "12345678910", first_name: "Qui-Gon", last_name: "Jinn"
+})
 #
 #
 #
@@ -46,9 +44,7 @@ insert_all [
 # Accounts
 #------------------------------------------------------------------------------
 # Backup
-backup_account = insert! %Account{
-  amount: 15000, type: "backup", currency: ars, owner: root, issuer: root
-}
+insert! %Account{amount: 15000, type: "backup", currency: ars, owner: root, issuer: root}
 # Points
 obiwan_acount = insert! %Account{
   amount: 5000, type: "default", currency: rio_points, owner: obiwan_kenoby, issuer: root
@@ -62,15 +58,15 @@ quigon_acount = insert! %Account{
 #------------------------------------------------------------------------------
 # Entities
 #------------------------------------------------------------------------------
-platform  = insert! %Entity{name: "Point Platform", users: [root]}
-rio       = insert! %Entity{name: "Rio",            users: [obiwan_kenoby]}
-boston    = insert! %Entity{name: "Boston",         users: [quigon_jinn]}
+insert! %Entity{name: "Point Platform", users: [root]}
+insert! %Entity{name: "Rio",            users: [obiwan_kenoby]}
+insert! %Entity{name: "Boston",         users: [quigon_jinn]}
 #
 #
 #
 #------------------------------------------------------------------------------
 # Movements
 #------------------------------------------------------------------------------
-transfer = insert! %Movement{
+insert! %Movement{
   type: "transfer", amount: 10, source: obiwan_acount, target: quigon_acount, rate: 1
 }

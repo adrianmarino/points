@@ -42,7 +42,8 @@ defmodule Point.Mixfile do
       {:ex_machina, "~> 1.0", only: [:test]},
       {:credo, "~> 0.5", only: [:dev, :test]},
       {:cors_plug, "~> 1.1"},
-      {:comeonin, "~> 2.0"}
+      {:comeonin, "~> 2.0"},
+      {:secure_random, "~> 0.2"}
    ]
   end
 
