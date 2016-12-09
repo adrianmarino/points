@@ -4,14 +4,18 @@ alias Point.{User, Entity, Account, Currency, ExchangeRate}
 #------------------------------------------------------------------------------
 # Users
 #------------------------------------------------------------------------------
-root = insert! User.registration_changeset(%User{
-  email: "jangofett@gmail.com", password: "12345678910", first_name: "Jango", last_name: "Fett"
+# Is the root user
+chewbacca = insert! User.registration_changeset(%User{
+  email: "chewbacca@gmail.com", password: "12345678910",
+  first_name: "Chewbacca", last_name: "Chewbacca"
 })
 obiwan_kenoby = insert! User.registration_changeset(%User{
-  email: "obiwankenoby@gmail.com", password: "12345678910", first_name: "Obi-Wan", last_name: "Kenoby"
+  email: "obiwankenoby@gmail.com", password: "12345678910",
+  first_name: "Obi-Wan", last_name: "Kenoby"
 })
-quigon_jinn = insert! User.registration_changeset(%User{
-  email: "quigonjinn@gmail.com", password: "12345678910", first_name: "Qui-Gon", last_name: "Jinn"
+anakin_skywalker = insert! User.registration_changeset(%User{
+  email: "anakinskywalker@gmail.com", password: "12345678910",
+  first_name: "Anakin", last_name: "Skywalker"
 })
 #
 #
@@ -19,24 +23,22 @@ quigon_jinn = insert! User.registration_changeset(%User{
 #------------------------------------------------------------------------------
 # Currencies
 #------------------------------------------------------------------------------
-# Real
-ars = insert! %Currency{code: "ARS", name: "Pesos", issuer: root}
-# Virtual
-rio_points = insert! %Currency{code: "RIO", name: "Rio Points", issuer: root}
-santander_points = insert! %Currency{code: "STD", name: "Santander Points", issuer: root}
+ars = insert! %Currency{code: "ARS", name: "Pesos", issuer: chewbacca}
+rebel_point = insert! %Currency{
+  code: "RBL", name: "Rebel Points", issuer: chewbacca
+}
+empire_point = insert! %Currency{
+  code: "EMP", name: "Empire Points", issuer: chewbacca
+}
 #
 #
 #
 #------------------------------------------------------------------------------
 # Exchange rates
 #------------------------------------------------------------------------------
-# Rio points
 insert_all [
-  %ExchangeRate{value: 1, source: ars,               target: rio_points},
-  %ExchangeRate{value: 2, source: rio_points,        target: ars},
-# Santander Points
-  %ExchangeRate{value: 3, source: ars,               target: santander_points},
-  %ExchangeRate{value: 4, source: santander_points,  target: ars},
+  %ExchangeRate{value: Decimal.new(1000), source: ars, target: rebel_point},
+  %ExchangeRate{value: Decimal.new(500), source: ars, target: empire_point}
 ]
 #
 #
@@ -44,14 +46,19 @@ insert_all [
 #------------------------------------------------------------------------------
 # Accounts
 #------------------------------------------------------------------------------
-# Backup
-insert! %Account{amount: 15000, type: "backup", currency: ars, owner: root, issuer: root}
-# Points
-obiwan_acount = insert! %Account{
-  amount: 5000, type: "default", currency: rio_points, owner: obiwan_kenoby, issuer: root
+initial_amount = Decimal.new(10000)
+
+insert! %Account{
+  amount: initial_amount, type: "backup", currency: ars,
+  owner: chewbacca, issuer: chewbacca
 }
-quigon_acount = insert! %Account{
-  amount: 10000, type: "default", currency: santander_points, owner: quigon_jinn, issuer: root
+obiwan_acount = insert! %Account{
+  amount: initial_amount, type: "default", currency: rebel_point,
+  owner: obiwan_kenoby, issuer: chewbacca
+}
+anakin_acount = insert! %Account{
+  amount: initial_amount, type: "default", currency: empire_point,
+  owner: anakin_skywalker, issuer: chewbacca
 }
 #
 #
@@ -59,6 +66,6 @@ quigon_acount = insert! %Account{
 #------------------------------------------------------------------------------
 # Entities
 #------------------------------------------------------------------------------
-insert! %Entity{name: "Point Platform", users: [root]}
-insert! %Entity{name: "Rio",            users: [obiwan_kenoby]}
-insert! %Entity{name: "Boston",         users: [quigon_jinn]}
+insert! %Entity{name: "Point Platform", users: [chewbacca]}
+insert! %Entity{name: "Rebellion",      users: [obiwan_kenoby]}
+insert! %Entity{name: "Empire",         users: [anakin_acount]}
