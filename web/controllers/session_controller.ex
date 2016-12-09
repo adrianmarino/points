@@ -11,11 +11,14 @@ defmodule Point.SessionController do
         session_changeset = Session.create_changeset(%Session{}, %{user_id: user.id})
         {:ok, session} = Repo.insert(session_changeset)
         conn |> put_status(:created) |> render("show.json", session: session)
+        info "#{user.email} sign in!"
       user ->
         conn |> put_status(:unauthorized) |> render("error.json", user_params)
+        error "#{user.email} sign in fail!"
       true ->
         dummy_checkpw
         conn |> put_status(:unauthorized) |> render("error.json", user_params)
+        error "#{user.email} sign in fail!"
     end
   end
 end
