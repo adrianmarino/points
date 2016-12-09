@@ -5,15 +5,15 @@ alias Point.{User, Entity, Account, Currency, ExchangeRate}
 # Users
 #------------------------------------------------------------------------------
 # Is the root user
-chewbacca = insert! User.registration_changeset(%User{
+chewbacca = insert! User.registration_changeset(%User{}, %{
   email: "chewbacca@gmail.com", password: "12345678910",
   first_name: "Chewbacca", last_name: "Chewbacca"
 })
-obiwan_kenoby = insert! User.registration_changeset(%User{
+obiwan_kenoby = insert! User.registration_changeset(%User{}, %{
   email: "obiwankenoby@gmail.com", password: "12345678910",
   first_name: "Obi-Wan", last_name: "Kenoby"
 })
-anakin_skywalker = insert! User.registration_changeset(%User{
+anakin_skywalker = insert! User.registration_changeset(%User{}, %{
   email: "anakinskywalker@gmail.com", password: "12345678910",
   first_name: "Anakin", last_name: "Skywalker"
 })
@@ -52,11 +52,11 @@ insert! %Account{
   amount: initial_amount, type: "backup", currency: ars,
   owner: chewbacca, issuer: chewbacca
 }
-obiwan_acount = insert! %Account{
+insert! %Account{
   amount: initial_amount, type: "default", currency: rebel_point,
   owner: obiwan_kenoby, issuer: chewbacca
 }
-anakin_acount = insert! %Account{
+insert! %Account{
   amount: initial_amount, type: "default", currency: empire_point,
   owner: anakin_skywalker, issuer: chewbacca
 }
@@ -68,4 +68,4 @@ anakin_acount = insert! %Account{
 #------------------------------------------------------------------------------
 insert! %Entity{name: "Point Platform", users: [chewbacca]}
 insert! %Entity{name: "Rebellion",      users: [obiwan_kenoby]}
-insert! %Entity{name: "Empire",         users: [anakin_acount]}
+insert! %Entity{name: "Empire",         users: [anakin_skywalker]}
