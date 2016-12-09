@@ -11,7 +11,7 @@ defmodule Point.Router do
     pipe_through :public_api
     post "/sign_in", SessionController, :sign_in
 
-    pipe_through :public_api
+    pipe_through :private_api
     resources "/users", UserController, except: [:new, :edit]
   end
 end
