@@ -5,10 +5,7 @@ defmodule Point.SessionControllerSpec do
   @valid_attrs %{email: "adrianmarino@gmail.com", password: "Whatever1123", first_name: "2222", last_name: "222"}
   let response: post(build_conn, session_path(build_conn, :create), user)
 
-  before do
-    put_req_header(build_conn, "accept", "application/json")
-    Repo.insert!(User.registration_changeset(%User{}, @valid_attrs))
-  end
+  before do: Repo.insert!(User.registration_changeset(%User{}, @valid_attrs))
 
   context "when create a session with a valid password" do
     let user: @valid_attrs

@@ -1,15 +1,16 @@
 import Point.Repo
-alias Point.{User, Entity, Account, Currency, ExchangeRate, Movement}
+alias Point.{User, Entity, Account, Currency, ExchangeRate}
+
 #------------------------------------------------------------------------------
 # Users
 #------------------------------------------------------------------------------
-root = insert! User.registration_changeset(%User{}, %{
+root = insert! User.registration_changeset(%User{
   email: "jangofett@gmail.com", password: "12345678910", first_name: "Jango", last_name: "Fett"
 })
-obiwan_kenoby = insert! User.registration_changeset(%User{}, %{
+obiwan_kenoby = insert! User.registration_changeset(%User{
   email: "obiwankenoby@gmail.com", password: "12345678910", first_name: "Obi-Wan", last_name: "Kenoby"
 })
-quigon_jinn = insert! User.registration_changeset(%User{}, %{
+quigon_jinn = insert! User.registration_changeset(%User{
   email: "quigonjinn@gmail.com", password: "12345678910", first_name: "Qui-Gon", last_name: "Jinn"
 })
 #
@@ -61,12 +62,3 @@ quigon_acount = insert! %Account{
 insert! %Entity{name: "Point Platform", users: [root]}
 insert! %Entity{name: "Rio",            users: [obiwan_kenoby]}
 insert! %Entity{name: "Boston",         users: [quigon_jinn]}
-#
-#
-#
-#------------------------------------------------------------------------------
-# Movements
-#------------------------------------------------------------------------------
-insert! %Movement{
-  type: "transfer", amount: 10, source: obiwan_acount, target: quigon_acount, rate: 1
-}
