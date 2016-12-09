@@ -10,10 +10,8 @@ defmodule Point.Router do
   scope "/api/v1", Point do
     pipe_through :public_api
     post "/sign_in", SessionController, :sign_in
-  end
 
-  scope "/api/v1", Point do
-    pipe_through :private_api
+    pipe_through :public_api
     resources "/users", UserController, except: [:new, :edit]
   end
 end
