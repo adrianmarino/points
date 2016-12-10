@@ -14,7 +14,13 @@ use Mix.Config
 config :point, Point.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/manifest.json"
+  cache_static_manifest: "priv/static/manifest.json",
+  session_ttl: 1800
+
+config :ecto_ttl,
+    ignore_newest_seconds: 0,
+    cleanup_interval: 30,
+    batch_size: 1000
 
 # Do not print debug messages in production
 config :logger, level: :info

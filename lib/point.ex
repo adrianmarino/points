@@ -18,6 +18,12 @@ defmodule Point do
       # worker(Point.Worker, [arg1, arg2, arg3]),
     ]
 
+    spawn(fn ->
+      Ecto.Ttl.Worker.start_link([]);
+      :ok = Ecto.Ttl.models([Point.Session], Point.Repo)
+      :timer.sleep(:infinity)
+    end)
+
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Point.Supervisor]

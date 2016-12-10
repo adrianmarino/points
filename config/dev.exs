@@ -11,8 +11,13 @@ config :point, Point.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: []
+  watchers: [],
+  session_ttl: 300
 
+config :ecto_ttl,
+    ignore_newest_seconds: 0,
+    cleanup_interval: 30,
+    batch_size: 1000
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :console, format: "[$level] $message\n"

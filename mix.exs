@@ -19,7 +19,7 @@ defmodule Point.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Point, []},
-     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :phoenix_ecto, :mariaex]]
+     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :phoenix_ecto, :mariaex, :ecto_ttl, :timex]]
   end
 
   # Specifies which paths to compile per environment.
@@ -43,7 +43,10 @@ defmodule Point.Mixfile do
       {:credo, "~> 0.5", only: [:dev, :test]},
       {:cors_plug, "~> 1.1"},
       {:comeonin, "~> 2.0"},
-      {:secure_random, "~> 0.2"}
+      {:secure_random, "~> 0.2"},
+      {:ecto_ttl, git: "https://github.com/xerions/ecto_ttl.git"},
+      {:ecto, ">= 2.0.6", override: true},
+      {:timex, "~> 3.0"}
    ]
   end
 

@@ -4,10 +4,16 @@ use Mix.Config
 # you can enable the server option below.
 config :point, Point.Endpoint,
   http: [port: 4001],
-  server: false
+  server: false,
+  session_ttl: 0
 
 # Print only warnings and errors during test
 config :logger, level: :info
+
+config :ecto_ttl,
+    ignore_newest_seconds: 0,
+    cleanup_interval: 0,
+    batch_size: 1000
 
 # Configure your database
 config :point, Point.Repo,
