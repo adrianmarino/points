@@ -1,19 +1,26 @@
 # Point
+  * A bank of points.
+  * Each user has many accounts.
+  * An user belongs to entities.
+  * Each account has an amount in a currency.
+  * Two type of accounts: Backup, Default.
+  * You can:
+    * Deposit to backup account.
+    * Extract from backup account.
+    * Transfer between accounts.
 
-To start your Phoenix app:
-
+## Start
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
   * Start Phoenix endpoint with `mix phoenix.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## Sign In
+  * Endpoint: [`localhost:4000/api/v1/sign_in`](http://localhost:4000/api/v1/sign_in)
+  * Method: POST
+  * Request Body: ```{ "email": "chewbacca@gmail.com", "password": "12345678910" }```
+  * Response Body: ```{ "token": "ZTF5ejdsbENLeDlJUVhWbWpjZFFXZz09" }```
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
-
-## Learn more
-
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: https://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+## Get sessions
+    * Endpoint: [`localhost:4000/api/v1/sessions`](http://localhost:4000/api/v1/sessions)
+    * Method: GET
+    * Response Body: ```[ {"email": "chewbacca@gmail.com", "timeout": "3 minutes, 12 seconds"} ]```
