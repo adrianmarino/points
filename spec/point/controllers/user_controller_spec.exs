@@ -1,9 +1,9 @@
 defmodule Point.UserControllerSpec do
   use ESpec.Phoenix, controller: Point.UserController
-  use ConnectionHelper
+  use ESpec.Phoenix.Helper
 
   let valid_attrs: %{email: "adrianmarino@gmail.com", password: "Whatever10", first_name: "2222", last_name: "222"}
-  let response: build_conn |> put_token_in_header(current_session.token) |> post(user_path(build_conn, :create), attrs)
+  let response: sec_conn |> post(user_path(sec_conn, :create), attrs)
 
   context "when register a valid user" do
     let attrs: valid_attrs

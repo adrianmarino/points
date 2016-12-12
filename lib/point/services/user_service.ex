@@ -14,9 +14,9 @@ defmodule Point.UserService do
   end
 
   def update(id, params) do
-    user = Repo.get!(User, id)
+    user = get!(id)
     changeset = User.registration_changeset(user, params)
-    Repo.insert changeset
+    Repo.insert(changeset)
   end
 
   def delete(id), do: Repo.delete!(get!(id))

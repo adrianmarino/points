@@ -14,5 +14,6 @@ defmodule Point.Router do
     pipe_through :private_api
     get "/sessions", SessionController, :index
     resources "/users", UserController, except: [:new, :edit]
+    resources "/accounts", AccountController, except: [:new, :edit]
   end
 end

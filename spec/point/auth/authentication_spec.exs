@@ -1,6 +1,6 @@
 defmodule Point.AuthenticationSpec do
   use ESpec.Phoenix, controller: Point.Authentication
-  use ConnectionHelper
+  use ESpec.Phoenix.Helper
 
   let opts: described_module.init([])
 

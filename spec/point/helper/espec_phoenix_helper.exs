@@ -1,11 +1,17 @@
-defmodule ConnectionHelper do
-  defmacro __using__(_opts) do
+defmodule ESpec.Phoenix.Helper do
+  defmacro __using__(_) do
     quote do
       import unquote(__MODULE__)
       alias Point.{Repo, Session, User}
 
       let current_user: Repo.insert!(%User{})
       let current_session: Repo.insert!(%Session{token: "token", user_id: current_user.id})
+    end
+  end
+
+  defmacro sec_conn do
+    quote do
+      build_conn |> put_token_in_header(current_session.token)
     end
   end
 

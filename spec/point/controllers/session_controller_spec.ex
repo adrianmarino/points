@@ -2,7 +2,7 @@ defmodule Point.SessionControllerSpec do
   use ESpec.Phoenix, controller: Point.SessionController
   alias Point.{Session, User, Repo}
 
-  @valid_attrs %{email: "adrianmarino@gmail.com", password: "Whatever1123", first_name: "2222", last_name: "222"}
+  @valid_attrs %{email: "adrianmarino@gmail.com", password: "Whatever1123", first_name: "adrian", last_name: "marino"}
   let response: post(build_conn, session_path(build_conn, :sign_in), user)
 
   before do: Repo.insert!(User.registration_changeset(%User{}, @valid_attrs))
