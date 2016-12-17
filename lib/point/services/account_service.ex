@@ -6,7 +6,7 @@ defmodule Point.AccountService do
   def all, do: Repo.all(Account)
 
   def insert(params) do
-    changeset = Account.changeset(%Account{}, params)
+    changeset = Account.save_changeset(%Account{}, params)
     Repo.insert(changeset)
   end
 
@@ -15,7 +15,7 @@ defmodule Point.AccountService do
 
   def update(id, params) do
     account = get!(id)
-    changeset = Account.changeset(account, params)
+    changeset = Account.save_changeset(account, params)
     Repo.update(changeset)
   end
 

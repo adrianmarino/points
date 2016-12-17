@@ -16,7 +16,14 @@ defmodule Point.Account do
     timestamps()
   end
 
+  # Only for test purpouse!
   def changeset(model , params \\ %{}) do
+    model
+      |> cast(params, [:type, :amount, :owner_id, :issuer_id, :currency_id])
+      |> validate_required([:type, :amount, :owner_id, :issuer_id, :currency_id])
+  end
+
+  def save_changeset(model , params \\ %{}) do
     model
       |> cast(params, [:type, :amount, :owner_email, :issuer_id, :currency_code])
       |> validate_required([:type, :amount, :owner_email, :issuer_id, :currency_code])
