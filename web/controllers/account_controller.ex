@@ -21,16 +21,6 @@ defmodule Point.AccountController do
     end
   end
 
-  def update(conn, %{"id" => id, "account" => account_params}) do
-    case AccountService.update(id , add_issuer_id(conn, account_params)) do
-      {:ok, account} -> render(conn, "show.json", account: account)
-      {:error, changeset} ->
-        conn
-          |> put_status(:unprocessable_entity)
-          |> render(Point.ChangesetView, "error.json", changeset: changeset)
-    end
-  end
-
   def delete(conn, %{"id" => id}) do
     case AccountService.delete!(id) do
       {:ok, _ } -> send_resp(conn, :no_content, "")
