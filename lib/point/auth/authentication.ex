@@ -28,7 +28,7 @@ defmodule Point.Authentication do
   end
 
   defp auth_error!(conn) do
-    {:ok, response_body } = Poison.encode(%{message: "Session expired"})
+    {:ok, response_body } = Poison.encode(%{message: "Session expired or closed"})
     send_resp(conn, :unauthorized, response_body) |> halt
   end
 end
