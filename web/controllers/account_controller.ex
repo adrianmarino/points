@@ -1,6 +1,7 @@
 defmodule Point.AccountController do
   use Point.Web, :controller
   import Point.Phoenix.ConnUtil
+  import Point.JSON
   alias Point.AccountService
 
   def index(conn, _), do: render(conn, "index.json", accounts: AccountService.all)
@@ -31,8 +32,10 @@ defmodule Point.AccountController do
   end
 
   def delete(conn, %{"id" => id}) do
-    AccountService.delete!(id)
-    send_resp(conn, :no_content, "")
+    case AccountService.delete!(id) do
+      {:ok, _ } -> send_resp(conn, :no_content, "")
+      {:error, message } -> send_resp(conn, :not_found, to_json(%{message: message}))
+    end
   end
 
   defp add_issuer_id(conn, params), do: Map.put(params, "issuer_id", current_session(conn).user_id)

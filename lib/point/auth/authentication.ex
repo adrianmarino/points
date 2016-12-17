@@ -1,5 +1,6 @@
 defmodule Point.Authentication do
   import Plug.Conn
+  import Point.JSON
   alias Point.SessionService
 
   def init(options), do: options
@@ -28,7 +29,6 @@ defmodule Point.Authentication do
   end
 
   defp auth_error!(conn) do
-    {:ok, response_body } = Poison.encode(%{message: "Session expired or closed"})
-    send_resp(conn, :unauthorized, response_body) |> halt
+    send_resp(conn, :unauthorized, to_json(%{message: "Session expired or closed"})) |> halt
   end
 end

@@ -48,7 +48,7 @@ defmodule Point.AccountControllerSpec do
     context "when data is valid" do
       let owner: UserFactory.insert(:luke_skywalker)
       let currency: CurrencyFactory.insert(:ars)
-      let attrs: %{type: "dafault", currency_code: currency.code, amount: Decimal.new(1000), owner_email: owner.email}
+      let attrs: %{currency_code: currency.code, owner_email: owner.email}
       let body: json_response(response, 201)
 
       it "returns 201 status", do: expect(response.status).to(eq 201)
@@ -57,9 +57,9 @@ defmodule Point.AccountControllerSpec do
 
       it "returns an account id that exist on database", do: expect AccountService.get!(body["id"]) |> to(be_truthy)
 
-      it "returns an account type", do: expect body["type"] |> to(eq attrs.type)
+      it "returns an account type", do: expect body["type"] |> to(eq "default")
 
-      it "returns an account amount", do: expect body["amount"] |> to(eq DecimalUtil.to_string(attrs.amount))
+      it "returns an account amount", do: expect body["amount"] |> to(eq "0.00")
 
       it "returns an account currency code", do: expect body["currency"] |> to(eq attrs.currency_code)
 
@@ -77,49 +77,27 @@ defmodule Point.AccountControllerSpec do
     end
   end
 
-  context "when updates an account" do
-    let account: AccountFactory.insert(:revel_backup)
-    let response: put(sec_conn, account_path(sec_conn, :update, account), account: attrs)
+  describe "delete" do
+    context "when account is empty" do
+      let account: Repo.insert!(%Account{amount: DecimalUtil.zero})
+      let response: delete(sec_conn, account_path(sec_conn, :delete, account.id))
 
-    context "and data is valid" do
-      let owner: UserFactory.insert(:luke_skywalker)
-      let currency: CurrencyFactory.insert(:ars)
-      let attrs: %{currency_code: currency.code, amount: Decimal.new(20), owner_email: owner.email}
-      let body: json_response(response, 200)
+      before do: response
 
-      it "returns 200 status", do: expect(response.status).to(eq 200)
+      it "returns 204 status", do: expect(response.status).to(eq 204)
 
-      it "has same id", do: expect body["id"] |> to(eq account.id)
-
-      it "has same type", do: expect body["type"] |> to(eq account.type)
-
-      it "has another amount", do: expect body["amount"] |> to(eq DecimalUtil.to_string(attrs.amount))
-
-      it "has another currency code", do: expect body["currency"] |> to(eq attrs.currency_code)
-
-      it "has another owner email", do: expect body["owner_email"] |> to(eq attrs.owner_email)
-
-      it "has same issuer email",do: expect body["issuer_email"] |> to(eq current_user(response).email)
-    end
-
-    context "and data is invalid" do
-      let attrs: %{currency_code: "ANY", owner_email: "any"}
-      let body: json_response(response, 422)
-
-      it "returns 422 status", do: expect(response.status).to(eq 422)
-
-      it "returns errors description", do: expect body["errors"] |> not_to(eq %{})
+      it "removes account from database", do: expect Repo.get(Account, account.id) |> to(be_falsy)
     end
   end
 
-  context "when deletes chosen resource" do
-    let account: Repo.insert!(%Account{})
+  context "when account has an amount" do
+    let account: Repo.insert!(%Account{amount: Decimal.new(100)})
     let response: delete(sec_conn, account_path(sec_conn, :delete, account.id))
 
     before do: response
 
-    it "returns 204 status", do: expect(response.status).to(eq 204)
+    it "returns 204 status", do: expect(response.status).to(eq 404)
 
-    it "removes account from database", do: expect Repo.get(Account, account.id) |> to(be_falsy)
+    it "doesn't delete account from database", do: expect Repo.get(Account, account.id) |> to(be_truthy)
   end
 end
