@@ -1,8 +1,8 @@
 defmodule Point.SessionController do
   use Point.Web, :controller
   import Logger
-  alias Point.{SessionService, UserService}
   import Point.Phoenix.ConnUtil
+  alias Point.{SessionService, UserService}
 
   def index(conn, _), do: render(conn, "index.json", sessions: SessionService.all)
 
@@ -26,6 +26,12 @@ defmodule Point.SessionController do
         message = warn_log user_params["email"], "User not found"
         conn |> put_status(:unauthorized) |> render("error.json", %{cause: message})
     end
+  end
+
+  def sign_out(conn, _) do
+    SessionService.close(token: current_session(conn).token)
+    close_session(conn)
+    send_resp(conn, :no_content, "")
   end
 
   defp warn_log(email, message) do

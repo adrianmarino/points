@@ -24,6 +24,15 @@ defmodule Point.SessionService do
     end
   end
 
+  def close(token: token) do
+    case by(token: token) do
+      nil -> { "Session doesn't found for #{token} token"}
+      session -> Repo.delete!(session)
+    end
+  end
+
+  def by(token: token), do: Repo.one(from s in Session, where: s.token == ^token)
+
   defp count_by(user: user, and_remote_ip: remote_ip) do
     Repo.one(from s in Session,
       where: s.user_id == ^user.id and s.remote_ip == ^remote_ip,

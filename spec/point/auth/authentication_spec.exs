@@ -1,13 +1,14 @@
 defmodule Point.AuthenticationSpec do
   use ESpec.Phoenix, controller: Point.Authentication
   use ESpec.Phoenix.Helper
+  import Point.Phoenix.ConnUtil
 
   let opts: described_module.init([])
 
   context "when an user has an opened session with the specified token" do
-    let response: build_conn |> put_token_in_header(current_session.token) |> described_module.call(opts)
+    let response: build_conn |> put_token_in_header(session_token) |> described_module.call(opts)
 
-    it do: expect response.assigns.current_user |> to(be_truthy)
+    it do: expect current_session(response) |> to(be_truthy)
   end
 
   context "when doesn't exist a session with the specified token" do

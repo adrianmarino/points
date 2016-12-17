@@ -1,5 +1,6 @@
 defmodule Point.AccountController do
   use Point.Web, :controller
+  import Point.Phoenix.ConnUtil
   alias Point.AccountService
 
   def index(conn, _), do: render(conn, "index.json", accounts: AccountService.all)
@@ -34,5 +35,5 @@ defmodule Point.AccountController do
     send_resp(conn, :no_content, "")
   end
 
-  defp add_issuer_id(conn, params), do: Map.put(params, "issuer_id", conn.assigns.current_user.id)
+  defp add_issuer_id(conn, params), do: Map.put(params, "issuer_id", current_session(conn).user_id)
 end

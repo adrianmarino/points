@@ -65,7 +65,7 @@ defmodule Point.AccountControllerSpec do
 
       it "returns an account owner email", do: expect body["owner_email"] |> to(eq attrs.owner_email)
 
-      it "returns an account issuer email",do: expect body["issuer_email"] |> to(eq current_user.email)
+      it "returns an account issuer email",do: expect body["issuer_email"] |> to(eq current_user(response).email)
     end
 
     context "when data is invalid" do
@@ -99,7 +99,7 @@ defmodule Point.AccountControllerSpec do
 
       it "has another owner email", do: expect body["owner_email"] |> to(eq attrs.owner_email)
 
-      it "has same issuer email",do: expect body["issuer_email"] |> to(eq current_user.email)
+      it "has same issuer email",do: expect body["issuer_email"] |> to(eq current_user(response).email)
     end
 
     context "and data is invalid" do
