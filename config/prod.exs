@@ -15,7 +15,8 @@ config :point, Point.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [host: "example.com", port: 80],
   cache_static_manifest: "priv/static/manifest.json",
-  session_ttl: 1800
+  session_ttl: 1_800,
+  simultaneous_sessions_by_user_and_remote_ip: 3
 
 config :ecto_ttl,
     ignore_newest_seconds: 0,

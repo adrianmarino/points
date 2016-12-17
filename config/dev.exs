@@ -12,7 +12,8 @@ config :point, Point.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [],
-  session_ttl: 300
+  session_ttl: 300,
+  simultaneous_sessions_by_user_and_remote_ip: 3
 
 config :ecto_ttl,
     ignore_newest_seconds: 0,
@@ -20,7 +21,10 @@ config :ecto_ttl,
     batch_size: 1000
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n"
+config :logger,
+  :console,
+  format: "[$level] $message\n",
+  level: :info
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

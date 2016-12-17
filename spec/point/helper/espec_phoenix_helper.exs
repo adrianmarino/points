@@ -15,6 +15,10 @@ defmodule ESpec.Phoenix.Helper do
     end
   end
 
+  defmacro put_remote_ip_in_header(conn, ip) do
+    quote do: put_req_header(unquote(conn), "x-forwarded-for", unquote(ip))
+  end
+
   defmacro put_app_json_in_header(conn), do: quote do: put_req_header(unquote(conn), "accept", "application/json")
 
   defmacro put_token_in_header(conn, token) do

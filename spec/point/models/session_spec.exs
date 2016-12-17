@@ -2,7 +2,7 @@ defmodule Point.SessionSpec do
   use ESpec
   alias Point.Session
 
-  let valid_attrs: %{user_id: "1"}
+  let valid_attrs: %{user_id: "1", remote_ip: "127.0.0.1"}
   let invalid_attrs: %{}
 
   describe "changeset" do
