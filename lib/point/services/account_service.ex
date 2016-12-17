@@ -6,6 +6,7 @@ defmodule Point.AccountService do
   def all, do: Repo.all(Account)
 
   def insert(params) do
+    params = Map.merge(%{"type" => "default"}, params)
     changeset = Account.save_changeset(%Account{}, params)
     Repo.insert(changeset)
   end
