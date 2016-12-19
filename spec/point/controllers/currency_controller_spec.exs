@@ -15,7 +15,6 @@ defmodule Point.CurrencyControllerTest do
       let currency: valid_attrs
       let response_currency_code: json_response(response, 201)["code"]
 
-
       it do: expect response.status |> to(eq 201)
       it "returns the inserted currency code", do: expect response_currency_code |> to(eq currency.code)
       it "inserts the currency in database", do: expect CurrencyService.by(code: currency.code) |> to(be_truthy)
@@ -43,7 +42,7 @@ defmodule Point.CurrencyControllerTest do
     let response: get(sec_conn, currency_path(sec_conn, :show, currency.code))
 
     context "when found a currency" do
-      let currency: Repo.insert!(Currency.changeset(%Currency{}, valid_attrs))
+      let currency:  CurrencyFactory.insert(:ars)
       let response_body: json_response(response, 200)
 
       it do: expect response.status |> to(eq 200)
@@ -59,21 +58,20 @@ defmodule Point.CurrencyControllerTest do
   end
 
   describe "update" do
+    let currency: CurrencyFactory.insert(:ars)
     let response: put(sec_conn, currency_path(sec_conn, :update, currency.code), currency: update_attrs)
 
     context "when data is valid" do
       let update_attrs: valid_attrs
-      let currency: Repo.insert!(Currency.changeset(%Currency{}, valid_attrs))
       let response_body: json_response(response, 200)
 
       it do: expect response.status |> to(eq 200)
-      it "returns account code", do: expect response_body["code"] |> to(eq currency.code)
-      it "returns account name", do: expect response_body["name"] |> to(eq currency.name)
+      it "returns account code", do: expect response_body["code"] |> to(eq update_attrs.code)
+      it "returns account name", do: expect response_body["name"] |> to(eq update_attrs.name)
     end
 
     context "when data is invalid" do
       let update_attrs: invalid_attrs
-      let currency: Repo.insert!(Currency.changeset(%Currency{}, valid_attrs))
       let errors: json_response(response, 422)["errors"]
 
       it do: expect response.status |> to(eq 422)

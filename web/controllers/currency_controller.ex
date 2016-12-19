@@ -38,7 +38,7 @@ defmodule Point.CurrencyController do
 
   def delete(conn, %{"code" => code}) do
     case CurrencyService.delete(code) do
-      {:ok, currency } -> send_resp(conn, :no_content, "")
+      {:ok, _ } -> send_resp(conn, :no_content, "")
       {:error, message } -> send_resp(conn, :not_found, to_json(%{message: message}))
     end
   end
