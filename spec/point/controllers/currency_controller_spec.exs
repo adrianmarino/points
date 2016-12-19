@@ -32,7 +32,6 @@ defmodule Point.CurrencyControllerTest do
   describe "index" do
     let response_body: json_response(response, 200)
     let response: get(sec_conn, currency_path(sec_conn, :index))
-
     before do: post(sec_conn, currency_path(sec_conn, :create), valid_attrs)
 
     it "returns a non empty collection", do: expect response_body |> not_to(be_empty)
@@ -52,7 +51,6 @@ defmodule Point.CurrencyControllerTest do
 
     context "when not found a currency" do
       let currency: %Currency{code: "XXX"}
-
       it do: expect response.status |> to(eq 404)
     end
   end
@@ -100,7 +98,6 @@ defmodule Point.CurrencyControllerTest do
 
     context "when currency non exist" do
       let currency: invalid_attrs
-
       it do: expect response.status |> to(eq 404)
     end
   end
