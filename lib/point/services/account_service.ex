@@ -2,18 +2,22 @@ defmodule Point.AccountService do
   import Ecto.Query
   import Decimal
   import Point.DecimalUtil, only: [is: 2, zero: 0]
-  alias Point.{Repo, Account}
+  alias Point.{Repo, Account, Currency}
 
+  # Crud
   def all, do: Repo.all(Account)
-
+  def get!(id), do: Repo.get!(Account, id)
   def insert(params) do
     params = Map.merge(%{"type" => "default"}, params)
     changeset = Account.insert_changeset(%Account{}, params)
     Repo.insert(changeset)
   end
-
-  def get!(id), do: Repo.get!(Account, id)
-  def delete!(id) do
+  def update(id, params) do
+    account = get!(id)
+    changeset = Account.update_changeset(account, params)
+    Repo.update(changeset)
+  end
+  def delete(id) do
     case get!(id) do
       nil -> {:error, "Account not found"}
       account ->
@@ -24,10 +28,8 @@ defmodule Point.AccountService do
     end
   end
 
-  def update(id, params) do
-    account = get!(id)
-    changeset = Account.update_changeset(account, params)
-    Repo.update(changeset)
+  def by(currency_code: currency_code) do
+    Repo.all(from a in Account, join: c in Currency, where: a.currency_id == c.id and c.code == ^currency_code)
   end
 
   def backup_account_of(account) do

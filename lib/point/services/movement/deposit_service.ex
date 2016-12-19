@@ -9,7 +9,6 @@ defmodule Point.DepositService do
 
   def deposit(amount: _, on: %Account{type: "default"} = _),
     do: raise "Deposite only is supported in default accounts!"
-
   def deposit(amount: amount, on: %Account{type: "backup"} = account) do
     {:ok, %{deposit: movement}} = Multi.new
       |> Multi.update(:increase_amount, increase_changeset(account, amount))

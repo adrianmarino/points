@@ -30,7 +30,7 @@ defmodule Point.UserController do
   end
 
   def delete(conn, %{"id" => id}) do
-    UserService.delete(id)
+    UserService.delete!(id)
     send_resp(conn, :no_content, "")
   end
 end

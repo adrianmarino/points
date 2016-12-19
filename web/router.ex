@@ -16,7 +16,7 @@ defmodule Point.Router do
     get "/sessions", SessionController, :index
 
     resources "/users", UserController, except: [:new, :edit]
-
-    resources "/accounts", AccountController, except: [:new, :edit]
+    resources "/accounts", AccountController, except: [:new, :edit, :update]
+    resources "/currencies", CurrencyController, except: [:new, :edit], param: "code"
   end
 end

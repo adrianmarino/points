@@ -10,9 +10,9 @@ defmodule Point.Currency do
     timestamps()
   end
 
-  def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:code, :name, :issuer])
-    |> validate_required([:code, :name, :issuer])
+  def changeset(model, params \\ %{}) do
+    model
+      |> cast(params, [:code, :name, :issuer_id])
+      |> validate_required([:code, :name, :issuer_id])
   end
 end
