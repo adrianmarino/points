@@ -1,8 +1,8 @@
 defmodule Point.CurrencyController do
   use Point.Web, :controller
   import Point.Phoenix.ConnUtil
+  import Point.Phoenix.JSONResponseUtil
   alias Point.CurrencyService
-  import Point.JSON
 
   def index(conn, _), do: render(conn, "index.json", currencies: CurrencyService.all)
   def show(conn, %{"code" => code}) do
@@ -39,7 +39,7 @@ defmodule Point.CurrencyController do
   def delete(conn, %{"code" => code}) do
     case CurrencyService.delete(code) do
       {:ok, _ } -> send_resp(conn, :no_content, "")
-      {:error, message } -> send_resp(conn, :not_found, to_json(%{message: message}))
+      {:error, message } -> send_message_resp(conn, :not_found, message)
     end
   end
 end

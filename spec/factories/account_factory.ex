@@ -25,7 +25,7 @@ defmodule Point.AccountFactory do
     %Account{
       type: "default",
       amount: Decimal.new(15000),
-      currency: CurrencyFactory.build(:revel_point),
+      currency: CurrencyFactory.build(:rebel_point),
       owner: UserFactory.build(:obiwan_kenoby),
       issuer: UserFactory.build(:luke_skywalker)
     }
@@ -35,7 +35,7 @@ defmodule Point.AccountFactory do
     %Account{
       type: "default",
       amount: Decimal.new(15000),
-      currency: CurrencyFactory.build(:revel_point),
+      currency: CurrencyFactory.build(:rebel_point),
       owner: UserFactory.build(:han_solo),
       issuer: UserFactory.build(:luke_skywalker)
     }

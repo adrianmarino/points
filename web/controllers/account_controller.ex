@@ -1,7 +1,7 @@
 defmodule Point.AccountController do
   use Point.Web, :controller
   import Point.Phoenix.ConnUtil
-  import Point.JSON
+  import Point.Phoenix.JSONResponseUtil
   alias Point.{AccountService, ChangesetView}
 
   def index(conn, _), do: render(conn, "index.json", accounts: AccountService.all)
@@ -24,7 +24,7 @@ defmodule Point.AccountController do
   def delete(conn, %{"id" => id}) do
     case AccountService.delete(id) do
       {:ok, _ } -> send_resp(conn, :no_content, "")
-      {:error, message } -> send_resp(conn, :not_found, to_json %{message: message})
+      {:error, message } -> send_message_resp(conn, :not_found, message)
     end
   end
 end

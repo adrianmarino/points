@@ -12,11 +12,24 @@ defmodule Point.Router do
     post "/sign_in", SessionController, :sign_in
 
     pipe_through :private_api
+
+    # Sessions
     delete "/sign_out", SessionController, :sign_out
     get "/sessions", SessionController, :index
 
     resources "/users", UserController, except: [:new, :edit]
     resources "/accounts", AccountController, except: [:new, :edit, :update]
     resources "/currencies", CurrencyController, except: [:new, :edit], param: "code"
+
+    scope "/exchange_rates" do
+      get "/", ExchangeRateController, :index
+      get "/:source/:target", ExchangeRateController, :show
+
+      post "/", ExchangeRateController, :create
+      delete "/:source/:target", ExchangeRateController, :delete
+
+      put "/:source/:target", ExchangeRateController, :update
+      patch "/:source/:target", ExchangeRateController, :update
+    end
   end
 end
