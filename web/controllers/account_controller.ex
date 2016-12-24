@@ -24,7 +24,7 @@ defmodule Point.AccountController do
   def delete(conn, %{"id" => id}) do
     case AccountService.delete(id) do
       {:ok, _ } -> send_resp(conn, :no_content, "")
-      {:error, message } -> send_resp(conn, :not_found, to_json(%{message: message}))
+      {:error, message } -> send_resp(conn, :not_found, to_json %{message: message})
     end
   end
 end

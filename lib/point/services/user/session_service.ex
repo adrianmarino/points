@@ -26,8 +26,8 @@ defmodule Point.SessionService do
 
   def close(token: token) do
     case by(token: token) do
-      nil -> { "Session doesn't found for #{token} token"}
-      session -> Repo.delete!(session)
+      nil -> { :error, "Session doesn't found for #{token} token"}
+      session -> {:ok, Repo.delete!(session)}
     end
   end
 

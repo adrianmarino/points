@@ -7,5 +7,5 @@ defmodule Point.Phoenix.ConnUtil do
   def currency_user_id(conn), do: current_user(conn).id
   def put_issuer_id(conn, to: params), do: Map.put(params, "issuer_id", currency_user_id(conn))
 
-  defmacro close_session(conn), do: quote do: assign(unquote(conn), :current_session, nil)
+  defmacro unbind_current_user(conn), do: quote do: assign(unquote(conn), :current_session, nil)
 end

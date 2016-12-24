@@ -62,10 +62,10 @@ defmodule Point.SessionControllerSpec do
       end
     end
 
-    xcontext "when sing_out an unknow session" do
+    context "when sing_out an unknow session" do
       let token: "unknow"
 
-      it do: expect response.status |> to(eq 204)
+      it do: expect response.status |> to(eq 401)
     end
   end
 end

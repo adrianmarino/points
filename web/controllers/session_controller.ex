@@ -2,6 +2,7 @@ defmodule Point.SessionController do
   use Point.Web, :controller
   import Logger
   import Point.Phoenix.ConnUtil
+  import Point.JSON
   alias Point.{SessionService, UserService}
 
   def index(conn, _), do: render(conn, "index.json", sessions: SessionService.all)
@@ -29,9 +30,11 @@ defmodule Point.SessionController do
   end
 
   def sign_out(conn, _) do
-    SessionService.close(token: current_session(conn).token)
-    close_session(conn)
-    send_resp(conn, :no_content, "")
+    token = current_session(conn).token
+    case SessionService.close(token: token) do
+      {:error, message } -> send_resp(conn, :unauthorized, to_json %{message: message})
+      _ -> unbind_current_user(conn); send_resp(conn, :no_content, "")
+    end
   end
 
   defp warn_log(email, message) do
