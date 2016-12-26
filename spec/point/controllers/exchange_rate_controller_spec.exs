@@ -1,7 +1,7 @@
 defmodule Point.ExchangeRateControllerSpec do
   use ESpec.Phoenix, controller: Point.ExchangeRateController
   use ESpec.Phoenix.Helper
-  alias Point.{ExchangeRateService, CurrencyFactory, Repo, DecimalUtil}
+  alias Point.{ExchangeRateService, CurrencyFactory, Repo}
 
   let source: CurrencyFactory.insert(:ars)
   let target: CurrencyFactory.insert(:rebel_point)
@@ -40,7 +40,7 @@ defmodule Point.ExchangeRateControllerSpec do
                       exchange_rate)
     let :db_rate_value do
       case ExchangeRateService.by(source_code: exchange_rate.source, target_code: exchange_rate.target) do
-        {:ok, model } -> DecimalUtil.to_string(model.value)
+        {:ok, model } -> to_string(model.value)
       end
     end
 

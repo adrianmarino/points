@@ -2,7 +2,7 @@ defmodule Point.AccountService do
   import Ecto.Query
   import Decimal
   import Point.DecimalUtil, only: [is: 2, zero: 0]
-  alias Point.{Repo, Account, Currency}
+  alias Point.{Repo, Account, Currency, User}
 
   # Crud
   def all, do: Repo.all(Account)
@@ -26,6 +26,13 @@ defmodule Point.AccountService do
           true -> Repo.delete(account)
         end
     end
+  end
+
+  def amount(account), do: Repo.refresh(account).amount
+
+  def by(email: email, currency_code: currency_code) do
+    Repo.one(from a in Account, join: c in Currency, join: u in User,
+             where: a.currency_id == c.id and a.owner_id == u.id and c.code == ^currency_code and u.email == ^email)
   end
 
   def by(currency_code: currency_code) do

@@ -25,7 +25,7 @@ defmodule Point.AccountControllerSpec do
 
       it "returns account type", do: expect body["type"] |> to(eq account.type)
 
-      it "returns account amount", do: expect body["amount"] |> to(eq DecimalUtil.to_string(account.amount))
+      it "returns account amount", do: expect body["amount"] |> to(eq to_string(account.amount))
 
       it "returns account currency code", do: expect body["currency"] |> to(eq Repo.assoc(account, :currency).code)
 

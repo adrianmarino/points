@@ -9,7 +9,6 @@ defimpl Point.Model, for: Point.Movement do
   import Point.Repo
   alias Point.Movement
   alias Point.Model
-  alias Point.DecimalUtil
 
   def changeset(model, fields), do: Movement.changeset(model, fields)
   def to_map(model) do
@@ -17,7 +16,7 @@ defimpl Point.Model, for: Point.Movement do
       type: model.type,
       source: account_to_map(model, :source),
       target: account_to_map(model, :target),
-      amount: DecimalUtil.to_string(model.amount),
+      amount: Decimal.to_string(model.amount),
     }
   end
   def to_string(model), do: inspect(to_map model)
@@ -35,10 +34,9 @@ end
 defimpl Point.Model, for: Point.Account do
   import Point.Repo
   alias Point.Account
-  alias Point.DecimalUtil
 
   def changeset(model, fields), do: Account.changeset(model, fields)
-  def to_map(model), do: "#{assoc(model, :currency).code} #{DecimalUtil.to_string(model.amount)}"
+  def to_map(model), do: "#{assoc(model, :currency).code} #{Decimal.to_string model.amount}"
   def to_string(model), do: inspect(to_map model)
   def refresh(model), do: get_by(Account, id: model.id)
 end
@@ -66,12 +64,11 @@ end
 defimpl Point.Model, for: Point.ExchangeRate do
   import Point.Repo
   alias Point.ExchangeRate
-  alias Point.DecimalUtil
   alias Point.Model
 
   def changeset(model, fields), do: ExchangeRate.changeset(model, fields)
   def to_map(model), do: %{
-    value: DecimalUtil.to_string(model.value),
+    value: Decimal.to_string(model.value),
     source: Model.to_map(assoc(model, :source)),
     target: Model.to_map(assoc(model, :target))
   }

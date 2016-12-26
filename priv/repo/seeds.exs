@@ -38,7 +38,8 @@ empire_point = insert! %Currency{
 #------------------------------------------------------------------------------
 insert_all [
   %ExchangeRate{value: Decimal.new(1000), source: ars, target: rebel_point},
-  %ExchangeRate{value: Decimal.new(500), source: ars, target: empire_point}
+  %ExchangeRate{value: Decimal.new(500), source: ars, target: empire_point},
+  %ExchangeRate{value: Decimal.new(10), source: rebel_point, target: empire_point}
 ]
 #
 #
