@@ -1,12 +1,19 @@
-defmodule StdLib do
-  alias Point.{AccountService, ExtractService, TransferService, DepositService}
-  require Logger
+defmodule Transaction do
+  use Behaviour
 
   defmacro __using__(_) do
     quote do
-      import unquote(__MODULE__)
+      import StdLib
+      @behaviour Transaction
     end
   end
+
+  defcallback run(params:: %{})
+end
+
+defmodule StdLib do
+  alias Point.{AccountService, ExtractService, TransferService, DepositService}
+  require Logger
 
   def amount(account), do: AccountService.amount(account)
 

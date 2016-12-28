@@ -1,6 +1,11 @@
-defmodule Point.Model, do: def to_string(model), do: inspect(Point.ModelMap.to_map model)
-defprotocol Point.ModelMap, do: def to_map(model)
-
+defmodule Point.Model do
+  def to_string(model) do
+    inspect(Point.ModelMap.to_map model)
+  end
+end
+defprotocol Point.ModelMap do
+  def to_map(model)
+end
 defimpl Point.ModelMap, for: Point.Currency do
   def to_map(model), do: %{code: model.code}
 end

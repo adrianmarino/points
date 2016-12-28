@@ -1,5 +1,5 @@
 defmodule Example do
-  use StdLib
+  use Transaction
 
   def run(params) do
     source = account(email: params.from.email, currency: params.from.currency)

@@ -1,4 +1,5 @@
-defmodule Point.ModelUtil do
+defmodule Point.EctoModel do
+
   defmacro map_from(changeset, from, to: to, resolver: resolver) do
     quote do
       case unquote(changeset) do

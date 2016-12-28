@@ -1,7 +1,7 @@
 defmodule Point.Account do
   use Point.Web, :model
   alias Point.{UserService, CurrencyService, DecimalUtil}
-  import Point.ModelUtil
+  import Point.EctoModel
 
   schema "accounts" do
     field :amount, :decimal

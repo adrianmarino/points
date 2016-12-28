@@ -3,7 +3,7 @@ defmodule Point.ExchangeRate do
   Allow convert an amount between to correncies.
   """
   alias Point.{DecimalUtil, CurrencyService}
-  import Point.ModelUtil
+  import Point.EctoModel
 
   def inverse(rate), do: DecimalUtil.inverse(rate.value)
 
@@ -26,7 +26,7 @@ defmodule Point.ExchangeRate do
     |> validate_required([:value, :source, :target])
   end
 
-  def insert_changeset(model , params \\ %{}) do
+  def insert_changeset(model, params \\ %{}) do
     model
       |> cast(params, [:value, :source_code, :target_code])
       |> validate_required([:value, :source_code, :target_code])
