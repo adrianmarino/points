@@ -24,9 +24,9 @@ defmodule Point.TransferService do
       |> transaction
 
     backup_data = result[move_name(backup_source, backup_target)]
-    if backup_data, do: debug("BACKUP  - #{Model.to_string backup_data}")
+    if backup_data, do: info(Model.to_string backup_data)
     movement = result[move_name(source, target)]
-    debug("DEFAULT - #{Model.to_string movement}")
+    info(Model.to_string movement)
     {:ok, movement}
   end
 

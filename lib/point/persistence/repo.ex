@@ -1,17 +1,8 @@
 defmodule Point.Repo do
   use Ecto.Repo, otp_app: :point
   import Enum
-  alias Point.Model
 
   def insert_all(entities), do: entities |> each(&insert!/1)
 
-  def assoc(model, name) do
-    one Ecto.assoc(model, name)
-  end
-
-  def changeset(model, fields), do: Model.changeset(model, fields)
-
-  def save(model, fields), do: update changeset(model, fields)
-
-  def refresh(model), do: Model.refresh(model)
+  def assoc(model, name), do: one Ecto.assoc(model, name)
 end

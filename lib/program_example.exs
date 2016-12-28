@@ -1,7 +1,7 @@
 defmodule Example do
   use StdLib
 
-  def run(params \\ %{}) do
+  def run(params) do
     source = account(email: params.from.email, currency: params.from.currency)
     target = account(email: params.to.email, currency: params.to.currency)
 

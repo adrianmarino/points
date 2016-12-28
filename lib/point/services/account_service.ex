@@ -28,7 +28,7 @@ defmodule Point.AccountService do
     end
   end
 
-  def amount(account), do: Repo.refresh(account).amount
+  def amount(account), do: get!(account.id).amount
 
   def by(email: email, currency_code: currency_code) do
     Repo.one(from a in Account, join: c in Currency, join: u in User,
@@ -44,10 +44,10 @@ defmodule Point.AccountService do
   end
 
   def increase_changeset(account, amount) do
-    Repo.changeset(account, %{amount: add(account.amount, new(amount))})
+    Account.changeset(account, %{amount: add(account.amount, new(amount))})
   end
 
   def decrease_changeset(account, amount) do
-    Repo.changeset(account, %{amount: sub(account.amount, new(amount))})
+    Account.changeset(account, %{amount: sub(account.amount, new(amount))})
   end
 end

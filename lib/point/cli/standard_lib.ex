@@ -1,5 +1,5 @@
 defmodule StdLib do
-  alias Point.{AccountService, ExtractService, TransferService, DepositService, DecimalUtil}
+  alias Point.{AccountService, ExtractService, TransferService, DepositService}
   require Logger
 
   defmacro __using__(_) do
