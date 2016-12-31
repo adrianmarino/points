@@ -7,13 +7,13 @@ defprotocol Point.ModelMap do
   def to_map(model)
 end
 defimpl Point.ModelMap, for: Point.Currency do
-  def to_map(model), do: %{code: model.code}
+  def to_map(model), do: model.code
 end
 defimpl Point.ModelMap, for: Point.Entity do
-  def to_map(model), do: %{name: model.name}
+  def to_map(model), do: model.name
 end
 defimpl Point.ModelMap, for: Point.User do
-  def to_map(model), do: %{email: model.email}
+  def to_map(model), do: model.email
 end
 defimpl Point.ModelMap, for: Point.Movement do
   alias Point.{Repo, ModelMap}
@@ -23,7 +23,7 @@ defimpl Point.ModelMap, for: Point.Movement do
       type: movement.type,
       source: account_to_map(Repo.assoc movement, :source),
       target: account_to_map(Repo.assoc movement, :target),
-      amount: Decimal.to_string(movement.amount)
+      amount: to_string(movement.amount)
     }
   end
 
@@ -40,7 +40,7 @@ defimpl Point.ModelMap, for: Point.Account do
   def to_map(account) do
     %{
       currency: ModelMap.to_map(Repo.assoc account, :currency),
-      amount: Decimal.to_string(account.amount),
+      amount: to_string(account.amount),
       type: account.type
     }
   end
@@ -50,7 +50,7 @@ defimpl Point.ModelMap, for: Point.ExchangeRate do
 
   def to_map(exchange_rate) do
     %{
-      value: Decimal.to_string(exchange_rate.value),
+      value: to_string(exchange_rate.value),
       source: ModelMap.to_map(Repo.assoc exchange_rate, :source),
       target: ModelMap.to_map(Repo.assoc exchange_rate, :target)
     }
