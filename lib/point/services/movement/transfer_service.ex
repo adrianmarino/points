@@ -3,20 +3,19 @@ defmodule Point.TransferService do
   Transfer an amount between two accounts with same/distinct currency.
   """
   alias Ecto.Multi
-  alias Point.{Model, Account, ExchangeRateService}
+  alias Point.{Account, ExchangeRateService}
 
   import Point.Repo
   import Logger
   import Point.MovementFactory
   import Point.AccountService
-  import Decimal
 
   def transfer(from:    %Account{type: "default"} = source,
                to:      %Account{type: "default"} = target,
                amount:  amount) do
     backup_target = backup_account_of(target)
     backup_source = backup_account_of(source)
-    backup_amount = mult(amount, rate_between(source, backup_source))
+    backup_amount = Decimal.mult(amount, rate_between(source, backup_source))
 
     {:ok, result} = Multi.new
       |> append(backup_source, backup_target, backup_amount)
@@ -24,9 +23,9 @@ defmodule Point.TransferService do
       |> transaction
 
     backup_data = result[move_name(backup_source, backup_target)]
-    if backup_data, do: info(Model.to_string backup_data)
+    if backup_data, do: info(to_string backup_data)
     movement = result[move_name(source, target)]
-    info("Movement: #{Model.to_string movement}")
+    info("Movement: #{to_string movement}")
     {:ok, movement}
   end
 
@@ -45,7 +44,7 @@ defmodule Point.TransferService do
     rate = rate_between(source, target)
     query
       |> Multi.update("dec_amount_#{source.id}", decrease_changeset(source, amount))
-      |> Multi.update("inc_amount_#{target.id}", increase_changeset(target, mult(amount, rate)))
+      |> Multi.update("inc_amount_#{target.id}", increase_changeset(target, Decimal.mult(amount, rate)))
       |> Multi.insert(move_name(source, target), transfer(source, target, amount, rate))
   end
 

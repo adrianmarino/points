@@ -1,5 +1,5 @@
 defmodule Point.ExchangeRateService do
-  alias Point.{ExchangeRate, Model, DecimalUtil, Repo, Currency}
+  alias Point.{ExchangeRate, DecimalUtil, Repo, Currency}
   import Ecto.Query
 
   def by(source_code: source_code, target_code: target_code) do
@@ -57,8 +57,8 @@ defmodule Point.ExchangeRateService do
   end
 
   defp missing_exchange_rate_message(source, target) do
-    source_str_rep = Model.to_string Repo.assoc(source, :currency)
-    target_str_rep = Model.to_string Repo.assoc(target, :currency)
+    source_str_rep = to_string Repo.assoc(source, :currency)
+    target_str_rep = to_string Repo.assoc(target, :currency)
     "Missing exchange rate between #{source_str_rep} and #{target_str_rep}!"
   end
 end

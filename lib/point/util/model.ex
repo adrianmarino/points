@@ -12,7 +12,9 @@ defmodule Point.Model do
     end
   end
 end
+
 defprotocol Point.ModelMap, do: def to_map(model)
+
 defimpl Point.ModelMap, for: Point.Currency, do: def to_map(model), do: model.code
 defimpl Point.ModelMap, for: Point.Entity, do: def to_map(model), do: model.name
 defimpl Point.ModelMap, for: Point.User, do: def to_map(model), do: model.email

@@ -1,5 +1,5 @@
 defmodule Point.DepositService do
-  alias Point.{Model, Account}
+  alias Point.Account
   alias Ecto.Multi
 
   import Logger
@@ -15,7 +15,7 @@ defmodule Point.DepositService do
       |> Multi.insert(:deposit, deposit(account, amount))
       |> transaction
 
-    debug(Model.to_string movement)
+    debug(to_string movement)
     {:ok, movement}
   end
 end

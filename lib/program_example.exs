@@ -5,14 +5,14 @@ defmodule Example do
     source = account(email: params.from.email, currency: params.from.currency)
     target = account(email: params.to.email, currency: params.to.currency)
 
-    log("Before", params, source, target)
+    log("Before", source, target)
     transfer(from: source, to: target, amount: 100)
   end
 
-  defp log(message, params, source, target) do
+  defp log(message, source, target) do
     print(message)
-    print("Email: #{params.from.email} - Amount: #{params.from.currency} #{to_string amount(source)}")
-    print("Email: #{params.to.email} - Amount: #{params.to.currency} #{to_string amount(target)}")
+    print(to_string source)
+    print(to_string target)
   end
 end
 

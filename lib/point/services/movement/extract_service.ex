@@ -1,5 +1,5 @@
 defmodule Point.ExtractService do
-  alias Point.{Account, Model, ExchangeRateService, DecimalUtil}
+  alias Point.{Account, ExchangeRateService, DecimalUtil}
   alias Ecto.Multi
 
   import Logger
@@ -8,14 +8,13 @@ defmodule Point.ExtractService do
   import Point.AccountService
   import Point.MovementFactory
   import Enum
-  import Decimal
 
   def extract(amount: _, from: %Account{type: "default"} = account) do
     raise "Mustn't extract amount from '#{assoc(account, :owner).email}' default account!. Only allowed with backup accounts."
   end
   def extract(amount: amount, from: %Account{type: "backup"} = account) do
       available_amount = calculate_available_amount(account)
-      info("Available Amount: #{assoc(account, :currency).code} #{round(available_amount, 2)}, Extract amount: #{assoc(account, :currency).code} #{amount}")
+      info("Available Amount: #{assoc(account, :currency).code} #{Decimal.round(available_amount, 2)}, Extract amount: #{assoc(account, :currency).code} #{amount}")
       assert_that(amount, is_less_or_equal_that: available_amount)
 
       {:ok, %{extract: movement}} = Multi.new
@@ -23,7 +22,7 @@ defmodule Point.ExtractService do
         |> Multi.insert(:extract, deposit(account, amount))
         |> transaction
 
-      debug(Model.to_string movement)
+      debug(to_string movement)
       {:ok, movement}
   end
 
@@ -36,8 +35,8 @@ defmodule Point.ExtractService do
     all(from acc in Account, where: acc.type != "backup" and acc.issuer_id == ^backup_account.owner_id)
       |> map(fn(account)->
           {:ok, rate } = ExchangeRateService.rate_between(account, backup_account)
-          mult(new(account.amount), rate)
+          Decimal.mult(Decimal.new(account.amount), rate)
         end)
-      |> reduce(new(0), &add/2)
+      |> reduce(Decimal.new(0), &Decimal.add/2)
   end
 end

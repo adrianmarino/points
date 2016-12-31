@@ -12,7 +12,3 @@ defmodule Point.DecimalUtil do
 
   def compare(left, right), do: Decimal.to_integer(Decimal.compare(Decimal.new(left), Decimal.new(right)))
 end
-
-defimpl String.Chars, for: Decimal do
-  def to_string(value), do: Decimal.to_string(Decimal.round(value, 2))
-end
