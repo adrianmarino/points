@@ -1,6 +1,6 @@
 defmodule Point.SessionController do
   use Point.Web, :controller
-  import Logger
+  import PointLogger
   import Point.Phoenix.ConnUtil
   import Point.JSON
   alias Point.{SessionService, UserService}

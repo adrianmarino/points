@@ -1,7 +1,8 @@
 defmodule StandardLib do
   alias Point.{AccountService, ExtractService, TransferService, DepositService}
-  require Logger
+  import PointLogger
 
+  def refresh(model), do: Point.Repo.refresh(model)
   def amount(account), do: AccountService.amount(account)
   def account(email: email, currency: currency) do
     case AccountService.by(email: email, currency_code: currency) do
@@ -14,7 +15,13 @@ defmodule StandardLib do
   end
   def extract(amount: amount, from: account), do: ExtractService.extract(amount: dec(amount), from: account)
   def deposit(amount: amount, on: account), do: DepositService.deposit(amount: dec(amount), on: account)
-  def print(message), do: Logger.info(message)
+
+  def print(message) do
+    case message do
+      message when is_list(message) -> Enum.each(message, &(info/1))
+      message -> info(message)
+    end
+  end
 
   defp dec(value), do: Decimal.new(value)
 end

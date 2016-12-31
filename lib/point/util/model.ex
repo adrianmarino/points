@@ -3,12 +3,19 @@ defmodule Point.Model do
 
   def to_string(model) do
     case model |> ModelMap.to_map |> JSX.encode do
-      {:ok, json} ->
+      {:ok, json} -> prettify(json)
+      {:error, message} -> message
+    end
+  end
+
+  defp prettify(json) do
+    cond do
+      String.length(json) <= 80 -> json
+      true ->
         case JSX.prettify(json) do
           {:ok, json } -> json
           {:error, message} -> message
         end
-      {:error, message} -> message
     end
   end
 end

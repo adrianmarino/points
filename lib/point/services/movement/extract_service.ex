@@ -2,7 +2,7 @@ defmodule Point.ExtractService do
   alias Point.{Account, ExchangeRateService, DecimalUtil}
   alias Ecto.Multi
 
-  import Logger
+  import PointLogger
   import Point.Repo
   import Ecto.Query
   import Point.AccountService
@@ -22,7 +22,7 @@ defmodule Point.ExtractService do
         |> Multi.insert(:extract, deposit(account, amount))
         |> transaction
 
-      debug(to_string movement)
+      debug(movement)
       {:ok, movement}
   end
 

@@ -6,9 +6,9 @@ defmodule Point.TransferService do
   alias Point.{Account, ExchangeRateService}
 
   import Point.Repo
-  import Logger
   import Point.MovementFactory
   import Point.AccountService
+  import PointLogger
 
   def transfer(from:    %Account{type: "default"} = source,
                to:      %Account{type: "default"} = target,
@@ -23,9 +23,9 @@ defmodule Point.TransferService do
       |> transaction
 
     backup_data = result[move_name(backup_source, backup_target)]
-    if backup_data, do: info(to_string backup_data)
+    if backup_data, do: debug(backup_data)
     movement = result[move_name(source, target)]
-    info("Movement: #{to_string movement}")
+    debug(movement)
     {:ok, movement}
   end
 
@@ -42,6 +42,7 @@ defmodule Point.TransferService do
   defp append(query, _, _, amount) when amount <= 0, do: query
   defp append(query, source, target, amount) do
     rate = rate_between(source, target)
+    debug("Rate: #{rate}")
     query
       |> Multi.update("dec_amount_#{source.id}", decrease_changeset(source, amount))
       |> Multi.update("inc_amount_#{target.id}", increase_changeset(target, Decimal.mult(amount, rate)))
