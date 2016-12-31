@@ -18,8 +18,12 @@ defmodule StandardLib do
 
   def print(message) do
     case message do
-      message when is_list(message) -> Enum.each(message, &(info/1))
-      message -> info(message)
+      message when is_list(message) ->
+        Enum.each(message, &(info/1))
+        List.last(message)
+      message ->
+        info(message)
+        message
     end
   end
 

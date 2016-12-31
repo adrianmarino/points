@@ -8,5 +8,5 @@ defmodule Transaction do
     end
   end
 
-  defcallback run(params:: %{})
+  defcallback perform(params:: %{})
 end

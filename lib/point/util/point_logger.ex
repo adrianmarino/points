@@ -1,7 +1,7 @@
 defmodule PointLogger do
   require Logger
 
-  def info({:ok, model} = _), do: info(model)
+  def info(Tuple = tuple), do: info(to_string tuple)
   def info(%Point.ExchangeRate{} = model), do: Logger.info("Rate: #{to_string model}")
   def info(%Point.Movement{} = model), do: Logger.info("Movement: #{to_string model}")
   def info(%Point.Account{} = model), do: Logger.info("Account: #{to_string model}")

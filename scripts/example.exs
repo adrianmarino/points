@@ -4,10 +4,10 @@ defmodule Example do
   def run(params) do
     source = to(params)
     target = from(params)
-
-    print [ "Before", source, target,
-            transfer(from: source, to: target, amount: 100),
-            "After", refresh(source), refresh(target) ]
+    print [
+      "Before", source, target,
+      "After", transfer(from: source, to: target, amount: 100)
+    ]
   end
 
   defp to(params), do: account(email: params.to.email, currency: params.to.currency)
