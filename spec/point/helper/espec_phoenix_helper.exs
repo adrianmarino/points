@@ -26,12 +26,16 @@ defmodule ESpec.Phoenix.Helper do
   end
 
   defmacro put_remote_ip_in_header(conn, ip) do
-    quote do: put_req_header(unquote(conn), "x-forwarded-for", unquote(ip))
+    quote bind_quoted: [conn: conn, ip: ip] do
+      put_req_header(conn, "x-forwarded-for", ip)
+    end
   end
 
   defmacro put_app_json_in_header(conn), do: quote do: put_req_header(unquote(conn), "accept", "application/json")
 
   defmacro put_token_in_header(conn, token) do
-    quote do: unquote(conn) |> put_req_header("token", unquote(token))
+    quote bind_quoted: [conn: conn, token: token] do
+      conn |> put_req_header("token", token)
+    end
   end
 end
