@@ -6,10 +6,7 @@ defmodule Example do
     target = account(email: params.to.email, currency: params.to.currency)
 
     log("Before", params, source, target)
-
     transfer(from: source, to: target, amount: 100)
-
-    log("After", params, source, target)
   end
 
   defp log(message, params, source, target) do

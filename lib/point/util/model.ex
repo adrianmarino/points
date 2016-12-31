@@ -8,7 +8,6 @@ defimpl Point.ModelMap, for: Point.Movement do
 
   def to_map(movement) do
     %{
-      type: movement.type,
       source: account_to_map(Repo.assoc movement, :source),
       target: account_to_map(Repo.assoc movement, :target),
       amount: to_string(movement.amount)
@@ -25,7 +24,15 @@ end
 defimpl Point.ModelMap, for: Point.Account do
   alias Point.{Repo, ModelMap}
 
-  def to_map(account) do
+  def to_map(%{type: "default"} = account) do
+    %{
+      currency: ModelMap.to_map(Repo.assoc account, :currency),
+      amount: to_string(account.amount),
+      owner: ModelMap.to_map(Repo.assoc account, :owner)
+    }
+  end
+
+  def to_map(%{type: "backup"} = account) do
     %{
       currency: ModelMap.to_map(Repo.assoc account, :currency),
       amount: to_string(account.amount),
