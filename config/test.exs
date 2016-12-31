@@ -9,7 +9,7 @@ config :point, Point.Endpoint,
   simultaneous_sessions_by_user_and_remote_ip: 1
 
 # Print only warnings and errors during test
-config :logger, level: :info
+config :logger, level: :error
 
 config :ecto_ttl,
     ignore_newest_seconds: 0,
