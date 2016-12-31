@@ -1,20 +1,8 @@
-defmodule Point.Model do
-  def to_string(model) do
-    inspect(Point.ModelMap.to_map model)
-  end
-end
-defprotocol Point.ModelMap do
-  def to_map(model)
-end
-defimpl Point.ModelMap, for: Point.Currency do
-  def to_map(model), do: model.code
-end
-defimpl Point.ModelMap, for: Point.Entity do
-  def to_map(model), do: model.name
-end
-defimpl Point.ModelMap, for: Point.User do
-  def to_map(model), do: model.email
-end
+defmodule Point.Model, do: def to_string(model), do: inspect(Point.ModelMap.to_map model)
+defprotocol Point.ModelMap, do: def to_map(model)
+defimpl Point.ModelMap, for: Point.Currency, do: def to_map(model), do: model.code
+defimpl Point.ModelMap, for: Point.Entity, do: def to_map(model), do: model.name
+defimpl Point.ModelMap, for: Point.User, do: def to_map(model), do: model.email
 defimpl Point.ModelMap, for: Point.Movement do
   alias Point.{Repo, ModelMap}
 
