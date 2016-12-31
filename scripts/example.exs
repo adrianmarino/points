@@ -1,12 +1,14 @@
 defmodule Example do
   use Transaction
 
-  def run(params) do
+  def perform(params) do
     source = to(params)
     target = from(params)
     print [
-      "Before", source, target,
-      "After", transfer(from: source, to: target, amount: 100)
+      "Before",
+      source, target,
+      "After",
+      transfer(from: source, to: target, amount: 100)
     ]
   end
 
@@ -14,7 +16,12 @@ defmodule Example do
   defp from(params), do: account(email: params.from.email, currency: params.from.currency)
 end
 
-Example.run %{
-  from: %{email: "obiwankenoby@gmail.com",    currency: "RBL"},
-  to:   %{email: "anakinskywalker@gmail.com", currency: "EMP"}
-}
+require Engine
+
+Engine.run(
+  Example,
+  params: %{
+    from: %{email: "obiwankenoby@gmail.com",    currency: "RBL"},
+    to:   %{email: "anakinskywalker@gmail.com", currency: "EMP"}
+  }
+)
