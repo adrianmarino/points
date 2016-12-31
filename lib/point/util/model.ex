@@ -1,4 +1,17 @@
-defmodule Point.Model, do: def to_string(model), do: inspect(Point.ModelMap.to_map model)
+defmodule Point.Model do
+  alias Point.ModelMap
+
+  def to_string(model) do
+    case model |> ModelMap.to_map |> JSX.encode do
+      {:ok, json} ->
+        case JSX.prettify(json) do
+          {:ok, json } -> json
+          {:error, message} -> message
+        end
+      {:error, message} -> message
+    end
+  end
+end
 defprotocol Point.ModelMap, do: def to_map(model)
 defimpl Point.ModelMap, for: Point.Currency, do: def to_map(model), do: model.code
 defimpl Point.ModelMap, for: Point.Entity, do: def to_map(model), do: model.name
@@ -26,17 +39,17 @@ defimpl Point.ModelMap, for: Point.Account do
 
   def to_map(%{type: "default"} = account) do
     %{
-      currency: ModelMap.to_map(Repo.assoc account, :currency),
+      owner: ModelMap.to_map(Repo.assoc account, :owner),
       amount: to_string(account.amount),
-      owner: ModelMap.to_map(Repo.assoc account, :owner)
+      currency: ModelMap.to_map(Repo.assoc account, :currency)
     }
   end
 
   def to_map(%{type: "backup"} = account) do
     %{
+      type: account.type,
       currency: ModelMap.to_map(Repo.assoc account, :currency),
-      amount: to_string(account.amount),
-      type: account.type
+      amount: to_string(account.amount)
     }
   end
 end

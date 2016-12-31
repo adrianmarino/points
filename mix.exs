@@ -45,8 +45,10 @@ defmodule Point.Mixfile do
       {:comeonin, "~> 2.0"},
       {:secure_random, "~> 0.2"},
       {:ecto_ttl, git: "https://github.com/xerions/ecto_ttl.git"},
+      {:ecto_migrate, "0.6.3", override: true},
       {:ecto, ">= 2.0.6", override: true},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      {:exjsx, "~> 3.2.1", git: "https://github.com/talentdeficit/exjsx"}
    ]
   end
 
