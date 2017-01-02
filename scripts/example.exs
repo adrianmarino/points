@@ -4,12 +4,8 @@ defmodule Example do
   def perform(params) do
     source = to(params)
     target = from(params)
-    print [
-      "Before",
-      source, target,
-      "After",
-      transfer(from: source, to: target, amount: 100)
-    ]
+    movement = transfer(from: source, to: target, amount: 100)
+    print ["Before", source, target, "After", movement]
   end
 
   defp to(params), do: account(email: params.to.email, currency: params.to.currency)
