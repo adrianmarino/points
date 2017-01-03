@@ -30,6 +30,7 @@ defimpl Point.ModelMap, for: Point.Movement do
 
   def to_map(movement) do
     %{
+      type: movement.type,
       source: account_to_map(Repo.assoc movement, :source),
       target: account_to_map(Repo.assoc movement, :target),
       amount: to_string(movement.amount)

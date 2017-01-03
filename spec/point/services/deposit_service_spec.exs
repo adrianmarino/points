@@ -6,7 +6,7 @@ defmodule Point.DepositServiceSpec do
   import Point.Repo
 
   let amount: Decimal.new 10.12
-  let deposit: ok_result(described_module.deposit(amount: amount, on: account))
+  let deposit: ok_result(described_module.deposit(amount: amount, to: account))
 
   context "when deposit an amount to issuer backup account" do
     let account: AccountFactory.insert(:revel_backup)
