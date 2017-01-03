@@ -4,7 +4,7 @@ defmodule Example do
   def perform(params) do
     source = to(params)
     target = from(params)
-    movement = transfer(from: source, to: target, amount: 100)
+    movement = transfer(from: source, to: target, amount: params.amount)
     print ["Before", source, target, "After", movement]
   end
 

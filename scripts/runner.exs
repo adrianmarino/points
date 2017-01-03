@@ -5,6 +5,7 @@ Engine.run(
   Example,
   params: %{
     from: %{email: "obiwankenoby@gmail.com",    currency: "RBL"},
-    to:   %{email: "anakinskywalker@gmail.com", currency: "EMP"}
+    to:   %{email: "anakinskywalker@gmail.com", currency: "EMP"},
+    amount: 100
   }
 )
