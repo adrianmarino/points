@@ -22,8 +22,8 @@ defmodule Point.ExchangeRate do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:value, :source, :target])
-    |> validate_required([:value, :source, :target])
+    |> cast(params, [:value, :source_id, :target_id])
+    |> validate_required([:value, :source_id, :target_id])
   end
 
   def insert_changeset(model, params \\ %{}) do

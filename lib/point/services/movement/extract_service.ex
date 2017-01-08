@@ -23,7 +23,7 @@ defmodule Point.ExtractService do
         |> transaction
 
       debug(movement)
-      {:ok, movement}
+      movement
   end
 
   defp assert_that(amount, is_less_or_equal_that: available_amount) do

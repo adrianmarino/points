@@ -12,7 +12,7 @@ config :point, Point.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [],
-  session_ttl: 900,
+  session_ttl: 9000000,
   simultaneous_sessions_by_user_and_remote_ip: 3
 
 config :ecto_ttl,

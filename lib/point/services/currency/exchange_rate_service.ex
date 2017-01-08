@@ -35,11 +35,10 @@ defmodule Point.ExchangeRateService do
   def get(id), do: Repo.get(ExchangeRate, id)
   def get!(id), do: Repo.get!(ExchangeRate, id)
   def insert(source_code: source_code, target_code: target_code, value: value) do
-    changeset = ExchangeRate.insert_changeset(
-      %ExchangeRate{},
-      %{source_code: source_code, target_code: target_code, value: value}
-    )
-    Repo.insert(changeset)
+    Repo.insert(insert_changeset(source_code, target_code, value))
+  end
+  def insert!(source_code: source_code, target_code: target_code, value: value) do
+    Repo.insert!(insert_changeset(source_code, target_code, value))
   end
   def update(source_code: source_code, target_code: target_code, value: value) do
     case by(source_code: source_code, target_code: target_code) do
@@ -60,5 +59,12 @@ defmodule Point.ExchangeRateService do
     source_str_rep = to_string Repo.assoc(source, :currency)
     target_str_rep = to_string Repo.assoc(target, :currency)
     "Missing exchange rate between #{source_str_rep} and #{target_str_rep}!"
+  end
+
+  defp insert_changeset(source_code, target_code, value) do
+    ExchangeRate.insert_changeset(
+      %ExchangeRate{},
+      %{source_code: source_code, target_code: target_code, value: value}
+    )
   end
 end

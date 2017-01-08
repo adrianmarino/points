@@ -31,5 +31,7 @@ defmodule Point.Router do
       put "/:source/:target", ExchangeRateController, :update
       patch "/:source/:target", ExchangeRateController, :update
     end
+
+    post "/transactions/:name", TransactionController, :perform
   end
 end

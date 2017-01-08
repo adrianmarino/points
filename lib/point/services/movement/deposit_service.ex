@@ -16,6 +16,6 @@ defmodule Point.DepositService do
       |> transaction
 
     debug(movement)
-    {:ok, movement}
+    movement
   end
 end

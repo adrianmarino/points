@@ -24,9 +24,7 @@ defmodule Point.TransferService do
 
     backup_data = result[move_name(backup_source, backup_target)]
     if backup_data, do: debug(backup_data)
-    movement = result[move_name(source, target)]
-    debug(movement)
-    {:ok, movement}
+    result[move_name(source, target)]
   end
 
   defp rate_between(source, target) do

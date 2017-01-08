@@ -1,15 +1,15 @@
 defmodule Point.ExtractServiceSpec do
   use ESpec
   import ServiceSpecHelper
-  import Point.Repo
+  alias Point.Repo
   alias Point.{ExchangeRate, AccountFactory}
 
   let backup: AccountFactory.insert(:revel_backup)
   let account: AccountFactory.insert(:han_solo_revel, issuer: backup.owner)
   let issuer_owner_rate: %ExchangeRate{value: 5, source: backup.currency, target: account.currency}
-  let extract: ok_result(described_module.extract(amount: amount, from: backup))
+  let extract: described_module.extract(amount: amount, from: backup)
 
-  before do: insert!(issuer_owner_rate)
+  before do: Repo.insert!(issuer_owner_rate)
 
   context "when extract an amount from backup account that has more than needed backup" do
     let amount: Decimal.new 10.12

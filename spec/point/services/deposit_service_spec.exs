@@ -3,10 +3,9 @@ defmodule Point.DepositServiceSpec do
   import ServiceSpecHelper
   alias Point.AccountFactory
   import ServiceSpecHelper
-  import Point.Repo
 
   let amount: Decimal.new 10.12
-  let deposit: ok_result(described_module.deposit(amount: amount, to: account))
+  let deposit: described_module.deposit(amount: amount, to: account)
 
   context "when deposit an amount to issuer backup account" do
     let account: AccountFactory.insert(:revel_backup)
@@ -16,7 +15,7 @@ defmodule Point.DepositServiceSpec do
     end
 
     it "should creates a movement with the account as target acount" do
-      expect(assoc(deposit, :target).id).to(eq account.id)
+      expect(target_id(deposit)).to(eq account.id)
     end
 
     it "should creates a movement with the deposited amount", do: expect(deposit.amount).to(eq amount)

@@ -74,3 +74,5 @@ defimpl Point.ModelMap, for: Point.ExchangeRate do
     }
   end
 end
+
+defimpl Point.ModelMap, for: Any, do: def to_map(model), do: inspect(model)

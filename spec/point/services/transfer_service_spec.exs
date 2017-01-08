@@ -6,7 +6,7 @@ defmodule Point.TransferServiceSpec do
   import Decimal
 
   let amount: Decimal.new 10.12
-  let transfer: ok_result(described_module.transfer(from: source, to: target, amount: amount))
+  let transfer: described_module.transfer(from: source, to: target, amount: amount)
 
   context "when transfer amount between accounts with same currency and backup account" do
     let backup: AccountFactory.insert(:revel_backup)
@@ -23,11 +23,11 @@ defmodule Point.TransferServiceSpec do
     end
 
     it "creates a movement with an expected target account" do
-      expect(assoc(transfer, :target).id).to(eq target.id)
+      expect(target_id(transfer)).to(eq target.id)
     end
 
     it "creates a movement with an expected source account" do
-      expect(assoc(transfer, :source).id).to(eq source.id)
+      expect(source_id(transfer)).to(eq source.id)
     end
 
     it "creates a movement with trasfered amount",

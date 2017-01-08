@@ -1,9 +1,12 @@
 defmodule Transfer do
   use Transaction
-  def perform(params), do: print(transfer(
-    from: account(email: params.from.email, currency: params.from.currency),
-    to: account(email: params.to.email, currency: params.to.currency),
-    amount: params.amount))
+  def perform(params) do
+    transfer(
+      from: account(email: params.from.email, currency: params.from.currency),
+      to: account(email: params.to.email, currency: params.to.currency),
+      amount: params.amount
+    )
+  end
 end
 
 defmodule Deposit do
