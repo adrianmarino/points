@@ -5,9 +5,8 @@ defmodule Point.TransactionControllerSpec do
   import Point.DecimalUtil
   alias Point.{AccountFactory, ExchangeRateService}
 
-
   describe "perfom" do
-    let! response: post(sec_conn, transaction_path(sec_conn, :perform, "transfer"), params)
+    let! response: post(sec_conn, transaction_path(sec_conn, :execute, "transfer"), params)
 
     context "when perform a transfer" do
       let source_backup: AccountFactory.insert(:revel_backup)
@@ -40,6 +39,27 @@ defmodule Point.TransactionControllerSpec do
       it "increases target account" do
         expect is(amount(target).(), greater_that: target.amount) |> to(be_truthy)
       end
+    end
+  end
+
+  describe "create" do
+    let response: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, "test_trans"), body)
+
+    context "when create a valid transaction" do
+      let body: """
+        defmodule TestTransfer do
+          use Transaction
+          def perform(params) do
+            transfer(
+            from: account(email: params.from.email, currency: params.from.currency),
+            to: account(email: params.to.email, currency: params.to.currency),
+            amount: params.amount
+            )
+          end
+        end
+      """
+
+      it "responds 201 status", do: expect response.status |> to(eq 201)
     end
   end
 end

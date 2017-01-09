@@ -1,15 +1,33 @@
 defmodule Point.TransactionController do
   use Point.Web, :controller
   import Point.JSON
+  import PointLogger
+  import Point.Phoenix.JSONResponseUtil
   alias Point.{Model, TransactionService}
+  import IEx
 
-  def perform(conn, %{"name" => name}) do
+  def execute(conn, %{"name" => name}) do
     case TransactionService.execute(name, conn.body_params) do
-      {:ok, result } -> ok(conn, result)
-      {:error, e} -> error(conn, e)
+      {:ok, result } -> send_resp(conn, :ok, Model.to_string(result))
+      {:error, error} -> send_error_resp(conn, :internal_server_error, error.message)
     end
   end
 
-  defp ok(conn, result), do: send_resp(conn, :ok, Model.to_string(result))
-  defp error(conn, error),do: send_resp(conn, :internal_server_error, to_json(%{error: error.message}))
+  def create(conn, %{"name" => name}) do
+    case body(conn) do
+      {:ok, body } ->
+        case TransactionService.insert(name, body) do
+          {:ok, _} -> send_resp(conn, :created, "")
+          {:error, message} -> send_error_resp(conn, :bad_request, message)
+        end
+      {:error, message} -> send_error_resp(conn, :bad_request, message)
+    end
+  end
+
+  defp body(conn) do
+    case Plug.Conn.read_body(conn) do
+      {:ok, data, _} -> {:ok, String.trim(data)}
+      _ -> {:error, "Parse request body errror!" }
+    end
+  end
 end

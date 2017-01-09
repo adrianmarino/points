@@ -25,13 +25,18 @@ defmodule ESpec.Phoenix.Helper do
     quote do: build_conn |> put_token_in_header(current_session.token)
   end
 
-  defmacro put_remote_ip_in_header(conn, ip) do
+  defmacro remote_ip(conn, ip) do
     quote bind_quoted: [conn: conn, ip: ip] do
       put_req_header(conn, "x-forwarded-for", ip)
     end
   end
 
-  defmacro put_app_json_in_header(conn), do: quote do: put_req_header(unquote(conn), "accept", "application/json")
+  defmacro text_plain, do: "text/plain"
+  defmacro application_json, do: "application/json"
+
+  defmacro content_type(conn, value) do
+    quote bind_quoted: [conn: conn, value: value], do: put_req_header(conn, "content-type", value)
+  end
 
   defmacro put_token_in_header(conn, token) do
     quote bind_quoted: [conn: conn, token: token] do

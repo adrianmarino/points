@@ -3,11 +3,11 @@ defmodule Point.SessionControllerSpec do
   use ESpec.Phoenix.Helper
   alias Point.{Session, User, Repo, SessionService}
 
-  let remote_ip: "127.0.0.1"
+  let ip: "127.0.0.1"
   let valid_attrs: %{email: "adrianmarino@gmail.com", password: "Whatever1123", first_name: "adrian", last_name: "marino"}
 
   describe "sign_in" do
-    let response: post(put_remote_ip_in_header(build_conn, remote_ip), session_path(build_conn, :sign_in), user)
+    let response: post(remote_ip(build_conn, ip), session_path(build_conn, :sign_in), user)
 
     before do: Repo.insert!(User.registration_changeset(%User{}, valid_attrs))
 
@@ -49,7 +49,7 @@ defmodule Point.SessionControllerSpec do
     context "when sign_out an opened session" do
       let! user: Repo.insert(User.registration_changeset(%User{}, valid_attrs))
       let :token do
-        signin = post(put_remote_ip_in_header(build_conn, remote_ip), session_path(build_conn, :sign_in), valid_attrs)
+        signin = post(remote_ip(build_conn, ip), session_path(build_conn, :sign_in), valid_attrs)
         json_response(signin, 201)["token"]
       end
 

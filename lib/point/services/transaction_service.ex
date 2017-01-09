@@ -17,4 +17,12 @@ defmodule Point.TransactionService do
       e -> {:error, e}
     end
   end
+
+  def insert(name, src) do
+    case Code.string_to_quoted(src) do
+      {:error, message} -> {:error, elem(message, 1)}
+      {:ok, compiled_src} ->
+        {:ok, compiled_src}
+    end
+  end
 end
