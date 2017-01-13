@@ -1,9 +1,13 @@
+defmodule Helper do
+  def clean(value), do: value |> String.replace("\n", "") |> String.replace(" ", "") |> String.replace("\t", "")
+end
+
 defmodule Point.TransactionControllerSpec do
   use ESpec.Phoenix, controller: Point.TransactionController
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
   import Point.DecimalUtil
-  alias Point.{AccountFactory, ExchangeRateService}
+  alias Point.{AccountFactory, ExchangeRateService, TransactionService}
 
   describe "perfom" do
     let! response: post(sec_conn, transaction_path(sec_conn, :execute, "transfer"), params)
@@ -43,23 +47,37 @@ defmodule Point.TransactionControllerSpec do
   end
 
   describe "create" do
-    let response: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, "test_trans"), body)
+    let! response: post(
+      content_type(sec_conn, text_plain),
+      transaction_path(sec_conn, :create, transaction.name),
+      transaction.source
+    )
 
     context "when create a valid transaction" do
-      let body: """
-        defmodule TestTransfer do
-          use Transaction
-          def perform(params) do
-            transfer(
-            from: account(email: params.from.email, currency: params.from.currency),
-            to: account(email: params.to.email, currency: params.to.currency),
-            amount: params.amount
-            )
+      let transaction: %{
+        name: "test_trans",
+        source: """
+          defmodule TestTransfer do
+            use Transaction
+            def perform(params) do
+              transfer(
+                from: account(email: params.from.email, currency: params.from.currency),
+                to: account(email: params.to.email, currency: params.to.currency),
+                amount: params.amount
+              )
+            end
           end
-        end
-      """
+        """
+      }
+      let db_transaction: TransactionService.by(name: transaction.name)
 
       it "responds 201 status", do: expect response.status |> to(eq 201)
+
+      it "save transaction to db", do: expect(db_transaction).to(be_truthy)
+
+      it "save transaction to db with a source code" do
+        expect(Helper.clean(db_transaction.source)).to(eq Helper.clean(transaction.source))
+      end
     end
   end
 end

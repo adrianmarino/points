@@ -1,6 +1,7 @@
 defmodule Point.TransactionService do
   import Macro, only: [camelize: 1]
-  alias Point.MapUtil
+  alias Point.{Repo, MapUtil, Transaction}
+  require Logger
 
   def execute(name, params) do
     try do
@@ -18,11 +19,12 @@ defmodule Point.TransactionService do
     end
   end
 
-  def insert(name, src) do
-    case Code.string_to_quoted(src) do
+  def insert(name: name, source: source) do
+    case Code.string_to_quoted(source) do
       {:error, message} -> {:error, elem(message, 1)}
-      {:ok, compiled_src} ->
-        {:ok, compiled_src}
+      {:ok, _} -> Repo.insert(Transaction.changeset(%Transaction{}, %{name: name, source: source}))
     end
   end
+
+  def by(name: name), do: Repo.get_by(Transaction, name: name)
 end

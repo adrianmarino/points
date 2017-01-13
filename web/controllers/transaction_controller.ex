@@ -1,10 +1,7 @@
 defmodule Point.TransactionController do
   use Point.Web, :controller
-  import Point.JSON
-  import PointLogger
   import Point.Phoenix.JSONResponseUtil
   alias Point.{Model, TransactionService}
-  import IEx
 
   def execute(conn, %{"name" => name}) do
     case TransactionService.execute(name, conn.body_params) do
@@ -16,7 +13,7 @@ defmodule Point.TransactionController do
   def create(conn, %{"name" => name}) do
     case body(conn) do
       {:ok, body } ->
-        case TransactionService.insert(name, body) do
+        case TransactionService.insert(name: name, source: body) do
           {:ok, _} -> send_resp(conn, :created, "")
           {:error, message} -> send_error_resp(conn, :bad_request, message)
         end
