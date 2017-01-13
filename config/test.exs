@@ -6,7 +6,8 @@ config :point, Point.Endpoint,
   http: [port: 4001],
   server: false,
   session_ttl: 1_800,
-  simultaneous_sessions_by_user_and_remote_ip: 1
+  simultaneous_sessions_by_user_and_remote_ip: 1,
+  tmp_path: "./tmp"
 
 # Print only warnings and errors during test
 config :logger, level: :info

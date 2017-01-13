@@ -4,9 +4,13 @@ defmodule Point.TransactionController do
   alias Point.{Model, TransactionService}
 
   def execute(conn, %{"name" => name}) do
-    case TransactionService.execute(name, conn.body_params) do
-      {:ok, result } -> send_resp(conn, :ok, Model.to_string(result))
-      {:error, error} -> send_error_resp(conn, :internal_server_error, error.message)
+    case TransactionService.by(name: name) do
+      nil -> send_error_resp(conn, :not_found, "")
+      transaction ->
+        case TransactionService.execute(transaction, conn.body_params) do
+          {:ok, result } -> send_resp(conn, :ok, Model.to_string(result))
+          {:error, error} -> send_error_resp(conn, :internal_server_error, error.message)
+        end
     end
   end
 
