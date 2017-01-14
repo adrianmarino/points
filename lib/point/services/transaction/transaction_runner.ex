@@ -5,7 +5,16 @@ defmodule Point.TransactionRunner do
 
   def execute(transaction, params) do
     try do
-      require_source(transaction)
+      path = script_path(transaction.name)
+
+      FileUtil.was_writen(path, before_that: transaction.updated_at, then: fn ->
+        File.write!(path, transaction.source)
+        Logger.info "#{path} script was updated!"
+      end)
+
+      Logger.info "Require: #{path}"
+      Code.require_file(path)
+
       exec(transaction, params)
     rescue
       e -> {:error, e}
@@ -22,16 +31,5 @@ defmodule Point.TransactionRunner do
   defp script_path(filename) do
     File.mkdir(Config.get(:tmp_path))
     "#{Config.get(:tmp_path)}/#{filename}.exs"
-  end
-
-  defp require_source(transaction) do
-    path = script_path(transaction.name)
-
-    if FileUtil.was_writed(path, before_that: transaction.updated_at) do
-      File.write!(path, transaction.source)
-      Logger.info "#{path} script was updated!"
-    end
-    Logger.info "Require: #{path}"
-    Code.require_file(path)
   end
 end

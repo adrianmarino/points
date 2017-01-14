@@ -6,10 +6,14 @@ defmodule Point.FileUtil do
     end
   end
 
-  def was_writed(path, before_that: datetime) do
+  def was_writen(path, before_that: datetime, then: block) do
     case write_datetime(path) do
-      {:ok, write_datetime} -> Timex.compare(datetime, write_datetime) < 0
-      _ -> true
+      {:ok, write_datetime} ->
+        case Timex.compare(datetime, write_datetime) do
+          result when result < 0 -> block.()
+          _ -> true
+        end
+      _ -> block.()
     end
   end
 end
