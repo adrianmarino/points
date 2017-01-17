@@ -10,7 +10,7 @@ config :point, Point.Endpoint,
   tmp_path: "./tmp"
 
 # Print only warnings and errors during test
-config :logger, level: :info
+config :logger, level: :error
 
 config :ecto_ttl,
     ignore_newest_seconds: 0,

@@ -23,7 +23,6 @@ defmodule Transaction do
 
   defmacro params(block), do: quote bind_quoted: [block: block], do: @params_def block.()
 
-  def get_def(nil), do: %{}
   def get_def([]), do: %{}
   def get_def([params_def|_]), do: params_def
 end
