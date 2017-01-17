@@ -1,5 +1,6 @@
 defmodule Helper do
-  def clean(value), do: value |> String.replace("\n", "") |> String.replace(" ", "") |> String.replace("\t", "")
+  import String
+  def clean(value), do: value |> replace("\n", "") |> replace(" ", "")
 end
 
 defmodule Point.TransactionControllerSpec do
@@ -24,11 +25,13 @@ defmodule Point.TransactionControllerSpec do
     end
     """
   }
+  let invalid_attrs: %{ name: "any", source: "any"}
 
   describe "perfom" do
-    let! response: post(sec_conn, transaction_path(sec_conn, :execute, valid_attrs.name), params)
+    let! response: post(sec_conn, transaction_path(sec_conn, :execute, attrs.name), params)
 
     context "when perform a transfer" do
+      let attrs: valid_attrs
       let source_backup: AccountFactory.insert(:revel_backup)
       let target_backup: AccountFactory.insert(:empire_backup)
 
@@ -44,8 +47,8 @@ defmodule Point.TransactionControllerSpec do
       before do
         post(
           content_type(sec_conn, text_plain),
-          transaction_path(sec_conn, :create, valid_attrs.name),
-          valid_attrs.source
+          transaction_path(sec_conn, :create, attrs.name),
+          attrs.source
         )
         ExchangeRateService.insert!(source_code: currency_code(source_backup),
           target_code: currency_code(source), value: Decimal.new(1))
@@ -64,25 +67,55 @@ defmodule Point.TransactionControllerSpec do
 
       it "increases target account", do: expect is(amount(target).(), greater_that: target.amount) |> to(be_truthy)
     end
+
+    context "when not found a transaction to perform" do
+      let attrs: valid_attrs
+      let params: %{}
+      it "responds not found", do: expect response.status |> to(eq 404)
+    end
+
+    context "when the transaction throws an error" do
+      let attrs: valid_attrs
+      let params: %{}
+
+      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
+
+      it "responds an internal sever error", do: expect response.status |> to(eq 500)
+    end
   end
 
   describe "create" do
-    let! response: post(
-      content_type(sec_conn, text_plain),
-      transaction_path(sec_conn, :create, valid_attrs.name),
-      valid_attrs.source
-    )
+    let attrs: valid_attrs
+    let! response: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name),
+      attrs.source)
 
     context "when create a valid transaction" do
-      let db_transaction: TransactionService.by(name: valid_attrs.name)
+      let db_transaction: TransactionService.by(name: attrs.name)
 
       it "responds 201 status", do: expect response.status |> to(eq 201)
 
       it "save transaction to db", do: expect(db_transaction).to(be_truthy)
 
       it "save transaction to db with a source code" do
-        expect(Helper.clean(db_transaction.source)).to(eq Helper.clean(valid_attrs.source))
+        expect(Helper.clean(db_transaction.source)).to(eq Helper.clean(attrs.source))
       end
+    end
+
+    xcontext "when create an invalid transaction" do
+    end
+  end
+
+  xdescribe "update" do
+    context "when the transaction exist" do
+    end
+    context "when not found the transaction" do
+    end
+  end
+
+  xdescribe "delete" do
+    context "when the transaction exist" do
+    end
+    context "when not found the transaction" do
     end
   end
 end

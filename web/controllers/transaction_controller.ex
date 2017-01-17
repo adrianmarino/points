@@ -9,7 +9,7 @@ defmodule Point.TransactionController do
       transaction ->
         case TransactionService.execute(transaction, conn.body_params) do
           {:ok, result } -> send_resp(conn, :ok, Model.to_string(result))
-          {:error, error} -> send_error_resp(conn, :internal_server_error, error.message)
+          {:error, error} -> send_error_resp(conn, :internal_server_error, inspect(error))
         end
     end
   end
