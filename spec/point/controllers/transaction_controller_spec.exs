@@ -9,6 +9,7 @@ defmodule Point.TransactionControllerSpec do
   import ServiceSpecHelper
   import Point.DecimalUtil
   alias Point.{AccountFactory, ExchangeRateService, TransactionService}
+  import PointLogger
 
   let valid_attrs: %{
     name: "test_transfer",
@@ -58,7 +59,7 @@ defmodule Point.TransactionControllerSpec do
           target_code: currency_code(target), value: Decimal.new(3))
 
         File.rmdir(Point.Config.get(:tmp_path))
-        response
+        info(inspect response.resp_body)
       end
 
       it "responds 200 status", do: expect response.status |> to(eq 200)

@@ -1,6 +1,5 @@
 defmodule Point.ParamsSpec do
     use ESpec
-    import Params
 
     describe "valid_params" do
       context "when doesn't found a required param" do
@@ -8,7 +7,7 @@ defmodule Point.ParamsSpec do
         let definition: %{to: %{user: %{email: :required}}}
 
         it "throws a required param error" do
-          expect fn -> valid_params(params, def: definition) end |> to(throw_term "to.user.email param is required!")
+          expect fn -> Params.valid_params(params, definition) end |> to(throw_term "to.user.email param is required!")
         end
       end
 
@@ -16,14 +15,14 @@ defmodule Point.ParamsSpec do
         let params: %{to: %{user: %{email: "adrianmarino@gmail.com"}}}
         let definition: %{to: %{user: %{email: :required}}}
 
-        it "returns same params", do: expect valid_params(params, def: definition) |> to(eq params)
+        it "returns same params", do: expect Params.valid_params(params, definition) |> to(eq params)
       end
 
       context "when doesn't found a param with default value" do
         let params: %{}
         let definition: %{to: %{user: %{email: "adrianmarino@gmail.com"}}}
 
-        it "assigns default value", do: expect valid_params(params, def: definition) |> to(eq definition)
+        it "assigns default value", do: expect Params.valid_params(params, definition) |> to(eq definition)
       end
     end
 end

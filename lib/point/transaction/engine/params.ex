@@ -4,7 +4,8 @@ defmodule Params do
   import Map, only: [to_list: 1, get: 2]
   import Point.MapUtil, only: [map: 2]
 
-  def valid_params(params, def: definition), do: _valid_params(params, definition, "")
+  def valid_params(params, definition) when definition == %{}, do: params
+  def valid_params(params, definition), do: _valid_params(params, definition, "")
 
   defp _valid_params(_, [], _), do: %{}
   defp _valid_params(params, definition, path) do
