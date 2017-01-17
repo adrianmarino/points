@@ -1,6 +1,6 @@
-defmodule Point.StandardLibSpec do
+defmodule Point.ParamsSpec do
     use ESpec
-    import StandardLib
+    import Params
 
     describe "valid_params" do
       context "when doesn't found a required param" do

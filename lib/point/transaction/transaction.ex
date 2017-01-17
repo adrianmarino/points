@@ -4,6 +4,7 @@ defmodule Transaction do
   defmacro __using__(_) do
     quote do
       import StandardLib
+      import Params
       @behaviour Transaction
     end
   end
