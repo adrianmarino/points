@@ -5,4 +5,9 @@ defmodule Point.FileUtil do
       error -> error
     end
   end
+
+  def mk_file_path(path, filename, ext \\ "") do
+    File.mkdir_p(path)
+    "#{path}/#{filename}.#{ext}"
+  end
 end

@@ -9,7 +9,7 @@ defmodule Point.TransactionControllerSpec do
   import ServiceSpecHelper
   import Point.DecimalUtil
   alias Point.{AccountFactory, ExchangeRateService, TransactionService}
-  import PointLogger
+  import Helper
 
   let valid_attrs: %{
     name: "test_transfer",
@@ -51,15 +51,14 @@ defmodule Point.TransactionControllerSpec do
           transaction_path(sec_conn, :create, attrs.name),
           attrs.source
         )
+
         ExchangeRateService.insert!(source_code: currency_code(source_backup),
           target_code: currency_code(source), value: Decimal.new(1))
         ExchangeRateService.insert!(source_code: currency_code(target_backup),
           target_code: currency_code(target), value: Decimal.new(2))
         ExchangeRateService.insert!(source_code: currency_code(source),
           target_code: currency_code(target), value: Decimal.new(3))
-
-        File.rmdir(Point.Config.get(:tmp_path))
-        info(inspect response.resp_body)
+        response
       end
 
       it "responds 200 status", do: expect response.status |> to(eq 200)
@@ -86,11 +85,12 @@ defmodule Point.TransactionControllerSpec do
   end
 
   describe "create" do
-    let attrs: valid_attrs
-    let! response: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name),
+    let response: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name),
       attrs.source)
+    before do: response
 
     context "when create a valid transaction" do
+      let attrs: valid_attrs
       let db_transaction: TransactionService.by(name: attrs.name)
 
       it "responds 201 status", do: expect response.status |> to(eq 201)
@@ -98,11 +98,14 @@ defmodule Point.TransactionControllerSpec do
       it "save transaction to db", do: expect(db_transaction).to(be_truthy)
 
       it "save transaction to db with a source code" do
-        expect(Helper.clean(db_transaction.source)).to(eq Helper.clean(attrs.source))
+        expect(clean(db_transaction.source)).to(eq clean(attrs.source))
       end
     end
 
-    xcontext "when create an invalid transaction" do
+    context "when create an invalid transaction" do
+      let attrs: invalid_attrs
+
+      it "responds bad request", do: expect response.status |> to(eq 400)
     end
   end
 

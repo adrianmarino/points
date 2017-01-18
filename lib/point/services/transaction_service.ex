@@ -1,12 +1,12 @@
 defmodule Point.TransactionService do
-  alias Point.{Repo, Transaction, TransactionRunner}
+  alias Point.{Repo, Transaction, TransactionCli}
 
-  def execute(transaction, params), do: TransactionRunner.execute(transaction, params)
+  def execute(transaction, params), do: TransactionCli.execute(transaction, params)
 
   def insert(name: name, source: source) do
-    case Code.string_to_quoted(source) do
-      {:error, message} -> {:error, elem(message, 1)}
+    case TransactionCli.compile(name, source) do
       {:ok, _} -> Repo.insert(Transaction.changeset(%Transaction{}, %{name: name, source: source}))
+      error -> error
     end
   end
 

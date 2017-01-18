@@ -17,7 +17,8 @@ config :point, Point.Endpoint,
   cache_static_manifest: "priv/static/manifest.json",
   session_ttl: 1_800,
   simultaneous_sessions_by_user_and_remote_ip: 3,
-  tmp_path: "./tmp"
+  tmp_compile_path: "./tmp/compile",
+  tmp_exec_path: "./tmp/exec"
 
 config :ecto_ttl,
     ignore_newest_seconds: 0,

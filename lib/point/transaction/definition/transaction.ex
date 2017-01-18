@@ -16,7 +16,7 @@ defmodule Transaction do
         info("params_def: #{inspect get_def(@params_def)}")
         build_params = Params.valid_params(params, get_def(@params_def))
         info("params: #{build_params}")
-        perform(build_params)
+        Point.Repo.transaction fn -> perform(build_params) end
       end
     end
   end
