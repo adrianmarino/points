@@ -1,7 +1,7 @@
 defmodule Transfer do
   use Transaction
 
-  params fn ->
+  defparams do
     acc_def = %{email: :required, currency: :required}
     %{from: acc_def, to: acc_def, amount: :required}
   end
