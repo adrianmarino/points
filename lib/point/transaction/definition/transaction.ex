@@ -12,17 +12,19 @@ defmodule Transaction do
 
   defmacro __before_compile__(_env) do
     quote do
-      def run(params) do
+      def run(params), do: Point.Repo.transaction fn -> perform(valid_params(params)) end
+
+      defp valid_params(params) do
         info("params_def: #{inspect get_def(@params_def)}")
         build_params = Params.valid_params(params, get_def(@params_def))
         info("params: #{build_params}")
-        Point.Repo.transaction fn -> perform(build_params) end
+        build_params
       end
+
+      defp get_def([]), do: %{}
+      defp get_def([params_def|_]), do: params_def
     end
   end
 
   defmacro defparams(do: params_def), do: quote do: @params_def unquote(params_def)
-
-  def get_def([]), do: %{}
-  def get_def([params_def|_]), do: params_def
 end

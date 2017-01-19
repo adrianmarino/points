@@ -8,7 +8,7 @@ defmodule Point.TransactionControllerSpec do
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
   import Point.DecimalUtil
-  alias Point.{AccountFactory, ExchangeRateService, TransactionService}
+  alias Point.{AccountFactory, TransactionService}
   import Helper
 
   let valid_attrs: %{
@@ -16,6 +16,12 @@ defmodule Point.TransactionControllerSpec do
     source: """
     defmodule TestTransfer do
       use Transaction
+
+      defparams do
+        acc_def = %{email: :required, currency: :required}
+        %{from: acc_def, to: acc_def, amount: :required}
+      end
+
       def perform(params) do
         transfer(
           from: account(email: params.from.email, currency: params.from.currency),
@@ -31,33 +37,25 @@ defmodule Point.TransactionControllerSpec do
   describe "perfom" do
     let! response: post(sec_conn, transaction_path(sec_conn, :execute, attrs.name), params)
 
-    context "when perform a transfer" do
+    context "when perform a transfer with valid param" do
       let attrs: valid_attrs
-      let source_backup: AccountFactory.insert(:revel_backup)
-      let target_backup: AccountFactory.insert(:empire_backup)
-
-      let source: AccountFactory.insert(:obiwan_kenoby_revel, issuer: source_backup.owner)
-      let target: AccountFactory.insert(:jango_fett_empire, issuer: target_backup.owner)
-
       let params: %{
         "from" => %{"email" => owner_email(source), "currency" => currency_code(source) },
         "to" =>  %{"email" => owner_email(target), "currency" => currency_code(target) },
         "amount" => 100
       }
 
-      before do
-        post(
-          content_type(sec_conn, text_plain),
-          transaction_path(sec_conn, :create, attrs.name),
-          attrs.source
-        )
+      let source_backup: AccountFactory.insert(:revel_backup)
+      let target_backup: AccountFactory.insert(:empire_backup)
+      let source: AccountFactory.insert(:obiwan_kenoby_revel, issuer: source_backup.owner)
+      let target: AccountFactory.insert(:jango_fett_empire, issuer: target_backup.owner)
 
-        ExchangeRateService.insert!(source_code: currency_code(source_backup),
-          target_code: currency_code(source), value: Decimal.new(1))
-        ExchangeRateService.insert!(source_code: currency_code(target_backup),
-          target_code: currency_code(target), value: Decimal.new(2))
-        ExchangeRateService.insert!(source_code: currency_code(source),
-          target_code: currency_code(target), value: Decimal.new(3))
+      before do
+        rate(source_backup, source, 1)
+        rate(target_backup, target, 2)
+        rate(source, target, 3)
+
+        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
         response
       end
 
@@ -68,25 +66,28 @@ defmodule Point.TransactionControllerSpec do
       it "increases target account", do: expect is(amount(target).(), greater_that: target.amount) |> to(be_truthy)
     end
 
+    context "when perform a transfer with invalid param" do
+      let attrs: valid_attrs
+      let params: %{}
+
+      before do
+        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
+      end
+
+      it "responds an internal sever error", do: expect response.status |> to(eq 500)
+    end
+
     context "when not found a transaction to perform" do
       let attrs: valid_attrs
       let params: %{}
       it "responds not found", do: expect response.status |> to(eq 404)
     end
-
-    context "when the transaction throws an error" do
-      let attrs: valid_attrs
-      let params: %{}
-
-      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
-
-      it "responds an internal sever error", do: expect response.status |> to(eq 500)
-    end
   end
 
   describe "create" do
-    let response: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name),
-      attrs.source)
+    let :response do
+      post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
+    end
     before do: response
 
     context "when create a valid transaction" do
@@ -95,16 +96,15 @@ defmodule Point.TransactionControllerSpec do
 
       it "responds 201 status", do: expect response.status |> to(eq 201)
 
-      it "save transaction to db", do: expect(db_transaction).to(be_truthy)
+      it "save transaction to db", do: expect db_transaction |> to(be_truthy)
 
       it "save transaction to db with a source code" do
-        expect(clean(db_transaction.source)).to(eq clean(attrs.source))
+        expect clean(db_transaction.source) |> to(eq clean(attrs.source))
       end
     end
 
     context "when create an invalid transaction" do
       let attrs: invalid_attrs
-
       it "responds bad request", do: expect response.status |> to(eq 400)
     end
   end

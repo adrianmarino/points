@@ -8,15 +8,14 @@ defmodule Point.TransactionCli do
   alias Point.Config
 
   def compile(name, source) do
-    path = build_source_path(Config.get(:tmp_compile_path), name)
-    write_and_require(path, source)
+      path = build_source_path(name)
+      write_and_require(path, source)
   end
 
   def execute(transaction, params) do
-    path = build_source_path(Config.get(:tmp_exec_path), transaction.name)
-    update_and_require(path, transaction.source, transaction.updated_at)
-
     try do
+      path = build_source_path(transaction.name)
+      update_and_require(path, transaction.source, transaction.updated_at)
       exec_source(transaction, params)
     rescue
       error -> {:error, error}
@@ -29,5 +28,5 @@ defmodule Point.TransactionCli do
     result
   end
 
-  defp build_source_path(path, filename), do: mk_file_path(path, filename, "exs")
+  defp build_source_path(filename), do: mk_file_path(Config.get(:tmp_path), filename, "exs")
 end

@@ -7,8 +7,7 @@ config :point, Point.Endpoint,
   server: false,
   session_ttl: 1_800,
   simultaneous_sessions_by_user_and_remote_ip: 1,
-  tmp_compile_path: "./tmp/compile",
-  tmp_exec_path: "./tmp/exec"
+  tmp_path: "./tmp"
 
 # Print only warnings and errors during test
 config :logger, level: :info
