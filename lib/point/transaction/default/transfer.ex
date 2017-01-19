@@ -2,8 +2,8 @@ defmodule Transfer do
   use Transaction
 
   defparams do
-    acc_def = %{email: :required, currency: :required}
-    %{from: acc_def, to: acc_def, amount: :required}
+    acc = %{email: :required, currency: :required}
+    %{from: acc, to: acc, amount: :required}
   end
 
   def perform(params) do

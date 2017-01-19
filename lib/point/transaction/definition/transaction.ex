@@ -1,23 +1,31 @@
 defmodule Transaction do
-  import PointLogger
+  alias Point.{StopWatch, Repo, JSON}
 
   defmacro __using__(_options) do
     quote do
       import unquote(__MODULE__)
       Module.register_attribute __MODULE__, :params_def, accumulate: true
       import StandardLib
+      import PointLogger
       @before_compile unquote(__MODULE__)
     end
   end
 
   defmacro __before_compile__(_env) do
     quote do
-      def run(params), do: Point.Repo.transaction fn -> perform(valid_params(params)) end
+      def run(params) do
+        info "Begin Transation."
+        params = valid_params(params)
+        stop_watch = StopWatch.begin
+        result = Repo.transaction fn -> perform(params) end
+        info "Transaction Result: #{result}"
+        info "End Transaction (Elapsed Time: #{stop_watch})."
+        result
+      end
 
       defp valid_params(params) do
-        info("params_def: #{inspect get_def(@params_def)}")
         build_params = Params.valid_params(params, get_def(@params_def))
-        info("params: #{build_params}")
+        info("Transaction Params: #{JSON.to_pretty_json build_params}")
         build_params
       end
 

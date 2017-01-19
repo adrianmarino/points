@@ -25,7 +25,9 @@ config :ecto_ttl,
     batch_size: 1000
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger,
+  format: "\n$time $metadata[$level] $levelpad$message",
+  level: :info
 
 # ## SSL Support
 #

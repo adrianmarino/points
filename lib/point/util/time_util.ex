@@ -1,4 +1,5 @@
 defmodule Point.TimeUtil do
-  def sec_humanized(secs) when secs > 0, do: Timex.Duration.from_seconds(secs) |> Timex.format_duration(:humanized)
-  def sec_humanized(secs) when secs <= 0, do: "0 seconds"
+  use Timex
+  def humanize(duration), do: duration |> Timex.format_duration(:humanized)
+  def sec_humanized(value), do: humanize(Duration.from_seconds(value))
 end

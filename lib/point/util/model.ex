@@ -1,23 +1,6 @@
 defmodule Point.Model do
-  alias Point.ModelMap
-
-  def to_string(model) do
-    case model |> ModelMap.to_map |> JSX.encode do
-      {:ok, json} -> prettify(json)
-      {:error, message} -> message
-    end
-  end
-
-  defp prettify(json) do
-    cond do
-      String.length(json) <= 80 -> json
-      true ->
-        case JSX.prettify(json) do
-          {:ok, json } -> json
-          {:error, message} -> message
-        end
-    end
-  end
+  alias Point.{ModelMap, JSON}
+  def to_string(model), do: model |> ModelMap.to_map |> JSON.to_pretty_json
 end
 
 defprotocol Point.ModelMap, do: def to_map(model)
