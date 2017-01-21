@@ -64,14 +64,11 @@ defmodule Point.TransactionControllerSpec do
 
     context "when create a valid transaction" do
       let attrs: valid_attrs
-      let db_transaction: TransactionService.by(name: attrs.name)
-      before do: response
+      let response_body: json_response(response, 201)
 
       it "responds 201 status", do: expect response.status |> to(eq 201)
-      it "save transaction to db", do: expect db_transaction |> to(be_truthy)
-      it "save transaction to db with a source code" do
-        expect clean(db_transaction.source) |> to(eq clean(attrs.source))
-      end
+      it "returns account name", do: expect response_body["name"] |> to(eq attrs.name)
+      it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(attrs.source))
     end
 
     context "when create an invalid transaction" do
@@ -115,15 +112,14 @@ defmodule Point.TransactionControllerSpec do
     context "when update transaction with a valid source code" do
       let attrs: %{valid_attrs | source: "defmodule TestTransfer do end"}
       let response_body: json_response(response, 200)
-      let db_transaction: TransactionService.by(name: attrs.name)
+      let response_body: json_response(response, 200)
+
       before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
         valid_attrs.source)
 
       it do: expect response.status |> to(eq 200)
-      it "save transaction to db with a source code" do
-        response
-        expect clean(db_transaction.source) |> to(eq clean(attrs.source))
-      end
+      it "returns account name", do: expect response_body["name"] |> to(eq attrs.name)
+      it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(attrs.source))
     end
 
     context "when update transaction with an invalid source code" do
