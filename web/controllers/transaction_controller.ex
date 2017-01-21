@@ -14,6 +14,13 @@ defmodule Point.TransactionController do
     end
   end
 
+  def show(conn, %{"name" => name}) do
+    case TransactionService.by(name: name) do
+      nil -> send_resp(conn, :not_found, "")
+      transaction -> render(conn, "show.json", transaction: transaction)
+    end
+  end
+
   def create(conn, %{"name" => name}) do
     case body(conn) do
       {:ok, body } ->

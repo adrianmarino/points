@@ -40,9 +40,7 @@ defmodule Point.TransactionControllerSpec do
       end
 
       it "responds 200 status", do: expect response.status |> to(eq 200)
-
       it "decreases source account", do: expect is(amount(source).(), less_that: source.amount) |> to(be_truthy)
-
       it "increases target account", do: expect is(amount(target).(), greater_that: target.amount) |> to(be_truthy)
     end
 
@@ -70,9 +68,7 @@ defmodule Point.TransactionControllerSpec do
       before do: response
 
       it "responds 201 status", do: expect response.status |> to(eq 201)
-
       it "save transaction to db", do: expect db_transaction |> to(be_truthy)
-
       it "save transaction to db with a source code" do
         expect clean(db_transaction.source) |> to(eq clean(attrs.source))
       end
@@ -82,6 +78,22 @@ defmodule Point.TransactionControllerSpec do
       let attrs: invalid_attrs
       it "responds 422 status", do: expect response.status |> to(eq 422)
     end
+  end
+
+  describe "show" do
+    let response: get(sec_conn, transaction_path(sec_conn, :show, valid_attrs.name))
+
+    context "when found a transaction" do
+      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+        valid_attrs.source)
+      let response_body: json_response(response, 200)
+
+      it do: expect response.status |> to(eq 200)
+      it "returns account name", do: expect response_body["name"] |> to(eq valid_attrs.name)
+      it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(valid_attrs.source))
+    end
+
+    it "responds 404 when not found a transaction", do: expect response.status |> to(eq 404)
   end
 
   describe "delete" do
@@ -104,15 +116,12 @@ defmodule Point.TransactionControllerSpec do
       let attrs: %{valid_attrs | source: "defmodule TestTransfer do end"}
       let response_body: json_response(response, 200)
       let db_transaction: TransactionService.by(name: attrs.name)
-      before do
-        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
-            valid_attrs.source)
-        response
-      end
+      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+        valid_attrs.source)
 
       it do: expect response.status |> to(eq 200)
-
       it "save transaction to db with a source code" do
+        response
         expect clean(db_transaction.source) |> to(eq clean(attrs.source))
       end
     end
