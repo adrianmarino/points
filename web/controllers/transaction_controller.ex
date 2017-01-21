@@ -18,11 +18,36 @@ defmodule Point.TransactionController do
     case body(conn) do
       {:ok, body } ->
         case TransactionService.insert(name: name, source: body) do
-          {:ok, _} -> send_resp(conn, :created, "")
-          {:error, message} -> send_error_resp(conn, :bad_request, message)
+          {:ok, transaction} ->
+            conn
+              |> put_status(:created)
+              |> put_resp_header("location", transaction_path(conn, :show, transaction))
+              |> render("show.json", transaction: transaction)
+          {:error, changeset} ->
+            conn
+              |> put_status(:unprocessable_entity)
+              |> render(Point.ChangesetView, "error.json", changeset: changeset)
         end
       {:error, message} -> send_error_resp(conn, :bad_request, message)
     end
+  end
+
+  def update(conn, %{"name" => name}) do
+    case TransactionService.by(name: name) do
+      nil -> send_resp(conn, :bad_request, "")
+      transaction ->
+        case body(conn) do
+          {:ok, body } ->
+            case TransactionService.update(transaction, source: body) do
+              {:ok, transaction} -> render(conn, "show.json", transaction: transaction)
+              {:error, changeset} ->
+                conn
+                  |> put_status(:unprocessable_entity)
+                  |> render(Point.ChangesetView, "error.json", changeset: changeset)
+            end
+          {:error, message} -> send_error_resp(conn, :bad_request, message)
+        end
+      end
   end
 
   def delete(conn, %{"name" => name}) do

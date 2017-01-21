@@ -8,12 +8,15 @@ defmodule Point.Transaction do
     timestamps()
   end
 
-  @doc """
-  Builds a changeset based on the `struct` and `params`.
-  """
-  def changeset(struct, params \\ %{}) do
+  def insert_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name, :source])
     |> validate_required([:name, :source])
+  end
+
+  def update_changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:source])
+    |> validate_required([:source])
   end
 end

@@ -5,7 +5,19 @@ defmodule Point.TransactionService do
 
   def insert(name: name, source: source) do
     case TransactionCli.compile(name, source) do
-      {:ok, _} -> Repo.insert(Transaction.changeset(%Transaction{}, %{name: name, source: source}))
+      {:ok, _} ->
+        attrs = %{name: name, source: source}
+        changeset = Transaction.insert_changeset(%Transaction{}, attrs)
+        Repo.insert(changeset)
+      error -> error
+    end
+  end
+
+  def update(transaction, source: source) do
+    case TransactionCli.compile(transaction.name, source) do
+      {:ok, _} ->
+        changeset = Transaction.update_changeset(transaction, %{source: source})
+        Repo.update(changeset)
       error -> error
     end
   end

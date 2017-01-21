@@ -32,13 +32,13 @@ defmodule Point.TransactionControllerSpec do
     end
     """
   }
-  let invalid_attrs: %{ name: "any", source: "any"}
+
+  let invalid_attrs: %{ name: "any", source: ""}
 
   describe "perfom" do
-    let! response: post(sec_conn, transaction_path(sec_conn, :execute, attrs.name), params)
+    let! response: post(sec_conn, transaction_path(sec_conn, :execute, valid_attrs.name), params)
 
     context "when perform a transfer with valid param" do
-      let attrs: valid_attrs
       let params: %{
         "from" => %{"email" => owner_email(source), "currency" => currency_code(source) },
         "to" =>  %{"email" => owner_email(target), "currency" => currency_code(target) },
@@ -55,7 +55,8 @@ defmodule Point.TransactionControllerSpec do
         rate(target_backup, target, 2)
         rate(source, target, 3)
 
-        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
+        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+          valid_attrs.source)
         response
       end
 
@@ -67,18 +68,16 @@ defmodule Point.TransactionControllerSpec do
     end
 
     context "when perform a transfer with invalid param" do
-      let attrs: valid_attrs
       let params: %{}
-
       before do
-        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
+        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+          valid_attrs.source)
       end
 
       it "responds an internal sever error", do: expect response.status |> to(eq 500)
     end
 
     context "when not found a transaction to perform" do
-      let attrs: valid_attrs
       let params: %{}
       it "responds not found", do: expect response.status |> to(eq 404)
     end
@@ -88,11 +87,11 @@ defmodule Point.TransactionControllerSpec do
     let :response do
       post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
     end
-    before do: response
 
     context "when create a valid transaction" do
       let attrs: valid_attrs
       let db_transaction: TransactionService.by(name: attrs.name)
+      before do: response
 
       it "responds 201 status", do: expect response.status |> to(eq 201)
 
@@ -105,17 +104,17 @@ defmodule Point.TransactionControllerSpec do
 
     context "when create an invalid transaction" do
       let attrs: invalid_attrs
-      it "responds bad request", do: expect response.status |> to(eq 400)
+      it "responds 422 status", do: expect response.status |> to(eq 422)
     end
   end
 
   describe "delete" do
-    let attrs: valid_attrs
-    let response: delete(content_type(sec_conn, text_plain), transaction_path(sec_conn, :delete, attrs.name))
+    let response: delete(content_type(sec_conn, text_plain), transaction_path(sec_conn, :delete, valid_attrs.name))
 
     context "when the transaction exist" do
       before do
-        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
+        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+          valid_attrs.source)
       end
       it "responds 204 status", do: expect response.status |> to(eq 204)
     end
@@ -123,10 +122,48 @@ defmodule Point.TransactionControllerSpec do
     it "responds 404 status when not found the transaction", do: expect response.status |> to(eq 404)
   end
 
-  xdescribe "update" do
-    context "when the transaction exist" do
+  describe "update" do
+    let :response do
+      put(content_type(sec_conn, text_plain), transaction_path(sec_conn, :update, attrs.name), attrs.source)
     end
+
+    context "when update transaction with a valid source code" do
+      let attrs: %{
+        valid_attrs |
+        source: """
+        defmodule TestTransfer do
+        end
+        """
+      }
+      let response_body: json_response(response, 200)
+      let db_transaction: TransactionService.by(name: attrs.name)
+      before do
+        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+            valid_attrs.source)
+        response
+      end
+
+      it do: expect response.status |> to(eq 200)
+
+      it "save transaction to db with a source code" do
+        expect clean(db_transaction.source) |> to(eq clean(attrs.source))
+      end
+    end
+
+    context "when update transaction with an invalid source code" do
+      let attrs: %{valid_attrs | source: ""}
+      before do
+        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+            valid_attrs.source)
+      end
+
+      it do: expect response.status |> to(eq 422)
+      it do: expect json_response(response, 422)["errors"] |> not_to(be_empty)
+    end
+
     context "when not found the transaction" do
+      let attrs: invalid_attrs
+      it "responds 400 status", do: expect response.status |> to(eq 400)
     end
   end
 end
