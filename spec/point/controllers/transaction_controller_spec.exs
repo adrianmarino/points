@@ -1,38 +1,17 @@
-defmodule Helper do
-  import String
-  def clean(value), do: value |> replace("\n", "") |> replace(" ", "")
-end
-
 defmodule Point.TransactionControllerSpec do
   use ESpec.Phoenix, controller: Point.TransactionController
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
   import Point.DecimalUtil
   alias Point.{AccountFactory, TransactionService}
-  import Helper
+  import String, only: [replace: 3]
+
+  def clean(value), do: value |> replace("\n", "") |> replace(" ", "")
 
   let valid_attrs: %{
     name: "test_transfer",
-    source: """
-    defmodule TestTransfer do
-      use Transaction
-
-      defparams do
-        acc_def = %{email: :required, currency: :required}
-        %{from: acc_def, to: acc_def, amount: :required}
-      end
-
-      def perform(params) do
-        transfer(
-          from: account(email: params.from.email, currency: params.from.currency),
-          to: account(email: params.to.email, currency: params.to.currency),
-          amount: params.amount
-        )
-      end
-    end
-    """
+    source: File.read!("./lib/point/transaction/default/transfer.ex") |> replace("Transfer", "TestTransfer")
   }
-
   let invalid_attrs: %{ name: "any", source: ""}
 
   describe "perfom" do
