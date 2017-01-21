@@ -13,6 +13,30 @@ defmodule Point.TransactionControllerSpec do
   let valid_attrs: %{name: "test_transfer", source: File.read!(@transfer_path) |> replace("Transfer", "TestTransfer")}
   let invalid_attrs: %{name: "any", source: ""}
 
+  describe "index" do
+    let response: get(sec_conn, transaction_path(sec_conn, :index))
+    before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+      valid_attrs.source)
+
+    it "returns a non empty collection", do: expect json_response(response, 200) |> not_to(be_empty)
+  end
+
+  describe "show" do
+    let response: get(sec_conn, transaction_path(sec_conn, :show, valid_attrs.name))
+
+    context "when found a transaction" do
+      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+        valid_attrs.source)
+      let response_body: json_response(response, 200)
+
+      it do: expect response.status |> to(eq 200)
+      it "returns account name", do: expect response_body["name"] |> to(eq valid_attrs.name)
+      it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(valid_attrs.source))
+    end
+
+    it "responds 404 when not found a transaction", do: expect response.status |> to(eq 404)
+  end
+
   describe "perfom" do
     let! response: post(sec_conn, transaction_path(sec_conn, :execute, valid_attrs.name), params)
 
@@ -73,31 +97,6 @@ defmodule Point.TransactionControllerSpec do
       let attrs: invalid_attrs
       it "responds 422 status", do: expect response.status |> to(eq 422)
     end
-  end
-
-  describe "index" do
-    let response_body: json_response(response, 200)
-    let response: get(sec_conn, transaction_path(sec_conn, :index))
-    before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
-      valid_attrs.source)
-
-    it "returns a non empty collection", do: expect response_body |> not_to(be_empty)
-  end
-
-  describe "show" do
-    let response: get(sec_conn, transaction_path(sec_conn, :show, valid_attrs.name))
-
-    context "when found a transaction" do
-      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
-        valid_attrs.source)
-      let response_body: json_response(response, 200)
-
-      it do: expect response.status |> to(eq 200)
-      it "returns account name", do: expect response_body["name"] |> to(eq valid_attrs.name)
-      it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(valid_attrs.source))
-    end
-
-    it "responds 404 when not found a transaction", do: expect response.status |> to(eq 404)
   end
 
   describe "delete" do
