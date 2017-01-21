@@ -11,4 +11,11 @@ defmodule Point.TransactionService do
   end
 
   def by(name: name), do: Repo.get_by(Transaction, name: name)
+
+  def delete(name: name) do
+    case by(name: name) do
+      nil -> {:error, "Not found"}
+      _ -> {:ok, "Transaction removed"}
+    end
+  end
 end

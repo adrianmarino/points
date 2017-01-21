@@ -25,6 +25,13 @@ defmodule Point.TransactionController do
     end
   end
 
+  def delete(conn, %{"name" => name}) do
+    case TransactionService.delete(name: name) do
+      {:ok, _ } -> send_resp(conn, :no_content, "")
+      {:error, message } -> send_message_resp(conn, :not_found, message)
+    end
+  end
+
   defp body(conn) do
     case Plug.Conn.read_body(conn) do
       {:ok, data, _} -> {:ok, String.trim(data)}

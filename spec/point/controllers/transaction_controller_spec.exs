@@ -109,14 +109,21 @@ defmodule Point.TransactionControllerSpec do
     end
   end
 
-  xdescribe "update" do
+  describe "delete" do
+    let attrs: valid_attrs
+    let response: delete(content_type(sec_conn, text_plain), transaction_path(sec_conn, :delete, attrs.name))
+
     context "when the transaction exist" do
+      before do
+        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
+      end
+      it "responds 204 status", do: expect response.status |> to(eq 204)
     end
-    context "when not found the transaction" do
-    end
+
+    it "responds 404 status when not found the transaction", do: expect response.status |> to(eq 404)
   end
 
-  xdescribe "delete" do
+  xdescribe "update" do
     context "when the transaction exist" do
     end
     context "when not found the transaction" do
