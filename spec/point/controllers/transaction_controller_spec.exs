@@ -6,7 +6,7 @@ defmodule Point.TransactionControllerSpec do
   alias Point.{AccountFactory, TransactionService}
   import String, only: [replace: 3]
 
-  def clean(value), do: value |> replace("\n", "") |> replace(" ", "")
+  def clean(value), do: value |> replace("\n", "")
 
   let valid_attrs: %{
     name: "test_transfer",
@@ -48,10 +48,8 @@ defmodule Point.TransactionControllerSpec do
 
     context "when perform a transfer with invalid param" do
       let params: %{}
-      before do
-        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
-          valid_attrs.source)
-      end
+      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+        valid_attrs.source)
 
       it "responds an internal sever error", do: expect response.status |> to(eq 500)
     end
@@ -63,9 +61,8 @@ defmodule Point.TransactionControllerSpec do
   end
 
   describe "create" do
-    let :response do
-      post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name), attrs.source)
-    end
+    let response: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, attrs.name),
+      attrs.source)
 
     context "when create a valid transaction" do
       let attrs: valid_attrs
@@ -91,10 +88,8 @@ defmodule Point.TransactionControllerSpec do
     let response: delete(content_type(sec_conn, text_plain), transaction_path(sec_conn, :delete, valid_attrs.name))
 
     context "when the transaction exist" do
-      before do
-        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
-          valid_attrs.source)
-      end
+      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+        valid_attrs.source)
       it "responds 204 status", do: expect response.status |> to(eq 204)
     end
 
@@ -102,18 +97,11 @@ defmodule Point.TransactionControllerSpec do
   end
 
   describe "update" do
-    let :response do
-      put(content_type(sec_conn, text_plain), transaction_path(sec_conn, :update, attrs.name), attrs.source)
-    end
+    let response: put(content_type(sec_conn, text_plain), transaction_path(sec_conn, :update, attrs.name),
+      attrs.source)
 
     context "when update transaction with a valid source code" do
-      let attrs: %{
-        valid_attrs |
-        source: """
-        defmodule TestTransfer do
-        end
-        """
-      }
+      let attrs: %{valid_attrs | source: "defmodule TestTransfer do end"}
       let response_body: json_response(response, 200)
       let db_transaction: TransactionService.by(name: attrs.name)
       before do
@@ -131,10 +119,8 @@ defmodule Point.TransactionControllerSpec do
 
     context "when update transaction with an invalid source code" do
       let attrs: %{valid_attrs | source: ""}
-      before do
-        post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
-            valid_attrs.source)
-      end
+      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+        valid_attrs.source)
 
       it do: expect response.status |> to(eq 422)
       it do: expect json_response(response, 422)["errors"] |> not_to(be_empty)
