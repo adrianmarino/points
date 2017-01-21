@@ -3,6 +3,14 @@ defmodule Point.TransactionController do
   import Point.Phoenix.JSONResponseUtil
   alias Point.{Model, TransactionService}
 
+  def index(conn, _), do: render(conn, "index.json", transactions: TransactionService.all)
+  def show(conn, %{"name" => name}) do
+    case TransactionService.by(name: name) do
+      nil -> send_resp(conn, :not_found, "")
+      transaction -> render(conn, "show.json", transaction: transaction)
+    end
+  end
+
   def execute(conn, %{"name" => name}) do
     case TransactionService.by(name: name) do
       nil -> send_error_resp(conn, :not_found, "")
@@ -11,13 +19,6 @@ defmodule Point.TransactionController do
           {:ok, result } -> send_resp(conn, :ok, Model.to_string(result))
           {:error, error} -> send_error_resp(conn, :internal_server_error, inspect(error))
         end
-    end
-  end
-
-  def show(conn, %{"name" => name}) do
-    case TransactionService.by(name: name) do
-      nil -> send_resp(conn, :not_found, "")
-      transaction -> render(conn, "show.json", transaction: transaction)
     end
   end
 

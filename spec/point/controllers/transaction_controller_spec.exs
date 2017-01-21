@@ -75,6 +75,15 @@ defmodule Point.TransactionControllerSpec do
     end
   end
 
+  describe "index" do
+    let response_body: json_response(response, 200)
+    let response: get(sec_conn, transaction_path(sec_conn, :index))
+    before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
+      valid_attrs.source)
+
+    it "returns a non empty collection", do: expect response_body |> not_to(be_empty)
+  end
+
   describe "show" do
     let response: get(sec_conn, transaction_path(sec_conn, :show, valid_attrs.name))
 
