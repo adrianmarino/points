@@ -6,13 +6,12 @@ defmodule Point.TransactionControllerSpec do
   alias Point.{AccountFactory, TransactionService}
   import String, only: [replace: 3]
 
+  @transfer_path "./lib/point/transaction/default/transfer.ex"
+
   def clean(value), do: value |> replace("\n", "")
 
-  let valid_attrs: %{
-    name: "test_transfer",
-    source: File.read!("./lib/point/transaction/default/transfer.ex") |> replace("Transfer", "TestTransfer")
-  }
-  let invalid_attrs: %{ name: "any", source: ""}
+  let valid_attrs: %{name: "test_transfer", source: File.read!(@transfer_path) |> replace("Transfer", "TestTransfer")}
+  let invalid_attrs: %{name: "any", source: ""}
 
   describe "perfom" do
     let! response: post(sec_conn, transaction_path(sec_conn, :execute, valid_attrs.name), params)
@@ -48,7 +47,6 @@ defmodule Point.TransactionControllerSpec do
       let params: %{}
       before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
         valid_attrs.source)
-
       it "responds an internal sever error", do: expect response.status |> to(eq 500)
     end
 
