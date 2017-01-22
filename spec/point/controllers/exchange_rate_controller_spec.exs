@@ -7,6 +7,22 @@ defmodule Point.ExchangeRateControllerSpec do
   let target: CurrencyFactory.insert(:rebel_point)
   let valid_attrs: %{value: "100.00", source: source.code, target: target.code}
 
+  describe "index" do
+    it "returns exchange rates"
+  end
+
+  describe "show" do
+    context "when found an exchange rate" do
+      it "returns ok status"
+      it "returns a source currency code"
+      it "returns a target currency code"
+    end
+
+    context "when not found an exchange rate" do
+      it "returns not found status"
+    end
+  end
+
   describe "create" do
     let response: post(sec_conn, exchange_rate_path(sec_conn, :create), attrs)
 

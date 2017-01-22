@@ -7,11 +7,9 @@ defmodule Point.AccountService do
   # Crud
   def all, do: Repo.all(Account)
   def get!(id), do: Repo.get!(Account, id)
-  def insert(params) do
-    params = Map.merge(%{"type" => "default"}, params)
-    changeset = Account.insert_changeset(%Account{}, params)
-    Repo.insert(changeset)
-  end
+  def get(id), do: Repo.get(Account, id)
+  def insert(params), do: Repo.insert(insert_changeset(params))
+  def insert!(params), do: Repo.insert(insert_changeset(params))
   def update(id, params) do
     account = get!(id)
     changeset = Account.update_changeset(account, params)
@@ -50,4 +48,6 @@ defmodule Point.AccountService do
   def decrease_changeset(account, amount) do
     Account.changeset(account, %{amount: sub(account.amount, new(amount))})
   end
+
+  defp insert_changeset(params), do: Account.insert_changeset(%Account{}, Map.merge(%{"type" => "default"}, params))
 end

@@ -65,4 +65,9 @@ defmodule Point.SessionControllerSpec do
       it "returns unauthorized status", do: expect response.status |> to(eq 401)
     end
   end
+
+  describe "index" do
+    it "returns ok status"
+    it "returns sessions"
+  end
 end

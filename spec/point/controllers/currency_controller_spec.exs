@@ -31,7 +31,7 @@ defmodule Point.CurrencyControllerTest do
     let response: get(sec_conn, currency_path(sec_conn, :index))
     before do: post(sec_conn, currency_path(sec_conn, :create), valid_attrs)
 
-    it "returns non empty collection", do: expect json_response(response, 200) |> not_to(be_empty)
+    it "returns currencies", do: expect json_response(response, 200) |> not_to(be_empty)
   end
 
   describe "show" do

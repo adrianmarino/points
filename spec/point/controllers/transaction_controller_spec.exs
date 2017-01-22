@@ -18,7 +18,7 @@ defmodule Point.TransactionControllerSpec do
     before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
       valid_attrs.source)
 
-    it "returns a non empty collection", do: expect json_response(response, 200) |> not_to(be_empty)
+    it "returns transactions", do: expect json_response(response, 200) |> not_to(be_empty)
   end
 
   describe "show" do
@@ -29,12 +29,12 @@ defmodule Point.TransactionControllerSpec do
         valid_attrs.source)
       let response_body: json_response(response, 200)
 
-      it do: expect response.status |> to(eq 200)
+      it "returns ok status", do: expect response.status |> to(eq 200)
       it "returns account name", do: expect response_body["name"] |> to(eq valid_attrs.name)
       it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(valid_attrs.source))
     end
 
-    it "responds 404 when not found a transaction", do: expect response.status |> to(eq 404)
+    it "returns not found status when non-exist a transaction", do: expect response.status |> to(eq 404)
   end
 
   describe "perfom" do
@@ -62,7 +62,7 @@ defmodule Point.TransactionControllerSpec do
         response
       end
 
-      it "responds 200 status", do: expect response.status |> to(eq 200)
+      it "returns ok status", do: expect response.status |> to(eq 200)
       it "decreases source account", do: expect is(amount(source).(), less_that: source.amount) |> to(be_truthy)
       it "increases target account", do: expect is(amount(target).(), greater_that: target.amount) |> to(be_truthy)
     end
@@ -71,12 +71,12 @@ defmodule Point.TransactionControllerSpec do
       let params: %{}
       before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
         valid_attrs.source)
-      it "responds an internal sever error", do: expect response.status |> to(eq 500)
+      it "returns internal server error status", do: expect response.status |> to(eq 500)
     end
 
     context "when not found a transaction to perform" do
       let params: %{}
-      it "responds not found", do: expect response.status |> to(eq 404)
+      it "returns not found status", do: expect response.status |> to(eq 404)
     end
   end
 
@@ -88,58 +88,57 @@ defmodule Point.TransactionControllerSpec do
       let attrs: valid_attrs
       let response_body: json_response(response, 201)
 
-      it "responds 201 status", do: expect response.status |> to(eq 201)
+      it "responds created status", do: expect response.status |> to(eq 201)
       it "returns account name", do: expect response_body["name"] |> to(eq attrs.name)
       it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(attrs.source))
     end
 
     context "when create an invalid transaction" do
       let attrs: invalid_attrs
-      it "responds 422 status", do: expect response.status |> to(eq 422)
+      it "returns unprocessable_entity status", do: expect response.status |> to(eq 422)
     end
   end
 
   describe "delete" do
     let response: delete(content_type(sec_conn, text_plain), transaction_path(sec_conn, :delete, valid_attrs.name))
 
-    context "when the transaction exist" do
+    context "when exist the transaction" do
       before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
         valid_attrs.source)
-      it "responds 204 status", do: expect response.status |> to(eq 204)
+      it "returns deleted status", do: expect response.status |> to(eq 204)
     end
 
-    it "responds 404 status when not found the transaction", do: expect response.status |> to(eq 404)
+    it "returns not found status when non-exist the transaction", do: expect response.status |> to(eq 404)
   end
 
   describe "update" do
     let response: put(content_type(sec_conn, text_plain), transaction_path(sec_conn, :update, attrs.name),
       attrs.source)
 
-    context "when update transaction with a valid source code" do
+    context "when update a transaction with a valid source" do
       let attrs: %{valid_attrs | source: "defmodule TestTransfer do end"}
-      let response_body: json_response(response, 200)
       let response_body: json_response(response, 200)
 
       before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
         valid_attrs.source)
 
-      it do: expect response.status |> to(eq 200)
+      it "returns ok status", do: expect response.status |> to(eq 200)
       it "returns account name", do: expect response_body["name"] |> to(eq attrs.name)
       it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(attrs.source))
     end
 
-    context "when update transaction with an invalid source code" do
+    context "when update a transaction with an invalid source" do
       let attrs: %{valid_attrs | source: ""}
       before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
         valid_attrs.source)
 
-      it do: expect response.status |> to(eq 422)
-      it do: expect json_response(response, 422)["errors"] |> not_to(be_empty)
+      it "returns unprocessable_entity status", do: expect response.status |> to(eq 422)
+      it "returns errors description", do: expect json_response(response, 422)["errors"] |> not_to(be_empty)
     end
 
-    context "when not found the transaction" do
+    context "when try to update a non-existent transaction" do
       let attrs: invalid_attrs
-      it "responds 400 status", do: expect response.status |> to(eq 400)
+      it "returns not found status", do: expect response.status |> to(eq 400)
     end
   end
 end
