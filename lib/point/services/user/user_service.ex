@@ -12,6 +12,7 @@ defmodule Point.UserService do
   def all, do: Repo.all(User)
   def get!(id), do: Repo.get!(User, id)
   def register(params), do: Repo.insert(User.registration_changeset(%User{}, params))
+  def register!(params), do: Repo.insert!(User.registration_changeset(%User{}, params))
   def update(id, params), do: Repo.insert(User.registration_changeset(get!(id), params))
   def delete!(id), do: Repo.delete!(get!(id))
 end

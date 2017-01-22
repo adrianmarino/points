@@ -1,15 +1,15 @@
 defmodule Point.AccountControllerSpec do
   use ESpec.Phoenix, controller: Point.AccountController
   use ESpec.Phoenix.Helper
+  import ServiceSpecHelper
   alias Point.{Repo, AccountFactory, Account, UserFactory, CurrencyFactory, AccountService, DecimalUtil}
 
   describe "index" do
     let response: get(sec_conn, account_path(sec_conn, :index))
-    let body: json_response(response, 200)
+    before do: AccountFactory.insert(:revel_backup)
 
-    it "returns 201 status", do: expect(response.status).to(eq 200)
-
-    it "has a body", do: expect(body).to(be_empty)
+    it "returns ok status", do: expect(response.status).to(eq 200)
+    it "has elements", do: expect(json_response(response, 200)).not_to(be_empty)
   end
 
   describe "show" do
@@ -19,7 +19,7 @@ defmodule Point.AccountControllerSpec do
     context "when request a default account" do
       let account: AccountFactory.insert(:revel_backup)
 
-      it "returns 201 status", do: expect(response.status).to(eq 200)
+      it "returns ok status", do: expect(response.status).to(eq 200)
 
       it "returns account id", do: expect body["id"] |> to(eq account.id)
 
@@ -27,18 +27,17 @@ defmodule Point.AccountControllerSpec do
 
       it "returns account amount", do: expect body["amount"] |> to(eq to_string(account.amount))
 
-      it "returns account currency code", do: expect body["currency"] |> to(eq Repo.assoc(account, :currency).code)
+      it "returns account currency code", do: expect body["currency"] |> to(eq currency_code(account))
 
-      it "returns account owner email", do: expect body["owner_email"] |> to(eq Repo.assoc(account, :owner).email)
+      it "returns account owner email", do: expect body["owner_email"] |> to(eq owner_email(account))
 
-      it "returns account issuer email", do: expect body["issuer_email"] |> to(eq Repo.assoc(account, :issuer).email)
+      it "returns account issuer email", do: expect body["issuer_email"] |> to(eq issuer_email(account))
     end
 
     context "when request a backup account" do
       let account: AccountFactory.insert(:universe_backup)
 
-      it "returns 201 status", do: expect(response.status).to(eq 200)
-
+      it "returns ok status", do: expect(response.status).to(eq 200)
       it "returns an account without issuer email", do: expect body["issuer_email"] |> to(eq nil)
     end
   end
@@ -52,7 +51,7 @@ defmodule Point.AccountControllerSpec do
       let attrs: %{currency_code: currency.code, owner_email: owner.email}
       let body: json_response(response, 201)
 
-      it "returns 201 status", do: expect(response.status).to(eq 201)
+      it "returns created status", do: expect(response.status).to(eq 201)
 
       it "returns an account id", do: expect body["id"] |> to(be_truthy)
 
@@ -71,10 +70,8 @@ defmodule Point.AccountControllerSpec do
 
     context "when data is invalid" do
       let attrs: %{}
-      let body: json_response(response, 422)
-
-      it "returns 422 status", do: expect(response.status).to(eq 422)
-      it "returns errors description", do: expect body["errors"] |> not_to(eq %{})
+      it "returns unprocessable_entity status", do: expect(response.status).to(eq 422)
+      it "returns errors description", do: expect json_response(response, 422)["errors"] |> not_to(eq %{})
     end
   end
 
@@ -85,14 +82,14 @@ defmodule Point.AccountControllerSpec do
     context "when account is empty" do
       let account: Repo.insert!(%Account{amount: DecimalUtil.zero})
 
-      it "returns 204 status", do: expect(response.status).to(eq 204)
+      it "returns deleted status", do: expect(response.status).to(eq 204)
       it "removes account from database", do: expect Repo.get(Account, account.id) |> to(be_falsy)
     end
 
     context "when account has an amount" do
       let account: Repo.insert!(%Account{amount: Decimal.new(100)})
 
-      it "returns 204 status", do: expect(response.status).to(eq 404)
+      it "returns bad request status", do: expect(response.status).to(eq 404)
       it "doesn't delete account from database", do: expect Repo.get(Account, account.id) |> to(be_truthy)
     end
   end

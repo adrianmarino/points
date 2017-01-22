@@ -2,6 +2,10 @@ defmodule Point.ExchangeRateService do
   alias Point.{ExchangeRate, DecimalUtil, Repo, Currency}
   import Ecto.Query
 
+  def by!(source_code: source_code, target_code: target_code) do
+    with {:ok, model } = by(source_code: source_code, target_code: target_code), do: to_string(model.value)
+  end
+
   def by(source_code: source_code, target_code: target_code) do
     model = Repo.one(from r in ExchangeRate,
     join: s in Currency,

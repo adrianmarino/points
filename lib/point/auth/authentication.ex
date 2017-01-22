@@ -14,7 +14,7 @@ defmodule Point.Authentication do
 
   defp find_session(conn) do
     with auth_header = get_req_header(conn, "token"),
-         {:ok, token}   <- parse_token(auth_header),
+      {:ok, token} <- parse_token(auth_header),
     do: find_session_by(token: token)
   end
 

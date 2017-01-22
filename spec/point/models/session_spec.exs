@@ -11,7 +11,7 @@ defmodule Point.SessionSpec do
       let attrs: valid_attrs
       it do: expect changeset.valid? |> to(be_truthy)
     end
-    context "when has valid attributes" do
+    context "when has invalid attributes" do
       let attrs: invalid_attrs
       it do: expect changeset.valid? |> to(be_falsy)
     end

@@ -5,6 +5,7 @@ defmodule Point.AccountController do
   alias Point.{AccountService, ChangesetView}
 
   def index(conn, _), do: render(conn, "index.json", accounts: AccountService.all)
+
   def show(conn, %{"id" => id}), do: render(conn, "show.json", account: AccountService.get!(id))
 
   def create(conn, params) do

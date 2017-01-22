@@ -4,6 +4,7 @@ defmodule Point.TransactionController do
   alias Point.{Model, TransactionService}
 
   def index(conn, _), do: render(conn, "index.json", transactions: TransactionService.all)
+
   def show(conn, %{"name" => name}) do
     case TransactionService.by(name: name) do
       nil -> send_resp(conn, :not_found, "")

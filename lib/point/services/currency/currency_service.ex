@@ -7,7 +7,8 @@ defmodule Point.CurrencyService do
   def all, do: Repo.all(Currency)
   def get(id), do: Repo.get(Currency, id)
   def get!(id), do: Repo.get!(Currency, id)
-  def insert(params), do: Repo.insert(Currency.changeset(%Currency{}, params))
+  def insert(params), do: Repo.insert(changeset(params))
+  def insert!(params), do: Repo.insert!(changeset(params))
   def update(code, params), do: Repo.update(Currency.changeset(by(code: code), params))
   def delete(code) do
     case by(code: code) do
@@ -21,4 +22,6 @@ defmodule Point.CurrencyService do
         end
     end
   end
+
+  defp changeset(params), do: Currency.changeset(%Currency{}, params)
 end

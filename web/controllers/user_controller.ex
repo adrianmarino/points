@@ -3,6 +3,7 @@ defmodule Point.UserController do
   alias Point.{UserService, ChangesetView}
 
   def index(conn, _params), do: render(conn, "index.json", users: UserService.all)
+
   def show(conn, %{"id" => id}), do: render(conn, "show.json", user: UserService.get!(id))
 
   def create(conn, user_params) do

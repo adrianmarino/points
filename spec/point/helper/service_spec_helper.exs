@@ -12,6 +12,8 @@ defmodule ServiceSpecHelper do
 
   def owner_email(account), do: assoc(account, :owner).email
 
+  def issuer_email(account), do: assoc(account, :issuer).email
+
   def source_id(movement), do: assoc(movement, :source).id
 
   def target_id(movement), do: assoc(movement, :target).id
