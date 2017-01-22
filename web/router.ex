@@ -33,7 +33,7 @@ defmodule Point.Router do
     end
 
     scope "/transactions" do
-      post "/execute/:name", TransactionController, :execute
+      post "/:name/execute", TransactionController, :execute
 
       get "/", TransactionController, :index
       get "/:name", TransactionController, :show
