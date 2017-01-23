@@ -23,7 +23,7 @@ config :ecto_ttl,
 
 # Do not include metadata nor timestamps in development logs
 config :logger,
-  format: "\n$time $metadata[$level] $levelpad$message",
+  format: "$time $metadata[$level] $levelpad$message",
   level: :info
 
 # Set a higher stacktrace during development. Avoid configuring such

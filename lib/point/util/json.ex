@@ -1,4 +1,11 @@
 defmodule Point.JSON do
+  def to_map(json) do
+    case JSX.decode(json) do
+      {:ok, json} -> json
+      {:error, message} -> message
+    end
+  end
+
   def to_pretty_json(map) do
     case map |> JSX.encode do
       {:ok, json} -> prettify(json)

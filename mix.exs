@@ -19,7 +19,8 @@ defmodule Point.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Point, []},
-     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :phoenix_ecto, :mariaex, :ecto_ttl, :timex]]
+     applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext, :phoenix_ecto, :mariaex, :ecto_ttl, :timex,
+                    :httpotion]]
   end
 
   # Specifies which paths to compile per environment.
@@ -48,7 +49,8 @@ defmodule Point.Mixfile do
       {:ecto_migrate, "0.6.3", override: true},
       {:ecto, ">= 2.0.6", override: true},
       {:timex, "~> 3.0"},
-      {:exjsx, "~> 3.2.1", git: "https://github.com/talentdeficit/exjsx"}
+      {:exjsx, "~> 3.2.1", git: "https://github.com/talentdeficit/exjsx"},
+      {:httpotion, "~> 3.0.2"}
    ]
   end
 

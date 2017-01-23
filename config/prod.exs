@@ -26,7 +26,7 @@ config :ecto_ttl,
 
 # Do not print debug messages in production
 config :logger,
-  format: "\n$time $metadata[$level] $levelpad$message",
+  format: "$time $metadata[$level] $levelpad$message",
   level: :info
 
 # ## SSL Support
