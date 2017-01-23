@@ -88,7 +88,7 @@ defmodule Point.TransactionControllerSpec do
       let attrs: valid_attrs
       let response_body: json_response(response, 201)
 
-      it "responds created status", do: expect response.status |> to(eq 201)
+      it "returns created status", do: expect response.status |> to(eq 201)
       it "returns account name", do: expect response_body["name"] |> to(eq attrs.name)
       it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(attrs.source))
     end

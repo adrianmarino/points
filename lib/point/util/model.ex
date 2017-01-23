@@ -58,4 +58,9 @@ defimpl Point.ModelMap, for: Point.ExchangeRate do
   end
 end
 
+defimpl Point.ModelMap, for: Point.Transaction do
+  import Point.MapUtil
+  def to_map(transaction), do: sub_map(transaction, [:name, :source])
+end
+
 defimpl Point.ModelMap, for: Any, do: def to_map(model), do: inspect(model)
