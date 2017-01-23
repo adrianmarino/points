@@ -25,5 +25,14 @@ defmodule Point.Client do
     )
   end
 
+  def sessions(client, token: token) do
+    request(
+      method: :get,
+      url: url(client, "sessions"),
+      body: %{},
+      headers: %{token: token}
+    )
+  end
+
   defp url(client, url), do: "#{client.base_url}/api/v1/#{url}"
 end

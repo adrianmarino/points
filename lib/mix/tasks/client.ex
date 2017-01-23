@@ -20,4 +20,9 @@ defmodule Mix.Tasks.Point do
     @shortdoc "Close a session"
     def run(params), do: points(base_url) |> sign_out(token: first(params))
   end
+  defmodule Sessions do
+    use PointClient
+    @shortdoc "Show opened sessions"
+    def run(params), do: points(base_url) |> sessions(token: first(params))
+  end
 end
