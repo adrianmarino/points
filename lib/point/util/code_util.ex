@@ -1,5 +1,6 @@
 defmodule Point.CodeUtil do
   import Point.FileUtil, only: [last_write: 1]
+  alias Point.TimeUtil
 
   def write_and_require(path, content) do
     try do
@@ -15,9 +16,7 @@ defmodule Point.CodeUtil do
 
   def update_and_require(path, content, updated_at) do
     case last_write(path) do
-      {:ok, last_write} ->
-        with Timex.compare(updated_at, last_write) > 0,
-          do: write_and_require(path, content)
+      {:ok, last_write} -> with TimeUtil.is(updated_at, greater_that: last_write), do: write_and_require(path, content)
       _ -> write_and_require(path, content)
     end
   end
