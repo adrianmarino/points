@@ -1,5 +1,6 @@
 defmodule Point.Currency do
   use Point.Web, :model
+  import Point.EctoModel
 
   schema "currencies" do
     field :code, :string
@@ -10,9 +11,5 @@ defmodule Point.Currency do
     timestamps()
   end
 
-  def changeset(model, params \\ %{}) do
-    model
-      |> cast(params, [:code, :name, :issuer_id])
-      |> validate_required([:code, :name, :issuer_id])
-  end
+  def changeset(model, params \\ %{}), do: model |> cast_and_validate_required(params, [:code, :name, :issuer_id])
 end

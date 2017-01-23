@@ -25,4 +25,12 @@ defmodule Point.EctoModel do
       end
     end
   end
+
+  defmacro cast_and_validate_required(model, params, fields \\ []) do
+    quote bind_quoted: [model: model, params: params, fields: fields ] do
+      model
+        |> cast(params, fields)
+        |> validate_required(fields)
+    end
+  end
 end

@@ -1,19 +1,22 @@
 defmodule Point.TransactionController do
   use Point.Web, :controller
   import Point.Phoenix.JSONResponseUtil
+  import Point.Phoenix.ConnUtil
   alias Point.{Model, TransactionService}
 
-  def index(conn, _), do: render(conn, "index.json", transactions: TransactionService.all)
+  def index(conn, _) do
+    render(conn, "index.json", transactions: TransactionService.by(issuer_id: current_user_id(conn)))
+  end
 
   def show(conn, %{"name" => name}) do
-    case TransactionService.by(name: name) do
+    case TransactionService.by(name: name, issuer_id: current_user_id(conn)) do
       nil -> send_resp(conn, :not_found, "")
       transaction -> render(conn, "show.json", transaction: transaction)
     end
   end
 
   def execute(conn, %{"name" => name}) do
-    case TransactionService.by(name: name) do
+    case TransactionService.by(name: name, issuer_id: current_user_id(conn)) do
       nil -> send_error_resp(conn, :not_found, "")
       transaction ->
         case TransactionService.execute(transaction, conn.body_params) do
@@ -26,7 +29,8 @@ defmodule Point.TransactionController do
   def create(conn, %{"name" => name}) do
     case body(conn) do
       {:ok, body } ->
-        case TransactionService.insert(name: name, source: body) do
+        attrs = %{name: name, issuer_id: current_user_id(conn), source: body}
+        case TransactionService.insert(attrs) do
           {:ok, transaction} ->
             conn
               |> put_status(:created)
@@ -42,7 +46,7 @@ defmodule Point.TransactionController do
   end
 
   def update(conn, %{"name" => name}) do
-    case TransactionService.by(name: name) do
+    case TransactionService.by(name: name, issuer_id: current_user_id(conn)) do
       nil -> send_resp(conn, :bad_request, "")
       transaction ->
         case body(conn) do
@@ -60,7 +64,7 @@ defmodule Point.TransactionController do
   end
 
   def delete(conn, %{"name" => name}) do
-    case TransactionService.delete(name: name) do
+    case TransactionService.delete(name: name, issuer_id: current_user_id(conn)) do
       {:ok, _ } -> send_resp(conn, :no_content, "")
       {:error, message } -> send_message_resp(conn, :not_found, message)
     end

@@ -3,6 +3,7 @@ defmodule Point.Movement do
   Represent an amount trans
   """
   use Point.Web, :model
+  import Point.EctoModel
 
   schema "movements" do
     field :type, :string
@@ -15,12 +16,5 @@ defmodule Point.Movement do
     timestamps()
   end
 
-  @doc """
-  Builds a changeset based on the `struct` and `params`.
-  """
-  def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:type, :amount])
-    |> validate_required([:type, :amount])
-  end
+  def changeset(model, params \\ %{}), do: model |> cast_and_validate_required(params, [:type, :amount])
 end

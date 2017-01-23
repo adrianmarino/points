@@ -1,5 +1,6 @@
 defmodule Point.Session do
   use Point.Web, :model
+  import Point.EctoModel
 
   schema "sessions" do
     field :token, :string
@@ -12,9 +13,7 @@ defmodule Point.Session do
   end
 
   def changeset(model, params \\ :empty) do
-    model
-      |> cast(params, ~w(user_id ttl remote_ip), [])
-      |> validate_required([:user_id, :ttl, :remote_ip])
+    model |> cast_and_validate_required(params, [:user_id, :ttl, :remote_ip])
   end
 
   def create_changeset(model, params \\ :empty) do

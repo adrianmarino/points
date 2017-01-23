@@ -7,6 +7,7 @@ defmodule Point.User do
     - Has accounts.
   """
   use Point.Web, :model
+  import Point.EctoModel
 
   schema "users" do
     field :email, :string
@@ -23,8 +24,7 @@ defmodule Point.User do
 
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, ~w(email first_name last_name))
-    |> validate_required([:email, :first_name, :last_name])
+    |> cast_and_validate_required(params, [:email, :first_name, :last_name])
     |> validate_length(:email, min: 6, max: 255)
     |> validate_format(:email, ~r/@/)
   end
@@ -32,8 +32,7 @@ defmodule Point.User do
   def registration_changeset(model, params \\ %{}) do
     model
       |> changeset(params)
-      |> cast(params, ~w(password))
-      |> validate_required([:password])
+      |> cast_and_validate_required(params, [:password])
       |> validate_length(:password, min: 10)
       |> put_password_hash
   end

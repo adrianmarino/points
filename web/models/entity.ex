@@ -3,6 +3,7 @@ defmodule Point.Entity do
   An entity has many accounts belonging to users.
   """
   use Point.Web, :model
+  import Point.EctoModel
 
   schema "entities" do
     field :name, :string
@@ -13,12 +14,5 @@ defmodule Point.Entity do
     timestamps()
   end
 
-  @doc """
-  Builds a changeset based on the `struct` and `params`.
-  """
-  def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:name])
-    |> validate_required([:name])
-  end
+  def changeset(model, params \\ %{}), do: model |> cast_and_validate_required(params, [:name])
 end

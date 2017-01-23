@@ -91,6 +91,7 @@ defmodule Point.TransactionControllerSpec do
       it "returns created status", do: expect response.status |> to(eq 201)
       it "returns account name", do: expect response_body["name"] |> to(eq attrs.name)
       it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(attrs.source))
+      it "returns issuer email", do: expect clean(response_body["issuer_email"]) |> to(eq current_user.email)
     end
 
     context "when create an invalid transaction" do
@@ -125,6 +126,7 @@ defmodule Point.TransactionControllerSpec do
       it "returns ok status", do: expect response.status |> to(eq 200)
       it "returns account name", do: expect response_body["name"] |> to(eq attrs.name)
       it "returns account source", do: expect clean(response_body["source"]) |> to(eq clean(attrs.source))
+      it "returns issuer email", do: expect clean(response_body["issuer_email"]) |> to(eq current_user.email)
     end
 
     context "when update a transaction with an invalid source" do

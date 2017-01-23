@@ -20,10 +20,8 @@ defmodule Point.ExchangeRate do
     timestamps()
   end
 
-  def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:value, :source_id, :target_id])
-    |> validate_required([:value, :source_id, :target_id])
+  def changeset(model, params \\ %{}) do
+    model |> cast_and_validate_required(params, [:value, :source_id, :target_id])
   end
 
   def insert_changeset(model, params \\ %{}) do
@@ -34,5 +32,5 @@ defmodule Point.ExchangeRate do
       |> map_from(:target_code, to: :target_id, resolver: &(CurrencyService.by(code: &1)))
   end
 
-  def update_changeset(model , params \\ %{}), do: model |> cast(params, [:value]) |> validate_required([:value])
+  def update_changeset(model , params \\ %{}), do: model |> cast_and_validate_required(params, [:value])
 end
