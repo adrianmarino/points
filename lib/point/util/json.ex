@@ -1,5 +1,5 @@
 defmodule Point.JSON do
-  def to_map(json) do
+  def to_struct(json) do
     case JSX.decode(json) do
       {:ok, json} -> json
       {:error, message} -> message
