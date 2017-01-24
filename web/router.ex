@@ -17,7 +17,7 @@ defmodule Point.Router do
     delete "/sign_out", SessionController, :sign_out
     get "/sessions", SessionController, :index
 
-    resources "/users", UserController, except: [:new, :edit]
+    resources "/users", UserController, except: [:new, :edit], param: "email"
     resources "/accounts", AccountController, except: [:new, :edit, :update]
     resources "/currencies", CurrencyController, except: [:new, :edit], param: "code"
 

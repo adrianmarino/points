@@ -7,6 +7,7 @@ defmodule Mix.Task.PointClient do
       import Point.Client
       import PointLogger
       import Point.Config
+      alias Point.JSON
     end
   end
 

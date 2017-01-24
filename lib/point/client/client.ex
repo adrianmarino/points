@@ -1,6 +1,7 @@
 defmodule Point.Client do
   import Point.HTTPotion
   alias Point.JSON
+  alias Point.MapUtil
 
   defstruct [:base_url, :token]
 
@@ -22,13 +23,27 @@ defmodule Point.Client do
   end
 
   def sessions(client) do
+    request(method: :get, url: url(client, "sessions"), body: %{}, headers: %{token: client.token})
+  end
+
+  def add_user(client, %Point.Client.User{} = user) do
+    request(method: :post, url: url(client, "users"), body: user, headers: %{token: client.token})
+  end
+
+  def update_user(client, %Point.Client.User{} = user) do
     request(
-      method: :get,
-      url: url(client, "sessions"),
-      body: %{},
+      method: :put,
+      url: url(client, "users/#{user.email}"),
+      body: MapUtil.comp_map(user, [:email]),
       headers: %{token: client.token}
     )
   end
+
+  def delete_user(client, email: email) do
+    request(method: :delete, url: url(client, "users/#{email}"), body: %{}, headers: %{token: client.token})
+  end
+
+  def users(client), do: request(method: :get, url: url(client, "users"), body: %{}, headers: %{token: client.token})
 
   defp sign_in_resp(%HTTPotion.Response{status_code: 401} = response, _), do: {:error, response}
   defp sign_in_resp(%HTTPotion.Response{status_code: 201, body: body} = response, client) do

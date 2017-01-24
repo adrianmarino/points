@@ -33,6 +33,7 @@ defmodule Point.HTTPotion.Describe do
       _ -> "#{desc}: #{to_pretty_json(map)}"
     end
   end
+  defp to_desc(_, :badarg), do: ""
   defp to_desc(desc, list) when length(list) > 0, do: "#{desc}: #{to_pretty_json(list)}"
   defp to_desc(_, []), do: ""
   defp to_desc(desc, value) when is_atom(value), do: "#{desc}: #{value}"
