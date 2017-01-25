@@ -20,8 +20,8 @@ defmodule Point.UserController do
     end
   end
 
-  def update(conn, %{"email" => email, "user" => user_params}) do
-    case UserService.update(email, user_params) do
+  def update(conn, %{"email" => email}) do
+    case UserService.update(email, conn.body_params) do
       {:ok, user} -> render(conn, "show.json", user: user)
       {:error, changeset} ->
         conn

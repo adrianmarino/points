@@ -45,6 +45,27 @@ defmodule Point.Client do
 
   def users(client), do: request(method: :get, url: url(client, "users"), body: %{}, headers: %{token: client.token})
 
+  def add_currency(client, code: code, name: name) do
+    request(
+      method: :post,
+      url: url(client, "currencies"),
+      body: %{code: code, name: name},
+      headers: %{token: client.token}
+    )
+  end
+
+  def update_currency(client, code: code, name: name) do
+    request(method: :put, url: url(client, "currencies/#{code}"), body: %{name: name}, headers: %{token: client.token})
+  end
+
+  def delete_currency(client, code: code) do
+    request(method: :delete, url: url(client, "currencies/#{code}"), body: %{}, headers: %{token: client.token})
+  end
+
+  def currencies(client) do
+    request(method: :get, url: url(client, "currencies"), body: %{}, headers: %{token: client.token})
+  end
+
   defp sign_in_resp(%HTTPotion.Response{status_code: 401} = response, _), do: {:error, response}
   defp sign_in_resp(%HTTPotion.Response{status_code: 201, body: body} = response, client) do
     {:ok, response, %Point.Client{base_url: client.base_url, token: JSON.to_struct(body)["token"]}}

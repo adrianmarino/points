@@ -3,7 +3,7 @@ defmodule Point.TransactionControllerSpec do
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
   import Point.DecimalUtil
-  alias Point.{AccountFactory, TransactionService}
+  alias Point.AccountFactory
   import String, only: [replace: 3]
 
   @transfer_path "./lib/point/transaction/default/transfer.ex"

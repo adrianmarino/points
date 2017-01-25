@@ -22,11 +22,8 @@ defmodule Point.User do
     timestamps()
   end
 
-  def changeset(model, params \\ %{}) do
-    model
-    |> cast_and_validate_required(params, [:first_name, :last_name])
-    |> validate_length(:email, min: 6, max: 255)
-    |> validate_format(:email, ~r/@/)
+  def first_last_name_changeset(model, params \\ %{}) do
+    model |> cast_and_validate_required(params, [:first_name, :last_name])
   end
 
   defp put_password_hash(changeset) do
@@ -37,19 +34,30 @@ defmodule Point.User do
     end
   end
 
-  def insert_changeset(model, params \\ %{}) do
+  def password_changeset(model, params \\ %{}) do
     model
-      |> changeset(params)
-      |> cast_and_validate_required(params, [:email, :password])
+      |> cast_and_validate_required(params, [:password])
       |> validate_length(:password, min: 10)
       |> put_password_hash
   end
 
+  def email_changeset(model, params \\ %{}) do
+    model
+      |> cast_and_validate_required(params, [:email])
+      |> validate_length(:email, min: 6, max: 255)
+      |> validate_format(:email, ~r/@/)
+  end
+
+  def insert_changeset(model, params \\ %{}) do
+    model
+      |> email_changeset(params)
+      |> password_changeset(params)
+      |> first_last_name_changeset(params)
+  end
+
   def update_changeset(model, params \\ %{}) do
     model
-      |> changeset(params)
-      |> cast_and_validate_required(params, [:password])
-      |> validate_length(:password, min: 10)
-      |> put_password_hash
+      |> first_last_name_changeset(params)
+      |> password_changeset(params)
   end
 end

@@ -1,15 +1,12 @@
 defmodule Point.CurrencyService do
   alias Point.{Repo, Currency, AccountService}
 
-  def by(code: code), do: Repo.get_by(Currency, code: code)
-
   # Crud
   def all, do: Repo.all(Currency)
-  def get(id), do: Repo.get(Currency, id)
-  def get!(id), do: Repo.get!(Currency, id)
-  def insert(params), do: Repo.insert(changeset(params))
-  def insert!(params), do: Repo.insert!(changeset(params))
-  def update(code, params), do: Repo.update(Currency.changeset(by(code: code), params))
+  def by(code: code), do: Repo.get_by(Currency, code: code)
+  def insert(params), do: Repo.insert(insert_changeset(params))
+  def insert!(params), do: Repo.insert!(insert_changeset(params))
+  def update(code, params), do: Repo.update(update_changeset(code, params))
   def delete(code) do
     case by(code: code) do
       nil -> {:error, "Not found"}
@@ -23,5 +20,6 @@ defmodule Point.CurrencyService do
     end
   end
 
-  defp changeset(params), do: Currency.changeset(%Currency{}, params)
+  defp insert_changeset(params), do: Currency.insert_changeset(%Currency{}, params)
+  defp update_changeset(code, params), do: Currency.update_changeset(by(code: code), params)
 end
