@@ -1,6 +1,6 @@
 defmodule Point.HTTPotion do
   import Point.JSON, only: [to_json: 1]
-  import Map, only: [to_list: 1]
+  import Map, only: [to_list: 1, merge: 2]
   import PointLogger
   alias Point.HTTPotion.Describe
 
@@ -10,7 +10,10 @@ defmodule Point.HTTPotion do
       response = HTTPotion.request(
         method,
         url,
-        [body: to_json(body), headers: ["Content-Type": "application/json"] ++ to_list(headers)]
+        [
+          body: to_json(body),
+          headers: to_list(merge(%{"Content-Type" => "application/json"}, headers))
+        ]
       )
       info Describe.response(response)
       response

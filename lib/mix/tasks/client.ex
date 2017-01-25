@@ -103,4 +103,34 @@ defmodule Mix.Tasks.Points.Client do
     alias Point.Client.Account
     defrun fn([token | account]) -> points(base_url, token) |> delete_account(Account.create(account)) end
   end
+
+  defmodule Transactions do
+    use Mix.Task.PointClient
+    @shortdoc "Show transactions. Params: token"
+    defrun fn([token | _]) -> points(base_url, token) |> transactions end
+  end
+  defmodule Transactions.Show do
+    use Mix.Task.PointClient
+    @shortdoc "Show a transaction. Params: token name"
+    defrun fn([token | [name | _]]) -> points(base_url, token) |> show_transaction(name: name) end
+  end
+  defmodule Transactions.Create do
+    use Mix.Task.PointClient
+    @shortdoc "Create a transaction. Params: token name source"
+    alias Point.Client.Transaction
+    defrun fn([token | transaction]) -> points(base_url, token) |> add_transaction(Transaction.create(transaction)) end
+  end
+  defmodule Transactions.Update do
+    use Mix.Task.PointClient
+    @shortdoc "Update a transaction. Params: token name source"
+    alias Point.Client.Transaction
+    defrun fn([token | transaction]) ->
+      points(base_url, token) |> update_transaction(Transaction.create(transaction))
+    end
+  end
+  defmodule Transactions.Delete do
+    use Mix.Task.PointClient
+    @shortdoc "Delete a transaction. Params: token name"
+    defrun fn([token | [name | _]]) -> points(base_url, token) |> delete_transaction(name: name) end
+  end
 end

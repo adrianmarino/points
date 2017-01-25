@@ -114,6 +114,36 @@ defmodule Point.Client do
     request(method: :get, url: url(client, "accounts"), body: %{}, headers: %{token: client.token})
   end
 
+  def transactions(client) do
+    request(method: :get, url: url(client, "transactions"), body: %{}, headers: %{token: client.token})
+  end
+
+  def add_transaction(client, %Point.Client.Transaction{} = transaction) do
+    request(
+      method: :post,
+      url: url(client, "transactions/#{transaction.name}"),
+      body: transaction.source,
+      headers: %{"Content-Type" => "application/text", token: client.token}
+    )
+  end
+
+  def update_transaction(client, %Point.Client.Transaction{} = transaction) do
+    request(
+      method: :put,
+      url: url(client, "transactions/#{transaction.name}"),
+      body: %{source: transaction.source},
+      headers: %{"Content-Type" => "application/text", token: client.token}
+    )
+  end
+
+  def delete_transaction(client, name: name) do
+    request(method: :delete, url: url(client, "transactions/#{name}"), body: %{}, headers: %{token: client.token})
+  end
+
+  def show_transaction(client, name: name) do
+    request(method: :get, url: url(client, "transactions/#{name}"), body: %{}, headers: %{token: client.token})
+  end
+
   defp sign_in_resp(%HTTPotion.Response{status_code: 401} = response, _), do: {:error, response}
   defp sign_in_resp(%HTTPotion.Response{status_code: 201, body: body} = response, client) do
     {:ok, response, %Point.Client{base_url: client.base_url, token: JSON.to_struct(body)["token"]}}
