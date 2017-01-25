@@ -1,34 +1,42 @@
 defmodule Point.HTTPotion do
-  import Point.JSON, only: [to_json: 1]
-  import Map, only: [to_list: 1, merge: 2]
-  import PointLogger
-  alias Point.HTTPotion.Describe
+  import Map, only: [to_list: 1]
+  alias Point.HTTPotion.{Logger, RequestBuilder}
 
   defmacro request(method: method, url: url, body: body, headers: headers) do
     quote bind_quoted: [method: method, url: url, body: body, headers: headers] do
-      info Describe.request(method, url, body, headers)
-      response = HTTPotion.request(
-        method,
-        url,
-        [
-          body: to_json(body),
-          headers: to_list(merge(%{"Content-Type" => "application/json"}, headers))
-        ]
-      )
-      info Describe.response(response)
+      headers = RequestBuilder.default_headers(headers)
+      body = RequestBuilder.format_body(body, headers["Content-Type"])
+
+      Logger.request(method, url, body, headers)
+      response = HTTPotion.request(method, url, [body: body, headers: to_list(headers)])
+      Logger.response(response)
       response
     end
   end
 end
 
-defmodule Point.HTTPotion.Describe do
+defmodule Point.HTTPotion.RequestBuilder do
+  import Point.JSON, only: [to_json: 1]
+  import Map, only: [merge: 2]
+
+  def default_headers(headers), do: merge(%{"Content-Type" => "application/json"}, headers)
+  def format_body(body, "application/json"), do: to_json(body)
+  def format_body(body, "application/text"), do: body
+end
+
+defmodule Point.HTTPotion.Logger do
   import Point.JSON, only: [to_pretty_json: 1, to_struct: 1]
   import String, only: [upcase: 1]
+  import PointLogger
 
   def request(method, url, body, headers) do
-    "Request - #{upcase(to_string method)} #{url}#{to_desc("\nHeaders", headers)}#{to_desc("\nBody", body)}"
+    info "Request - #{upcase(to_string method)} #{url}#{to_desc("\nHeaders", headers)}#{to_desc("\nBody", body)}"
   end
-  def response(resp), do: "Response - Status: #{resp.status_code}#{to_desc(", Body", to_struct(resp.body))}"
+
+  def response(%HTTPotion.ErrorResponse{message: message}), do: error "Response - Error: #{message}"
+  def response(%HTTPotion.Response{status_code: status_code, body: body}) do
+    info "Response - Status: #{status_code}#{to_desc(", Body", to_struct(body))}"
+  end
 
   defp to_desc(desc, %{} = map) do
     case Map.keys(map) do

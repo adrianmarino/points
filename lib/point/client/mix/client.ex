@@ -1,4 +1,4 @@
-defmodule Mix.Task.PointClient do
+defmodule Mix.Task.Point.Client do
   defmacro __using__(_options) do
     quote do
       use Mix.Task
@@ -10,8 +10,17 @@ defmodule Mix.Task.PointClient do
     end
   end
 
-  defmacro defrun(block), do: quote do: def run(params), do: unquote(block).(params) |> response
-
+  defmacro defrun(block) do
+    quote do
+      def run(params) do
+        try do
+          unquote(block).(params) |> response
+        rescue
+          err -> error inspect(err)
+        end
+      end
+    end
+  end
   def response({:ok, response, _}), do: response
   def response({:error, response}), do: response
   def response(response), do: response

@@ -157,7 +157,7 @@ defmodule Point.Client do
     request(
       method: :put,
       url: url(client, "transactions/#{transaction.name}"),
-      body: %{source: transaction.source},
+      body: transaction.source,
       headers: %{"Content-Type" => "application/text", token: client.token}
     )
   end
@@ -168,6 +168,15 @@ defmodule Point.Client do
 
   def show_transaction(client, name: name) do
     request(method: :get, url: url(client, "transactions/#{name}"), body: %{}, headers: %{token: client.token})
+  end
+
+  def exec_transaction(client, name: name, params: params) do
+    request(
+      method: :post,
+      url: url(client, "transactions/#{name}/execute"),
+      body: JSON.to_struct(params),
+      headers: %{token: client.token}
+    )
   end
 
   defp sign_in_resp(%HTTPotion.Response{status_code: 401} = response, _), do: {:error, response}

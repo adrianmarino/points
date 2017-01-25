@@ -1,5 +1,5 @@
 
-defmodule Point.TransactionCli do
+defmodule Point.Transaction.CLI do
   import Macro, only: [camelize: 1]
   import Point.MapUtil, only: [keys_to_atom: 1]
   import Point.FileUtil, only: [mk_file_path: 3]
@@ -16,7 +16,7 @@ defmodule Point.TransactionCli do
       path = build_source_path(transaction.name)
       update_and_require(path, transaction.source, transaction.updated_at)
       exec_source(transaction, params)
-    catch
+    rescue
       error -> {:error, error}
     end
   end
