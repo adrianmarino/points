@@ -39,6 +39,10 @@ defmodule Point.Client do
     )
   end
 
+  def show_user(client, email: email) do
+    request(method: :get, url: url(client, "users/#{email}"), body: %{}, headers: %{token: client.token})
+  end
+
   def delete_user(client, email: email) do
     request(method: :delete, url: url(client, "users/#{email}"), body: %{}, headers: %{token: client.token})
   end

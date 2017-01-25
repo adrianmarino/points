@@ -20,6 +20,11 @@ defmodule Mix.Tasks.Points.Client do
     @shortdoc "Show users"
     defrun fn([token | _])-> points(base_url, token) |> users end
   end
+  defmodule Users.Show do
+    use Mix.Task.PointClient
+    @shortdoc "Show a user. Params: token email"
+    defrun fn([token | [email | _]])-> points(base_url, token) |> show_user(email: email) end
+  end
   defmodule Users.Create do
     use Mix.Task.PointClient
     @shortdoc "Create a user. Params: token email password first_name last_name"
