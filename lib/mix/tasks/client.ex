@@ -108,6 +108,12 @@ defmodule Mix.Tasks.Points.Client do
     @shortdoc "Show accounts. Params: token"
     defrun fn([token | _]) -> points(base_url, token) |> accounts end
   end
+  defmodule Accounts.Show do
+    use Mix.Task.PointClient
+    @shortdoc "Show an account. Params: token owner_email currency_code"
+    alias Point.Client.Account
+    defrun fn([token | account]) -> points(base_url, token) |> show_account(Account.create(account)) end
+  end
   defmodule Accounts.Create do
     use Mix.Task.PointClient
     @shortdoc "Create an account. Params: token owner_email currency_code"

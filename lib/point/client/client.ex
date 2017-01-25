@@ -131,6 +131,15 @@ defmodule Point.Client do
     request(method: :get, url: url(client, "accounts"), body: %{}, headers: %{token: client.token})
   end
 
+  def show_account(client, %Point.Client.Account{} = account) do
+    request(
+      method: :get,
+      url: url(client, "accounts/#{account.owner_email}/#{account.currency_code}"),
+      body: %{},
+      headers: %{token: client.token}
+    )
+  end
+
   def transactions(client) do
     request(method: :get, url: url(client, "transactions"), body: %{}, headers: %{token: client.token})
   end
