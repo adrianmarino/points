@@ -3,7 +3,6 @@ defmodule Mix.Task.PointClient do
     quote do
       use Mix.Task
       import unquote(__MODULE__)
-      import List
       import Point.Client
       import PointLogger
       import Point.Config
