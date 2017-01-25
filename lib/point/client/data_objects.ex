@@ -10,3 +10,15 @@ defmodule Point.Client.User do
     }
   end
 end
+
+defmodule Point.Client.ExchangeRate do
+  defstruct [:source, :target, :value]
+
+  def create(params) do
+    %Point.Client.ExchangeRate{
+      source: Enum.at(params, 0),
+      target: Enum.at(params, 1),
+      value: Enum.at(params, 2)
+    }
+  end
+end

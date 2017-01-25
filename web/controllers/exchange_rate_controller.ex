@@ -3,7 +3,7 @@ defmodule Point.ExchangeRateController do
   import Point.Phoenix.JSONResponseUtil
   alias Point.{ExchangeRateService, ChangesetView}
 
-  def index(conn, _), do: render(conn, "index.json", exchange_dates: ExchangeRateService.all)
+  def index(conn, _), do: render(conn, "index.json", exchange_rates: ExchangeRateService.all)
 
   def show(conn, %{"source" => source_code, "target" => target_code}) do
     case ExchangeRateService.by(source_code: source_code, target_code: target_code) do
@@ -24,8 +24,9 @@ defmodule Point.ExchangeRateController do
     end
   end
 
-  def update(conn, %{"source" => source_code, "target" => target_code, "value" => value}) do
-    case ExchangeRateService.update(source_code: source_code, target_code: target_code, value: value) do
+  def update(conn, %{"source" => source_code, "target" => target_code}) do
+    case ExchangeRateService.update(source_code: source_code, target_code: target_code,
+      value: conn.body_params["value"]) do
       {:ok, exchange_rate} ->
         conn
           |> put_status(:created)
