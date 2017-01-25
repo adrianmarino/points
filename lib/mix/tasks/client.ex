@@ -81,8 +81,26 @@ defmodule Mix.Tasks.Points.Client do
   defmodule ExchangeRates.Delete do
     use Mix.Task.PointClient
     @shortdoc "Delete a exchange rate. Params: token code"
-    defrun fn([token | [source_code | [target_code | _]]]) ->
-      points(base_url, token) |> delete_exchange_rate(source_code: source_code, target_code: target_code)
+    defrun fn([token | [source | [target | _]]]) ->
+      points(base_url, token) |> delete_exchange_rate(source: source, target: target)
     end
+  end
+
+  defmodule Accounts do
+    use Mix.Task.PointClient
+    @shortdoc "Show accounts. Params: token"
+    defrun fn([token | _]) -> points(base_url, token) |> accounts end
+  end
+  defmodule Accounts.Create do
+    use Mix.Task.PointClient
+    @shortdoc "Create an account. Params: token owner_email currency_code"
+    alias Point.Client.Account
+    defrun fn([token | account]) -> points(base_url, token) |> add_account(Account.create(account)) end
+  end
+  defmodule Accounts.Delete do
+    use Mix.Task.PointClient
+    @shortdoc "Delete an account. Params: token owner_email currency_code"
+    alias Point.Client.Account
+    defrun fn([token | account]) -> points(base_url, token) |> delete_account(Account.create(account)) end
   end
 end

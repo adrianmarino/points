@@ -84,10 +84,10 @@ defmodule Point.Client do
     )
   end
 
-  def delete_exchange_rate(client, source_code: source_code, target_code: target_code) do
+  def delete_exchange_rate(client, source: source, target: target) do
     request(
       method: :delete,
-      url: url(client, "exchange_rates/#{source_code}/#{target_code}"),
+      url: url(client, "exchange_rates/#{source}/#{target}"),
       body: %{},
       headers: %{token: client.token}
     )
@@ -95,6 +95,23 @@ defmodule Point.Client do
 
   def exchange_rates(client) do
     request(method: :get, url: url(client, "exchange_rates"), body: %{}, headers: %{token: client.token})
+  end
+
+  def add_account(client, %Point.Client.Account{} = account) do
+    request(method: :post, url: url(client, "accounts"), body: account, headers: %{token: client.token})
+  end
+
+  def delete_account(client, %Point.Client.Account{} = account) do
+    request(
+      method: :delete,
+      url: url(client, "accounts/#{account.owner_email}/#{account.currency_code}"),
+      body: account,
+      headers: %{token: client.token}
+    )
+  end
+
+  def accounts(client) do
+    request(method: :get, url: url(client, "accounts"), body: %{}, headers: %{token: client.token})
   end
 
   defp sign_in_resp(%HTTPotion.Response{status_code: 401} = response, _), do: {:error, response}

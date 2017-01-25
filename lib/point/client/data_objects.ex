@@ -22,3 +22,11 @@ defmodule Point.Client.ExchangeRate do
     }
   end
 end
+
+defmodule Point.Client.Account do
+  defstruct [:owner_email, :currency_code]
+
+  def create(params) do
+    %Point.Client.Account{owner_email: Enum.at(params, 0), currency_code: Enum.at(params, 1)}
+  end
+end
