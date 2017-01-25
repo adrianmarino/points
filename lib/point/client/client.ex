@@ -105,6 +105,15 @@ defmodule Point.Client do
     request(method: :get, url: url(client, "exchange_rates"), body: %{}, headers: %{token: client.token})
   end
 
+  def show_exchange_rate(client, source: source, target: target) do
+    request(
+      method: :get,
+      url: url(client, "exchange_rates/#{source}/#{target}"),
+      body: %{},
+      headers: %{token: client.token}
+    )
+  end
+
   def add_account(client, %Point.Client.Account{} = account) do
     request(method: :post, url: url(client, "accounts"), body: account, headers: %{token: client.token})
   end

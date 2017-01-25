@@ -7,8 +7,8 @@ defmodule Point.ExchangeRateController do
 
   def show(conn, %{"source" => source_code, "target" => target_code}) do
     case ExchangeRateService.by(source_code: source_code, target_code: target_code) do
-      nil  -> send_resp(conn, :not_found, "")
-      exchange_rate -> render(conn, "show.json", exchange_rate: exchange_rate)
+      {:error, _}  -> send_resp(conn, :not_found, "")
+      {:ok, exchange_rate} -> render(conn, "show.json", exchange_rate: exchange_rate)
     end
   end
 

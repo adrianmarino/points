@@ -72,9 +72,16 @@ defmodule Mix.Tasks.Points.Client do
     @shortdoc "Show exchange rates. Params: token"
     defrun fn([token | _]) -> points(base_url, token) |> exchange_rates end
   end
+  defmodule ExchangeRates.Show do
+    use Mix.Task.PointClient
+    @shortdoc "Show a exchange rate. Params: token source target"
+    defrun fn([token | [source | [target | _]]]) ->
+      points(base_url, token) |> show_exchange_rate(source: source, target: target)
+    end
+  end
   defmodule ExchangeRates.Create do
     use Mix.Task.PointClient
-    @shortdoc "Create a exchange rate. Params: token source_code target_code value"
+    @shortdoc "Create a exchange rate. Params: token source target value"
     alias Point.Client.ExchangeRate
     defrun fn([token | exchange_rate]) ->
       points(base_url, token) |> add_exchange_rate(ExchangeRate.create(exchange_rate))
@@ -82,7 +89,7 @@ defmodule Mix.Tasks.Points.Client do
   end
   defmodule ExchangeRates.Update do
     use Mix.Task.PointClient
-    @shortdoc "Update a exchange rate. Params: token source_code target_code value"
+    @shortdoc "Update a exchange rate. Params: token source target value"
     alias Point.Client.ExchangeRate
     defrun fn([token | exchange_rate]) ->
       points(base_url, token) |> update_exchange_rate(ExchangeRate.create(exchange_rate))
@@ -90,7 +97,7 @@ defmodule Mix.Tasks.Points.Client do
   end
   defmodule ExchangeRates.Delete do
     use Mix.Task.PointClient
-    @shortdoc "Delete a exchange rate. Params: token code"
+    @shortdoc "Delete a exchange rate. Params: token source target"
     defrun fn([token | [source | [target | _]]]) ->
       points(base_url, token) |> delete_exchange_rate(source: source, target: target)
     end
