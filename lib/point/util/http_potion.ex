@@ -5,9 +5,9 @@ defmodule Point.HTTPotion do
   defmacro request(method: method, url: url, body: body, headers: headers) do
     quote bind_quoted: [method: method, url: url, body: body, headers: headers] do
       headers = RequestBuilder.default_headers(headers)
-      body = RequestBuilder.format_body(body, headers["Content-Type"])
-
       Logger.request(method, url, body, headers)
+
+      body = RequestBuilder.format_body(body, headers["Content-Type"])
       response = HTTPotion.request(method, url, [body: body, headers: to_list(headers)])
       Logger.response(response)
       response
@@ -44,9 +44,9 @@ defmodule Point.HTTPotion.Logger do
       _ -> "#{desc}: #{to_pretty_json(map)}"
     end
   end
-  defp to_desc(_, :badarg), do: ""
-  defp to_desc(desc, list) when length(list) > 0, do: "#{desc}: #{to_pretty_json(list)}"
-  defp to_desc(_, []), do: ""
-  defp to_desc(desc, value) when is_atom(value), do: "#{desc}: #{value}"
   defp to_desc(desc, value) when is_bitstring(value), do: "#{desc}: #{value}"
+  defp to_desc(desc, list) when length(list) > 0, do: "#{desc}: #{to_pretty_json(list)}"
+  defp to_desc(desc, value) when is_atom(value), do: "#{desc}: #{value}"
+  defp to_desc(_, []), do: ""
+  defp to_desc(_, :badarg), do: ""
 end
