@@ -70,6 +70,10 @@ defmodule Point.Client do
     request(method: :get, url: url(client, "currencies"), body: %{}, headers: %{token: client.token})
   end
 
+  def show_currency(client, code: code) do
+    request(method: :get, url: url(client, "currencies/#{code}"), body: %{}, headers: %{token: client.token})
+  end
+
   def add_exchange_rate(client, %Point.Client.ExchangeRate{} = exchange_rate) do
     request(
       method: :post,

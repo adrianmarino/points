@@ -46,6 +46,11 @@ defmodule Mix.Tasks.Points.Client do
     @shortdoc "Show currencies. Params: token"
     defrun fn([token | _]) -> points(base_url, token) |> currencies end
   end
+  defmodule Currencies.Show do
+    use Mix.Task.PointClient
+    @shortdoc "Show a currency. Params: token code"
+    defrun fn([token | [code | _]])-> points(base_url, token) |> show_currency(code: code) end
+  end
   defmodule Currencies.Create do
     use Mix.Task.PointClient
     @shortdoc "Create a currency. Params: token code name"
