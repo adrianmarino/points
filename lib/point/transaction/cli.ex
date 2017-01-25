@@ -16,7 +16,7 @@ defmodule Point.Transaction.CLI do
       path = build_source_path(transaction.name)
       update_and_require(path, transaction.source, transaction.updated_at)
       exec_source(transaction, params)
-    rescue
+    catch
       error -> {:error, error}
     end
   end
