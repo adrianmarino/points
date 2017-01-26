@@ -37,21 +37,21 @@ defmodule Mix.Tasks.Points.Client.Transactions do
 
     defmodule Transfer do
       use Mix.Task.Point.Client
-      @shortdoc "Transfer. Params: token name paras(as json: '{...}')"
+      @shortdoc "Transfer. Params: token name params(as json: '{...}')"
       defrun fn([token | [params | _]]) ->
         points(base_url, token) |> exec_transaction(name: "transfer", params: params)
       end
     end
     defmodule Deposit do
       use Mix.Task.Point.Client
-      @shortdoc "Deposit. Params: token name paras(as json: '{...}')"
+      @shortdoc "Deposit. Params: token name params(as json: '{...}')"
       defrun fn([token | [params | _]]) ->
         points(base_url, token) |> exec_transaction(name: "deposit", params: params)
       end
     end
     defmodule Extract do
       use Mix.Task.Point.Client
-      @shortdoc "Extract. Params: token name paras(as json: '{...}')"
+      @shortdoc "Extract. Params: token name params(as json: '{...}')"
       defrun fn([token | [params | _]]) ->
         points(base_url, token) |> exec_transaction(name: "extract", params: params)
       end
