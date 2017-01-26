@@ -11,18 +11,26 @@ defmodule Point.Transaction.CLI do
     write_and_require(path, source)
   end
 
+  def execute(name, params) when is_atom(name), do: execute(to_string(name), params)
+  def execute(name, params) when is_bitstring(name) do
+    try do
+      exec_source(name, params)
+    catch
+      error -> {:error, error}
+    end
+  end
   def execute(transaction, params) do
     try do
       path = build_source_path(transaction.name)
       update_and_require(path, transaction.source, transaction.updated_at)
-      exec_source(transaction, params)
+      exec_source(transaction.name, params)
     catch
       error -> {:error, error}
     end
   end
 
-  defp exec_source(transaction, params) do
-    {result, _} = Code.eval_string("#{camelize transaction.name}.run(params)", [params: keys_to_atom(params)], __ENV__)
+  defp exec_source(name, params) do
+    {result, _} = Code.eval_string("#{camelize name}.run(params)", [params: keys_to_atom(params)], __ENV__)
     result
   end
 

@@ -15,14 +15,14 @@ defmodule Point.TransactionController do
     end
   end
 
+  def transfer(conn, params), do: exec(conn, :transfer, params)
+  def deposit(conn, params), do: exec(conn, :deposit, params)
+  def extract(conn, params), do: exec(conn, :extract, params)
+
   def execute(conn, %{"name" => name}) do
     case TransactionService.by(name: name, issuer_id: current_user_id(conn)) do
       nil -> send_error_resp(conn, :not_found, "")
-      transaction ->
-        case TransactionService.execute(transaction, conn.body_params) do
-          {:ok, result} -> send_resp(conn, :ok, to_string(result))
-          {:error, error} -> send_error_resp(conn, :internal_server_error, inspect(error))
-        end
+      transaction -> exec(conn, transaction, conn.body_params)
     end
   end
 
@@ -74,6 +74,13 @@ defmodule Point.TransactionController do
     case Plug.Conn.read_body(conn) do
       {:ok, data, _} -> {:ok, String.trim(data)}
       _ -> {:error, "Parse request body errror!" }
+    end
+  end
+
+  defp exec(conn, transaction, params) do
+    case TransactionService.execute(transaction, params) do
+      {:ok, result} -> send_resp(conn, :ok, to_string(result))
+      {:error, error} -> send_error_resp(conn, :internal_server_error, inspect(error))
     end
   end
 end
