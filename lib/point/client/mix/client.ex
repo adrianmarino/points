@@ -21,6 +21,7 @@ defmodule Mix.Task.Point.Client do
       end
     end
   end
+
   def response({:ok, response, _}), do: response
   def response({:error, response}), do: response
   def response(response), do: response

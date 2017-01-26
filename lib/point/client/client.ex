@@ -11,17 +11,15 @@ defmodule Point.Client do
     %Point.Client{base_url: base_url, token: token}
   end
 
-  def sign_in(client, email: email, password: password) do
+  def sessions(client, :sign_in, email: email, password: password) do
     sign_in_resp(
       request(method: :post, url: url(client, "sign_in"), body: %{email: email, password: password}, headers: %{}),
       client
     )
   end
-
-  def sign_out(client) do
+  def sessions(client, :sign_out) do
     request(method: :delete, url: url(client, "sign_out"), body: %{}, headers: %{token: client.token})
   end
-
   def sessions(client) do
     request(method: :get, url: url(client, "sessions"), body: %{}, headers: %{token: client.token})
   end
