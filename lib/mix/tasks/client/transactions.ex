@@ -11,13 +11,11 @@ defmodule Mix.Tasks.Points.Client.Transactions do
   defmodule Create do
     use Mix.Task.Point.Client
     @shortdoc "Create a transaction. Params: token name source"
-    alias Point.Client.Transaction
     defrun fn([token | transaction]) -> points(base_url, token) |> add_transaction(Transaction.create(transaction)) end
   end
   defmodule Update do
     use Mix.Task.Point.Client
     @shortdoc "Update a transaction. Params: token name source"
-    alias Point.Client.Transaction
     defrun fn([token | transaction]) ->
       points(base_url, token) |> update_transaction(Transaction.create(transaction))
     end

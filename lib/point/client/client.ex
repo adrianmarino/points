@@ -24,11 +24,11 @@ defmodule Point.Client do
     request(method: :get, url: url(client, "sessions"), body: %{}, headers: %{token: client.token})
   end
 
-  def add_user(client, %Point.Client.User{} = user) do
+
+  def users(client, :create, %Point.Client.User{} = user) do
     request(method: :post, url: url(client, "users"), body: user, headers: %{token: client.token})
   end
-
-  def update_user(client, %Point.Client.User{} = user) do
+  def users(client, :update, %Point.Client.User{} = user) do
     request(
       method: :put,
       url: url(client, "users/#{user.email}"),
@@ -36,18 +36,16 @@ defmodule Point.Client do
       headers: %{token: client.token}
     )
   end
-
-  def show_user(client, email: email) do
+  def users(client, :show, email: email) do
     request(method: :get, url: url(client, "users/#{email}"), body: %{}, headers: %{token: client.token})
   end
-
-  def delete_user(client, email: email) do
+  def users(client, :delete, email: email) do
     request(method: :delete, url: url(client, "users/#{email}"), body: %{}, headers: %{token: client.token})
   end
-
   def users(client), do: request(method: :get, url: url(client, "users"), body: %{}, headers: %{token: client.token})
 
-  def add_currency(client, code: code, name: name) do
+
+  def currencies(client, :create, code: code, name: name) do
     request(
       method: :post,
       url: url(client, "currencies"),
@@ -55,24 +53,21 @@ defmodule Point.Client do
       headers: %{token: client.token}
     )
   end
-
-  def update_currency(client, code: code, name: name) do
+  def currencies(client, :update, code: code, name: name) do
     request(method: :put, url: url(client, "currencies/#{code}"), body: %{name: name}, headers: %{token: client.token})
   end
-
-  def delete_currency(client, code: code) do
+  def currencies(client, :delete, code: code) do
     request(method: :delete, url: url(client, "currencies/#{code}"), body: %{}, headers: %{token: client.token})
   end
-
+  def currencies(client, :show, code: code) do
+    request(method: :get, url: url(client, "currencies/#{code}"), body: %{}, headers: %{token: client.token})
+  end
   def currencies(client) do
     request(method: :get, url: url(client, "currencies"), body: %{}, headers: %{token: client.token})
   end
 
-  def show_currency(client, code: code) do
-    request(method: :get, url: url(client, "currencies/#{code}"), body: %{}, headers: %{token: client.token})
-  end
 
-  def add_exchange_rate(client, %Point.Client.ExchangeRate{} = exchange_rate) do
+  def exchange_rates(client, :create, %Point.Client.ExchangeRate{} = exchange_rate) do
     request(
       method: :post,
       url: url(client, "exchange_rates"),
@@ -80,8 +75,7 @@ defmodule Point.Client do
       headers: %{token: client.token}
     )
   end
-
-  def update_exchange_rate(client, %Point.Client.ExchangeRate{} = exchange_rate) do
+  def exchange_rates(client, :update, %Point.Client.ExchangeRate{} = exchange_rate) do
     request(
       method: :put,
       url: url(client, "exchange_rates/#{exchange_rate.source}/#{exchange_rate.target}"),
@@ -89,8 +83,7 @@ defmodule Point.Client do
       headers: %{token: client.token}
     )
   end
-
-  def delete_exchange_rate(client, source: source, target: target) do
+  def exchange_rates(client, :delete, source: source, target: target) do
     request(
       method: :delete,
       url: url(client, "exchange_rates/#{source}/#{target}"),
@@ -98,25 +91,23 @@ defmodule Point.Client do
       headers: %{token: client.token}
     )
   end
-
+  def exchange_rates(client, :show, source: source, target: target) do
+    request(
+    method: :get,
+    url: url(client, "exchange_rates/#{source}/#{target}"),
+    body: %{},
+    headers: %{token: client.token}
+    )
+  end
   def exchange_rates(client) do
     request(method: :get, url: url(client, "exchange_rates"), body: %{}, headers: %{token: client.token})
   end
 
-  def show_exchange_rate(client, source: source, target: target) do
-    request(
-      method: :get,
-      url: url(client, "exchange_rates/#{source}/#{target}"),
-      body: %{},
-      headers: %{token: client.token}
-    )
-  end
 
-  def add_account(client, %Point.Client.Account{} = account) do
+  def accounts(client, :create, %Point.Client.Account{} = account) do
     request(method: :post, url: url(client, "accounts"), body: account, headers: %{token: client.token})
   end
-
-  def delete_account(client, %Point.Client.Account{} = account) do
+  def accounts(client, :delete, %Point.Client.Account{} = account) do
     request(
       method: :delete,
       url: url(client, "accounts/#{account.owner_email}/#{account.currency_code}"),
@@ -124,19 +115,18 @@ defmodule Point.Client do
       headers: %{token: client.token}
     )
   end
-
+  def accounts(client, :show, %Point.Client.Account{} = account) do
+    request(
+    method: :get,
+    url: url(client, "accounts/#{account.owner_email}/#{account.currency_code}"),
+    body: %{},
+    headers: %{token: client.token}
+    )
+  end
   def accounts(client) do
     request(method: :get, url: url(client, "accounts"), body: %{}, headers: %{token: client.token})
   end
 
-  def show_account(client, %Point.Client.Account{} = account) do
-    request(
-      method: :get,
-      url: url(client, "accounts/#{account.owner_email}/#{account.currency_code}"),
-      body: %{},
-      headers: %{token: client.token}
-    )
-  end
 
   def transactions(client) do
     request(method: :get, url: url(client, "transactions"), body: %{}, headers: %{token: client.token})
