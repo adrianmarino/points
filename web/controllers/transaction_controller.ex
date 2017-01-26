@@ -15,13 +15,13 @@ defmodule Point.TransactionController do
     end
   end
 
-  def transfer(conn, params), do: exec(conn, :transfer, params)
-  def deposit(conn, params), do: exec(conn, :deposit, params)
-  def extract(conn, params), do: exec(conn, :extract, params)
-
   def execute(conn, %{"name" => name}) do
     case TransactionService.by(name: name, issuer_id: current_user_id(conn)) do
-      nil -> send_error_resp(conn, :not_found, "")
+      nil ->
+        cond do
+          Transaction.is_basic(name) -> exec(conn, name, conn.body_params)
+          true -> send_error_resp(conn, :not_found, "")
+        end
       transaction -> exec(conn, transaction, conn.body_params)
     end
   end

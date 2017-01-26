@@ -1,5 +1,10 @@
 defmodule Transaction do
   alias Point.{StopWatch, Repo, JSON}
+  import Enum, only: [any?: 2]
+  @basic_transactions ~w[transfer deposit extract]
+
+  def is_basic(name) when is_atom(name), do: is_basic(to_string name)
+  def is_basic(name), do: any?(@basic_transactions, &(&1 == name))
 
   defmacro __using__(_options) do
     quote do

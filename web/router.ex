@@ -40,10 +40,6 @@ defmodule Point.Router do
     end
 
     scope "/transactions" do
-      post "/transfer/execute", TransactionController, :transfer
-      post "/deposit/execute", TransactionController, :deposit
-      post "/extract/execute", TransactionController, :extract
-
       post "/:name/execute", TransactionController, :execute
 
       get "/", TransactionController, :index
