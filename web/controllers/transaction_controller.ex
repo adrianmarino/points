@@ -19,7 +19,7 @@ defmodule Point.TransactionController do
     case TransactionService.by(name: name, issuer_id: current_user_id(conn)) do
       nil ->
         cond do
-          Transaction.is_basic(name) -> exec(conn, name, conn.body_params)
+          Transaction.is_primitive(name) -> exec(conn, name, conn.body_params)
           true -> send_error_resp(conn, :not_found, "")
         end
       transaction -> exec(conn, transaction, conn.body_params)
