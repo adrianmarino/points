@@ -1,47 +1,38 @@
 defmodule Point.Client.Dto do
   defmodule Session do
-    import Enum
     defstruct [:email, :password]
-    def new(params) do
-      %Session{email: at(params, 0), password: at(params, 1)}
-    end
+    def new([email, [password | _]]), do: %Session{email: email, password: password}
   end
 
   defmodule User do
-    import Enum
     defstruct [:email, :password, :first_name, :last_name]
-    def new(params) do
-      %User{email: at(params, 0), password: at(params, 1), first_name: at(params, 2),
-        last_name: at(params, 3)}
+    def new([email | [password | [first_name | [last_name |_]]]]) do
+      %User{email: email, password: password, first_name: first_name, last_name: last_name}
     end
   end
 
   defmodule Currency do
-    import Enum
     defstruct [:code, :name]
-    def new(params), do: %Currency{code: at(params, 0), name: at(params, 1)}
+    def new([code | [name | _]]), do: %Currency{code: code, name: name}
   end
 
   defmodule ExchangeRateId do
-    import Enum
     defstruct [:source, :target]
-    def new(params), do: %ExchangeRateId{source: at(params, 0), target: at(params, 1)}
+    def new([source | [target | _]]), do: %ExchangeRateId{source: source, target: target}
   end
+
   defmodule ExchangeRate do
-    import Enum
     defstruct [:source, :target, :value]
-    def new(params), do: %ExchangeRate{source: at(params, 0), target: at(params, 1), value: at(params, 2)}
+    def new([source | [target | [value | _]]]), do: %ExchangeRate{source: source, target: target, value: value}
   end
 
   defmodule Account do
-    import Enum
     defstruct [:owner_email, :currency_code]
-    def create(params), do: %Account{owner_email: at(params, 0), currency_code: at(params, 1)}
+    def create([owner_email, [currency_code |_]]), do: %Account{owner_email: owner_email, currency_code: currency_code}
   end
 
   defmodule Transaction do
-    import Enum
     defstruct [:name, :source]
-    def new(params), do: %Transaction{name: at(params, 0), source: at(params, 1)}
+    def new([name | [source | _]]), do: %Transaction{name: name, source: source}
   end
 end
