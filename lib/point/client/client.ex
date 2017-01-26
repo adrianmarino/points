@@ -131,8 +131,7 @@ defmodule Point.Client do
   def transactions(client) do
     request(method: :get, url: url(client, "transactions"), body: %{}, headers: %{token: client.token})
   end
-
-  def add_transaction(client, %Point.Client.Transaction{} = transaction) do
+  def transactions(client, :create, %Point.Client.Transaction{} = transaction) do
     request(
       method: :post,
       url: url(client, "transactions/#{transaction.name}"),
@@ -140,8 +139,7 @@ defmodule Point.Client do
       headers: %{"Content-Type" => "application/text", token: client.token}
     )
   end
-
-  def update_transaction(client, %Point.Client.Transaction{} = transaction) do
+  def transactions(client, :update, %Point.Client.Transaction{} = transaction) do
     request(
       method: :put,
       url: url(client, "transactions/#{transaction.name}"),
@@ -149,16 +147,13 @@ defmodule Point.Client do
       headers: %{"Content-Type" => "application/text", token: client.token}
     )
   end
-
-  def delete_transaction(client, name: name) do
+  def transactions(client, :delete, name: name) do
     request(method: :delete, url: url(client, "transactions/#{name}"), body: %{}, headers: %{token: client.token})
   end
-
-  def show_transaction(client, name: name) do
+  def transactions(client, :show, name: name) do
     request(method: :get, url: url(client, "transactions/#{name}"), body: %{}, headers: %{token: client.token})
-  end
-
-  def exec_transaction(client, name: name, params: params) do
+  end  
+  def transactions(client, exec: name, params: params) do
     request(
       method: :post,
       url: url(client, "transactions/#{name}/execute"),
@@ -166,6 +161,7 @@ defmodule Point.Client do
       headers: %{token: client.token}
     )
   end
+
 
   defp sign_in_resp(%HTTPotion.Response{status_code: 401} = response, _), do: {:error, response}
   defp sign_in_resp(%HTTPotion.Response{status_code: 201, body: body} = response, client) do
