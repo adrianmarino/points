@@ -6,7 +6,9 @@ defmodule Mix.Tasks.Points.Client.Sessions do
   defmodule SignIn do
     use Mix.Task.Point.Client
     @shortdoc "Open a session"
-    defrun fn([email | [password | _]])-> points(base_url) |> sessions(:sign_in, email: email, password: password) end
+    defrun fn(params)->
+      points(base_url) |> sessions(sign_in: Session.new(params))
+    end
   end
   defmodule SignOut do
     use Mix.Task.Point.Client

@@ -7,10 +7,13 @@ defmodule Mix.Task.Point.Client do
       import PointLogger
       import Point.Config
       alias Point.JSON
-      alias Point.Client.User
-      alias Point.Client.ExchangeRate
-      alias Point.Client.Account
-      alias Point.Client.Transaction
+      alias Point.Client.Dto.Session
+      alias Point.Client.Dto.User
+      alias Point.Client.Dto.ExchangeRateId
+      alias Point.Client.Dto.ExchangeRate
+      alias Point.Client.Dto.Account
+      alias Point.Client.Dto.Transaction
+      alias Point.Client.Dto.Currency
     end
   end
 
