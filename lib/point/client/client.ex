@@ -11,7 +11,7 @@ defmodule Point.Client do
     %Point.Client{base_url: base_url, token: token}
   end
 
-  def sessions(client, sign_in: %Point.Client.Dto.User{email: email, password: password}) do
+  def sessions(client, sign_in: %Point.Client.Dto.Session{email: email, password: password}) do
     sign_in_resp(
       request(method: :post, url: url(client, "sign_in"), body: %{email: email, password: password}, headers: %{}),
       client
