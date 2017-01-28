@@ -6,7 +6,7 @@ defmodule Mix.Tasks.Points.Client.Transactions do
   defmodule Show do
     use Mix.Task.Point.Client
     @shortdoc "Show a transaction. Params: token name"
-    defrun fn([token | [name | _]]) -> points(base_url, token) |> transactions(show: name) end
+    defrun fn([token, name]) -> points(base_url, token) |> transactions(show: name) end
   end
   defmodule Create do
     use Mix.Task.Point.Client
@@ -21,6 +21,6 @@ defmodule Mix.Tasks.Points.Client.Transactions do
   defmodule Delete do
     use Mix.Task.Point.Client
     @shortdoc "Delete a transaction. Params: token name"
-    defrun fn([token | [name | _]]) -> points(base_url, token) |> transactions(delete: name) end
+    defrun fn([token, name]) -> points(base_url, token) |> transactions(delete: name) end
   end
 end

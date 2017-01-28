@@ -130,19 +130,19 @@ defmodule Point.Client do
   def transactions(client) do
     request(method: :get, url: url(client, "transactions"), body: %{}, headers: %{token: client.token})
   end
-  def transactions(client, :create, %Point.Client.Dto.Transaction{} = transaction) do
+  def transactions(client, create: %Point.Client.Dto.Transaction{name: name, source: source}) do
     request(
       method: :post,
-      url: url(client, "transactions/#{transaction.name}"),
-      body: transaction.source,
+      url: url(client, "transactions/#{name}"),
+      body: source,
       headers: %{"Content-Type" => "application/text", token: client.token}
     )
   end
-  def transactions(client, update: %Point.Client.Dto.Transaction{} = transaction) do
+  def transactions(client, update: %Point.Client.Dto.Transaction{name: name, source: source}) do
     request(
       method: :put,
-      url: url(client, "transactions/#{transaction.name}"),
-      body: transaction.source,
+      url: url(client, "transactions/#{name}"),
+      body: source,
       headers: %{"Content-Type" => "application/text", token: client.token}
     )
   end

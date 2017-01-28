@@ -20,11 +20,11 @@ defmodule Mix.Task.Point.Client do
   defmacro defrun(block) do
     quote do
       def run(params) do
-        try do
+        # try do
           unquote(block).(params) |> response
-        rescue
-          err -> error inspect(err)
-        end
+        #rescue
+        #  err -> error inspect(err)
+        #end
       end
     end
   end

@@ -1,7 +1,7 @@
 defmodule Point.JSON do
   def to_struct(json) do
     case JSX.decode(json) do
-      {:ok, json} -> json
+      {:ok, struct} -> struct
       {:error, message} -> message
     end
   end

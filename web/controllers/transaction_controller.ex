@@ -20,7 +20,7 @@ defmodule Point.TransactionController do
       nil ->
         cond do
           Transaction.is_primitive(name) -> exec(conn, name, conn.body_params)
-          true -> send_error_resp(conn, :not_found, "")
+          true -> send_resp(conn, :not_found, "")
         end
       transaction -> exec(conn, transaction, conn.body_params)
     end
@@ -79,8 +79,11 @@ defmodule Point.TransactionController do
 
   defp exec(conn, transaction, params) do
     case TransactionService.execute(transaction, params) do
-      {:ok, result} -> send_resp(conn, :ok, to_string(result))
-      {:error, error} -> send_error_resp(conn, :internal_server_error, inspect(error))
+      {:ok, result} -> send_resp(conn, :ok, to_json_result(result))
+      {:error, error} -> send_error_resp(conn, :internal_server_error, error)
     end
   end
+
+  defp to_json_result(%{} = result), do: to_string(result)
+  defp to_json_result(result), do: to_string(%{return: result})
 end
