@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Points.Client.ExchangeRates do
   use Mix.Task.Point.Client
   @shortdoc "Show exchange rates. Params: token"
-  defrun fn([token | _]) -> points(base_url, token) |> exchange_rates end
+  defrun fn(token) -> points(base_url, token) |> exchange_rates end
 
   defmodule Show do
     use Mix.Task.Point.Client

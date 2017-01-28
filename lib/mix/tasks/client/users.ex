@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Points.Client.Users do
   use Mix.Task.Point.Client
   @shortdoc "Show users"
-  defrun fn([token | _])-> points(base_url, token) |> users end
+  defrun fn(token)-> points(base_url, token) |> users end
 
   defmodule Show do
     use Mix.Task.Point.Client

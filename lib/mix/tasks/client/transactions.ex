@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Points.Client.Transactions do
   use Mix.Task.Point.Client
   @shortdoc "Show transactions. Params: token"
-  defrun fn([token | _]) -> points(base_url, token) |> transactions end
+  defrun fn(token) -> points(base_url, token) |> transactions end
 
   defmodule Show do
     use Mix.Task.Point.Client
