@@ -147,20 +147,25 @@ defmodule Point.Client do
     )
   end
   def transactions(client, delete: name) do
-    request(method: :delete, url: url(client, "transactions/#{name}"), body: %{}, headers: %{token: client.token})
+    request(
+      method: :delete,
+      url: url(client, "transactions/#{to_string(name)}"),
+      body: %{},
+      headers: %{token: client.token}
+    )
   end
   def transactions(client, show: name) do
-    request(method: :get, url: url(client, "transactions/#{name}"), body: %{}, headers: %{token: client.token})
+    request(method: :get, url: url(client, "transactions/#{to_string(name)}"), body: %{},
+      headers: %{token: client.token})
   end
   def transactions(client, exec: name, params: params) do
     request(
       method: :post,
-      url: url(client, "transactions/#{name}/execute"),
+      url: url(client, "transactions/#{to_string(name)}/execute"),
       body: JSON.to_struct(params),
       headers: %{token: client.token}
     )
   end
-
 
   defp sign_in_resp(%HTTPotion.Response{status_code: 401} = response, _), do: {:error, response}
   defp sign_in_resp(%HTTPotion.Response{status_code: 201, body: body} = response, client) do
