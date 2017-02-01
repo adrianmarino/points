@@ -3,7 +3,7 @@ defmodule Point.Movement do
   Represent an amount trans
   """
   use Point.Web, :model
-  import Point.EctoModel
+  use Timex.Ecto.Timestamps, usec: true
 
   schema "movements" do
     field :type, :string

@@ -2,12 +2,11 @@ defmodule Point.ExchangeRate do
   @moduledoc """
   Allow convert an amount between to correncies.
   """
+  use Point.Web, :model
+  use Timex.Ecto.Timestamps, usec: true
   alias Point.{DecimalUtil, CurrencyService}
-  import Point.EctoModel
 
   def inverse(rate), do: DecimalUtil.inverse(rate.value)
-
-  use Point.Web, :model
 
   schema "exchange_rates" do
     field :value, :decimal

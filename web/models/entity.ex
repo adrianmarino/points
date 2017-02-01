@@ -3,7 +3,7 @@ defmodule Point.Entity do
   An entity has many accounts belonging to users.
   """
   use Point.Web, :model
-  import Point.EctoModel
+  use Timex.Ecto.Timestamps, usec: true
 
   schema "entities" do
     field :name, :string

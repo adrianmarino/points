@@ -23,8 +23,8 @@ defmodule Point.Mixfile do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "web", "spec/factories"]
-  defp elixirc_paths(_),     do: ["lib", "web"]
+  defp elixirc_paths(:test), do: ["lib", "web", "tmp", "spec/factories"]
+  defp elixirc_paths(_),     do: ["lib", "web", "tmp"]
 
   # Specifies your project dependencies.
   #
@@ -48,7 +48,13 @@ defmodule Point.Mixfile do
       {:ecto_migrate, "0.6.3", override: true},
       {:ecto, ">= 2.0.6", override: true},
       {:timex, "~> 3.0"},
+<<<<<<< Updated upstream
       {:exjsx, "~> 3.2.1", git: "https://github.com/talentdeficit/exjsx"}
+=======
+      {:timex_ecto, "~> 3.0"},
+      {:exjsx, "~> 3.2.1", git: "https://github.com/talentdeficit/exjsx"},
+      {:httpotion, "~> 3.0.2"}
+>>>>>>> Stashed changes
    ]
   end
 

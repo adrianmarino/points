@@ -1,6 +1,6 @@
 defmodule Point.Transaction do
   use Point.Web, :model
-  import Point.EctoModel
+  use Timex.Ecto.Timestamps, usec: true
 
   schema "transactions" do
     field :name, :string
