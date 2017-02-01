@@ -5,15 +5,15 @@ alias Point.{User, Entity, Account, Currency, ExchangeRate}
 # Users
 #------------------------------------------------------------------------------
 # Is the root user
-chewbacca = insert! User.registration_changeset(%User{}, %{
+chewbacca = insert! User.insert_changeset(%User{}, %{
   email: "chewbacca@gmail.com", password: "12345678910",
   first_name: "Chewbacca", last_name: "Chewbacca"
 })
-obiwan_kenoby = insert! User.registration_changeset(%User{}, %{
+obiwan_kenoby = insert! User.insert_changeset(%User{}, %{
   email: "obiwankenoby@gmail.com", password: "12345678910",
   first_name: "Obi-Wan", last_name: "Kenoby"
 })
-anakin_skywalker = insert! User.registration_changeset(%User{}, %{
+anakin_skywalker = insert! User.insert_changeset(%User{}, %{
   email: "anakinskywalker@gmail.com", password: "12345678910",
   first_name: "Anakin", last_name: "Skywalker"
 })

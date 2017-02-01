@@ -1,8 +1,4 @@
 defmodule Point.CodeUtil do
-<<<<<<< Updated upstream
-  import Point.FileUtil, only: [last_write: 1]
-  alias Point.TimeUtil
-=======
   import Macro, only: [camelize: 1]
 
   def to_module(value) when is_bitstring(value) or is_atom(value), do: elem(Code.eval_string(camelize(to_string value)), 0)
@@ -14,12 +10,12 @@ defmodule Point.CodeUtil do
     # :code.delete(module_name)
     :code.purge(module_name)
   end
->>>>>>> Stashed changes
 
   def write_and_require(path, content) do
     try do
       File.write!(path, content)
       Code.require_file(path)
+      info "Require #{path}"
       {:ok, path}
     rescue
       error ->

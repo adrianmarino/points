@@ -10,7 +10,8 @@ defimpl String.Chars, for: Tuple do
   end
 end
 defimpl String.Chars, for: Map do
-  def to_string(value), do: inspect(value)
+  alias Point.JSON
+  def to_string(value), do: JSON.to_pretty_json(value)
 end
 defimpl String.Chars, for: Decimal do
   def to_string(value), do: Decimal.to_string(Decimal.round(value, 2))

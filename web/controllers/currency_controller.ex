@@ -2,7 +2,7 @@ defmodule Point.CurrencyController do
   use Point.Web, :controller
   import Point.Phoenix.ConnUtil
   import Point.Phoenix.JSONResponseUtil
-  alias Point.CurrencyService
+  alias Point.{CurrencyService, ChangesetView}
 
   def index(conn, _), do: render(conn, "index.json", currencies: CurrencyService.all)
   def show(conn, %{"code" => code}) do
@@ -22,17 +22,17 @@ defmodule Point.CurrencyController do
       {:error, changeset} ->
         conn
           |> put_status(:unprocessable_entity)
-          |> render(Point.ChangesetView, "error.json", changeset: changeset)
+          |> render(ChangesetView, "error.json", changeset: changeset)
     end
   end
 
-  def update(conn, %{"code" => code, "currency" => params}) do
-    case CurrencyService.update(code, put_issuer_id(conn, to: params)) do
+  def update(conn, %{"code" => code}) do
+    case CurrencyService.update(code, conn.body_params) do
       {:ok, currency} -> render(conn, "show.json", currency: currency)
       {:error, changeset} ->
         conn
           |> put_status(:unprocessable_entity)
-          |> render(Point.ChangesetView, "error.json", changeset: changeset)
+          |> render(ChangesetView, "error.json", changeset: changeset)
     end
   end
 

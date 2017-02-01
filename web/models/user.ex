@@ -22,19 +22,8 @@ defmodule Point.User do
     timestamps()
   end
 
-  def changeset(model, params \\ %{}) do
-    model
-    |> cast_and_validate_required(params, [:email, :first_name, :last_name])
-    |> validate_length(:email, min: 6, max: 255)
-    |> validate_format(:email, ~r/@/)
-  end
-
-  def registration_changeset(model, params \\ %{}) do
-    model
-      |> changeset(params)
-      |> cast_and_validate_required(params, [:password])
-      |> validate_length(:password, min: 10)
-      |> put_password_hash
+  def first_last_name_changeset(model, params \\ %{}) do
+    model |> cast_and_validate_required(params, [:first_name, :last_name])
   end
 
   defp put_password_hash(changeset) do
@@ -43,5 +32,32 @@ defmodule Point.User do
         changeset |> put_change(:password_hash, Comeonin.Bcrypt.hashpwsalt(value))
       _ -> changeset
     end
+  end
+
+  def password_changeset(model, params \\ %{}) do
+    model
+      |> cast_and_validate_required(params, [:password])
+      |> validate_length(:password, min: 10)
+      |> put_password_hash
+  end
+
+  def email_changeset(model, params \\ %{}) do
+    model
+      |> cast_and_validate_required(params, [:email])
+      |> validate_length(:email, min: 6, max: 255)
+      |> validate_format(:email, ~r/@/)
+  end
+
+  def insert_changeset(model, params \\ %{}) do
+    model
+      |> email_changeset(params)
+      |> password_changeset(params)
+      |> first_last_name_changeset(params)
+  end
+
+  def update_changeset(model, params \\ %{}) do
+    model
+      |> first_last_name_changeset(params)
+      |> password_changeset(params)
   end
 end

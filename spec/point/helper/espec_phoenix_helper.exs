@@ -7,7 +7,7 @@ defmodule ESpec.Phoenix.Helper do
       alias Point.{Repo, Session, User}
 
       let :current_user do
-        Repo.insert! User.registration_changeset(%User{}, %{
+        Repo.insert! User.insert_changeset(%User{}, %{
           email: "session_test_user@gmail.com",
           password: "Whatever10",
           first_name: "Test",
