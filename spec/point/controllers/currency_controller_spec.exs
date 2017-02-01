@@ -2,6 +2,7 @@ defmodule Point.CurrencyControllerTest do
   use ESpec.Phoenix, controller: Point.CurrencyController
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
+  import Point.MapUtil, only: [sub_map: 2]
   alias Point.{Currency, CurrencyService, CurrencyFactory, AccountFactory}
   require Logger
 
@@ -54,14 +55,13 @@ defmodule Point.CurrencyControllerTest do
 
   describe "update" do
     let currency: CurrencyFactory.insert(:ars)
-    let response: put(sec_conn, currency_path(sec_conn, :update, currency.code), currency: attrs)
+    let response: put(sec_conn, currency_path(sec_conn, :update, currency.code), sub_map(attrs, [:name]))
 
     context "when data is valid" do
       let attrs: valid_attrs
       let response_body: json_response(response, 200)
 
       it "returns ok status", do: expect response.status |> to(eq 200)
-      it "returns account code", do: expect response_body["code"] |> to(eq attrs.code)
       it "returns account name", do: expect response_body["name"] |> to(eq attrs.name)
     end
 

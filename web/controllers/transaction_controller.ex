@@ -2,7 +2,7 @@ defmodule Point.TransactionController do
   use Point.Web, :controller
   import Point.Phoenix.JSONResponseUtil
   import Point.Phoenix.ConnUtil
-  alias Point.{Model, TransactionService}
+  alias Point.TransactionService
 
   def index(conn, _) do
     render(conn, "index.json", transactions: TransactionService.by(issuer_id: current_user_id(conn)))
@@ -17,12 +17,12 @@ defmodule Point.TransactionController do
 
   def execute(conn, %{"name" => name}) do
     case TransactionService.by(name: name, issuer_id: current_user_id(conn)) do
-      nil -> send_error_resp(conn, :not_found, "")
-      transaction ->
-        case TransactionService.execute(transaction, conn.body_params) do
-          {:ok, result } -> send_resp(conn, :ok, Model.to_string(result))
-          {:error, error} -> send_error_resp(conn, :internal_server_error, inspect(error))
+      nil ->
+        cond do
+          Transaction.is_primitive(name) -> exec(conn, name, conn.body_params)
+          true -> send_resp(conn, :not_found, "")
         end
+      transaction -> exec(conn, transaction, conn.body_params)
     end
   end
 
@@ -76,4 +76,14 @@ defmodule Point.TransactionController do
       _ -> {:error, "Parse request body errror!" }
     end
   end
+
+  defp exec(conn, transaction, params) do
+    case TransactionService.execute(transaction, params) do
+      {:ok, result} -> send_resp(conn, :ok, to_json_result(result))
+      {:error, error} -> send_error_resp(conn, :internal_server_error, error)
+    end
+  end
+
+  defp to_json_result(%{} = result), do: to_string(result)
+  defp to_json_result(result), do: to_string(%{return: result})
 end

@@ -1,5 +1,10 @@
 defmodule Transaction do
   alias Point.{StopWatch, Repo, JSON}
+  import Enum, only: [any?: 2]
+  @primitives ~w[transfer deposit extract]
+
+  def is_primitive(name) when is_atom(name), do: is_primitive(to_string name)
+  def is_primitive(name), do: any?(@primitives, &(&1 == name))
 
   defmacro __using__(_options) do
     quote do

@@ -13,7 +13,7 @@ defmodule Point.AccountControllerSpec do
   end
 
   describe "show" do
-    let response: get(sec_conn, account_path(sec_conn, :show, account))
+    let response: get(sec_conn, account_path(sec_conn, :show, owner_email(account), currency_code(account)))
     let response_body: json_response(response, 200)
 
     context "when request a default account" do
@@ -81,7 +81,7 @@ defmodule Point.AccountControllerSpec do
 
   describe "delete" do
     let account: AccountFactory.insert(:revel_backup, amount: account_amount)
-    let response: delete(sec_conn, account_path(sec_conn, :delete, account.id))
+    let response: delete(sec_conn, account_path(sec_conn, :delete, owner_email(account), currency_code(account)))
     before do: response
 
     context "when account is empty" do

@@ -4,7 +4,7 @@ defmodule Point.UserController do
 
   def index(conn, _params), do: render(conn, "index.json", users: UserService.all)
 
-  def show(conn, %{"id" => id}), do: render(conn, "show.json", user: UserService.get!(id))
+  def show(conn, %{"email" => email}), do: render(conn, "show.json", user: UserService.by(email: email))
 
   def create(conn, user_params) do
     case UserService.register(user_params) do
@@ -20,8 +20,8 @@ defmodule Point.UserController do
     end
   end
 
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    case UserService.update(id, user_params) do
+  def update(conn, %{"email" => email}) do
+    case UserService.update(email, conn.body_params) do
       {:ok, user} -> render(conn, "show.json", user: user)
       {:error, changeset} ->
         conn
@@ -30,8 +30,8 @@ defmodule Point.UserController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    UserService.delete!(id)
+  def delete(conn, %{"email" => email}) do
+    UserService.delete!(email: email)
     send_resp(conn, :no_content, "")
   end
 end

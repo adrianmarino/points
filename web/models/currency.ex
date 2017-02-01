@@ -11,5 +11,8 @@ defmodule Point.Currency do
     timestamps()
   end
 
-  def changeset(model, params \\ %{}), do: model |> cast_and_validate_required(params, [:code, :name, :issuer_id])
+  def insert_changeset(model, params \\ %{}) do
+    model |> cast_and_validate_required(params, [:code, :name, :issuer_id])
+  end
+  def update_changeset(model, params \\ %{}), do: model |> cast_and_validate_required(params, [:name])
 end

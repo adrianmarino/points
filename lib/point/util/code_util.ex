@@ -1,11 +1,13 @@
 defmodule Point.CodeUtil do
   import Point.FileUtil, only: [last_write: 1]
   alias Point.TimeUtil
+  import Logger
 
   def write_and_require(path, content) do
     try do
       File.write!(path, content)
       Code.require_file(path)
+      info "Require #{path}"
       {:ok, path}
     rescue
       error ->

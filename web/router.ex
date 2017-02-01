@@ -17,9 +17,16 @@ defmodule Point.Router do
     delete "/sign_out", SessionController, :sign_out
     get "/sessions", SessionController, :index
 
-    resources "/users", UserController, except: [:new, :edit]
-    resources "/accounts", AccountController, except: [:new, :edit, :update]
+    resources "/users", UserController, except: [:new, :edit], param: "email"
     resources "/currencies", CurrencyController, except: [:new, :edit], param: "code"
+
+    scope "/accounts" do
+      get "/", AccountController, :index
+      get "/:owner_email/:currency_code", AccountController, :show
+
+      post "/", AccountController, :create
+      delete "/:owner_email/:currency_code", AccountController, :delete
+    end
 
     scope "/exchange_rates" do
       get "/", ExchangeRateController, :index

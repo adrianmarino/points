@@ -6,17 +6,10 @@ defmodule Point.AccountService do
 
   # Crud
   def all, do: Repo.all(Account)
-  def get!(id), do: Repo.get!(Account, id)
-  def get(id), do: Repo.get(Account, id)
   def insert(params), do: Repo.insert(insert_changeset(params))
   def insert!(params), do: Repo.insert(insert_changeset(params))
-  def update(id, params) do
-    account = get!(id)
-    changeset = Account.update_changeset(account, params)
-    Repo.update(changeset)
-  end
-  def delete(id) do
-    case get!(id) do
+  def delete(owner_email: owner_email, currency_code: currency_code) do
+    case by(email: owner_email, currency_code: currency_code) do
       nil -> {:error, "Account not found"}
       account ->
         cond do
@@ -28,11 +21,12 @@ defmodule Point.AccountService do
 
   def amount(account), do: get!(account.id).amount
 
+  def get!(id), do: Repo.get!(Account, id)
+  def get(id), do: Repo.get(Account, id)
   def by(email: email, currency_code: currency_code) do
     Repo.one(from a in Account, join: c in Currency, join: u in User,
              where: a.currency_id == c.id and a.owner_id == u.id and c.code == ^currency_code and u.email == ^email)
   end
-
   def by(currency_code: currency_code) do
     Repo.all(from a in Account, join: c in Currency, where: a.currency_id == c.id and c.code == ^currency_code)
   end
