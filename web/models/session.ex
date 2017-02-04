@@ -1,6 +1,5 @@
 defmodule Point.Session do
   use Point.Web, :model
-  import Point.EctoModel
 
   schema "sessions" do
     field :token, :string

@@ -1,25 +1,25 @@
 defmodule Point.CodeUtil do
-  import Point.FileUtil, only: [last_write: 1]
-  alias Point.TimeUtil
+  import Macro, only: [camelize: 1]
   import Logger
 
-  def write_and_require(path, content) do
+  def to_module(value) when is_bitstring(value) or is_atom(value), do: elem(Code.eval_string(camelize(to_string value)), 0)
+
+  def ensure_loaded?(value), do: Code.ensure_loaded?(to_module(value))
+
+  def load_file(path) do
+    Code.load_file(path)
+    info "Load #{path}"
+  end
+
+  def write_and_load(path, content) do
     try do
       File.write!(path, content)
-      Code.require_file(path)
-      info "Require #{path}"
+      load_file(path)
       {:ok, path}
     rescue
       error ->
         File.rm(path)
         {:error, error}
-    end
-  end
-
-  def update_and_require(path, content, updated_at) do
-    case last_write(path) do
-      {:ok, last_write} -> with TimeUtil.is(updated_at, greater_that: last_write), do: write_and_require(path, content)
-      _ -> write_and_require(path, content)
     end
   end
 end

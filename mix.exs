@@ -49,6 +49,7 @@ defmodule Point.Mixfile do
       {:ecto_migrate, "0.6.3", override: true},
       {:ecto, ">= 2.0.6", override: true},
       {:timex, "~> 3.0"},
+      {:timex_ecto, "~> 3.0"},
       {:exjsx, "~> 3.2.1", git: "https://github.com/talentdeficit/exjsx"},
       {:httpotion, "~> 3.0.2"}
    ]

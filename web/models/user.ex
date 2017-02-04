@@ -7,7 +7,7 @@ defmodule Point.User do
     - Has accounts.
   """
   use Point.Web, :model
-  import Point.EctoModel
+  use Timex.Ecto.Timestamps, usec: true
 
   schema "users" do
     field :email, :string

@@ -1,7 +1,7 @@
 defmodule Point.Account do
   use Point.Web, :model
+  use Timex.Ecto.Timestamps, usec: true
   alias Point.{UserService, CurrencyService, DecimalUtil}
-  import Point.EctoModel
 
   schema "accounts" do
     field :amount, :decimal

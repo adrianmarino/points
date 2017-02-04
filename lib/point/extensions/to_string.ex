@@ -1,4 +1,5 @@
 import Kernel, except: [to_string: 1]
+Code.compiler_options(ignore_module_conflict: true)
 
 # Basic types
 defimpl String.Chars, for: Tuple do
@@ -13,6 +14,7 @@ defimpl String.Chars, for: Map do
   alias Point.JSON
   def to_string(value), do: JSON.to_pretty_json(value)
 end
+
 defimpl String.Chars, for: Decimal do
   def to_string(value), do: Decimal.to_string(Decimal.round(value, 2))
 end

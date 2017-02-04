@@ -23,6 +23,7 @@ defmodule Point.Web do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      import Point.EctoModel
     end
   end
 
