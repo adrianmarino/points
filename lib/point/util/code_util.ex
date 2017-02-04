@@ -1,5 +1,6 @@
 defmodule Point.CodeUtil do
   import Macro, only: [camelize: 1]
+  import Logger
 
   def to_module(value) when is_bitstring(value) or is_atom(value), do: elem(Code.eval_string(camelize(to_string value)), 0)
 
