@@ -19,13 +19,13 @@ defmodule ModuleLoader do
         cond do
           TimeUtil.is(last_update, greater_or_equal_that: last_write) -> # But outdated...
             write_and_load(module_path, source)
-            info "#{module_path} Updated and loaded!"
+            debug "#{module_path} Updated and loaded!"
           ensure_loaded?(name) ->  # And is already updated...
-            info "#{module_path} Already updated and loaded!."
+            debug "#{module_path} Already updated and loaded!."
           true -> # But is unloaded...
-            info "#{module_path} Already updated but not unloaded!."
+            debug "#{module_path} Already updated but not unloaded!."
             load_file(module_path)
-            info "#{module_path} loaded!"
+            debug "#{module_path} loaded!"
         end
       {:error, err} -> # when not found a module file...
         warn("Require file. Error: #{inspect err}")
