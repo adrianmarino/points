@@ -6,17 +6,15 @@ defmodule Point.CodeUtil do
 
   def ensure_loaded?(value), do: Code.ensure_loaded?(to_module(value))
 
-  def unload(module) do
-    module_name = to_module(module)
-    # :code.delete(module_name)
-    :code.purge(module_name)
+  def load_file(path) do
+    Code.load_file(path)
+    info "Load #{path}"
   end
 
-  def write_and_require(path, content) do
+  def write_and_load(path, content) do
     try do
       File.write!(path, content)
-      Code.require_file(path)
-      info "Require #{path}"
+      load_file(path)
       {:ok, path}
     rescue
       error ->
