@@ -2,16 +2,25 @@ defmodule Point.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :point,
-     version: "0.0.1",
-     elixir: "~> 1.2",
-     elixirc_paths: elixirc_paths(Mix.env),
-     compilers: [:phoenix, :gettext] ++ Mix.compilers,
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     aliases: aliases(),
-     deps: deps(),
-     preferred_cli_env: [espec: :test]]
+    [
+      app: :point,
+      version: "0.0.1",
+      elixir: "~> 1.2",
+      elixirc_paths: elixirc_paths(Mix.env),
+      compilers: [:phoenix, :gettext] ++ Mix.compilers,
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      aliases: aliases(),
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls, test_task: "espec"],
+      preferred_cli_env: [
+        espec: :test,
+        "coveralls": :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
+    ]
   end
 
   # Configuration for the OTP application.
@@ -50,7 +59,7 @@ defmodule Point.Mixfile do
       {:ecto, ">= 2.0.6", override: true},
       {:timex, "~> 3.0"},
       {:timex_ecto, "~> 3.0"},
-      {:exjsx, "~> 3.2.1", git: "https://github.com/talentdeficit/exjsx"},
+      {:exjsx, "~> 3.2.1", git: "https://github.com/talentdeficit/exjsx", override: true},
       {:httpotion, "~> 3.0.2"}
    ]
   end
