@@ -5,15 +5,12 @@
   [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
 # Features
-  * Used to point management or any type of currency.
-  * Each user belongs to entities.
-  * Each user has many accounts.
-  * Each account has an amount in a currency.
-  * Two type of accounts: Backup, Default.
-  * You can:
-    * Deposit to backup account.
-    * Extract from backup account.
-    * Transfer between accounts (any type).
+  * Manage currencies, exchange rates, accounts, users, transactions, entities.
+  * Use three basic transactions for increase/decrease amount on accounts:
+    * Deposit an amount to backup account.
+    * Extract an amount from backup account.
+    * Transfer an amount between accounts(This include foreign exchange when necessary).
+  * Also, include a DSL to create custom transactions at runtime.
 
 # Requirements
 
