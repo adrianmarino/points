@@ -1,3 +1,5 @@
+Code.compiler_options(ignore_module_conflict: true)
+
 defmodule Point.TransactionControllerSpec do
   use ESpec.Phoenix, controller: Point.TransactionController
   use ESpec.Phoenix.Helper

@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/adrianmarino/points.svg?branch=master)](https://travis-ci.org/adrianmarino/points)
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
+
 # Points
   * Is a bank of virtual money.
   * Can be used to point management or any type of currency.
