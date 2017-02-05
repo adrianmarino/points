@@ -5,12 +5,12 @@
   [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
 # Features
-  * Manage currencies, exchange rates, accounts, users, transactions, entities.
-  * Use three basic transactions for increase/decrease amount on accounts:
+  * Manage currencies, exchange rates, accounts, users, transactions and entities.
+  * Use three basic transactions to increase/decrease amount on accounts:
     * Deposit an amount to backup account.
     * Extract an amount from backup account.
     * Transfer an amount between accounts(This include foreign exchange when necessary).
-  * Also, include a DSL to create custom transactions at runtime.
+  * Also, include a simple DSL to create custom transactions at runtime.
 
 # Requirements
 
