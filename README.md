@@ -1,9 +1,11 @@
-[![Build Status](https://travis-ci.org/adrianmarino/points.svg?branch=master)](https://travis-ci.org/adrianmarino/points)
-[![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
-
 # Points
-  * Is a bank of virtual money.
-  * Can be used to point management or any type of currency.
+  Points is a platform used to foreign exchange between registered users.
+
+  [![Build Status](https://travis-ci.org/adrianmarino/points.svg?branch=master)](https://travis-ci.org/adrianmarino/points)
+  [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
+
+# Features
+  * Used to point management or any type of currency.
   * Each user belongs to entities.
   * Each user has many accounts.
   * Each account has an amount in a currency.
@@ -13,11 +15,30 @@
     * Extract from backup account.
     * Transfer between accounts (any type).
 
-## Start
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  * Start Phoenix endpoint with `mix phoenix.server`
-  * Base url: localhost:4000
+# Requirements
+
+* MySQL or MariaDB
+* Elixir(iex/mix)
+
+# Beginning
+
+**Step 1:** Download project.
+```bash
+git clone https://github.com/adrianmarino/points.git; cd points
+```
+**Step 2:** Install dependencies.
+```bash
+mix deps.get
+```
+**Step 3:** Create and migrate your database.
+```bash
+mix ecto.create
+mix ecto.migrate
+```
+**Step 4:** Start server.
+```bash
+mix phoenix.server
+```
 
 ## Sign In
 Request:
