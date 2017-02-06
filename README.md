@@ -1,4 +1,4 @@
-# Points
+# <img src="https://cdn.rawgit.com/adrianmarino/points/features/basic-readme/images/logo.svg" width="35" height="35" /> Points
   Points is a platform used to foreign exchange between registered users.
 
   [![Build Status](https://travis-ci.org/adrianmarino/points.svg?branch=master)](https://travis-ci.org/adrianmarino/points)
@@ -27,7 +27,7 @@ git clone https://github.com/adrianmarino/points.git; cd points
 ```bash
 mix deps.get
 ```
-**Step 3:** Create and migrate your database.
+**Step 3:** Create your database.
 ```bash
 mix ecto.create
 mix ecto.migrate
