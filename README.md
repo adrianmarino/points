@@ -4,7 +4,7 @@
   [![Build Status](https://travis-ci.org/adrianmarino/points.svg?branch=master)](https://travis-ci.org/adrianmarino/points)
   [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
-# Features
+## Features
   * Manage currencies, exchange rates, accounts, users, transactions and entities.
   * Use three basic transactions to increase/decrease amount on accounts:
     * Deposit an amount to backup account.
@@ -12,12 +12,12 @@
     * Transfer an amount between accounts(This include foreign exchange when necessary).
   * Also, include a simple DSL to create custom transactions at runtime.
 
-# Requirements
+## Requirements
 
 * MySQL or MariaDB
 * Elixir(iex/mix)
 
-# Beginning
+## Beginning
 
 **Step 1:** Download project.
 ```bash
@@ -37,7 +37,7 @@ mix ecto.migrate
 mix phoenix.server
 ```
 
-## Sign In
+### Sign In
 Request:
 ```
 POST /api/v1/sign_in
@@ -52,7 +52,7 @@ Response:
   "token": "ZTF5ejdsbENLeDlJUVhWbWpjZFFXZz09"
 }
 ```
-## Sessions
+### Sessions
 ```
 GET /api/v1/sessions
 [
