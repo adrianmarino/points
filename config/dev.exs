@@ -12,7 +12,7 @@ config :point, Point.Endpoint,
   code_reloader: true,
   check_origin: false,
   watchers: [],
-  session_ttl: 9000000,
+  session_ttl: 1800,
   simultaneous_sessions_by_user_and_remote_ip: 3,
   tmp_path: "./tmp"
 
