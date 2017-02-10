@@ -230,7 +230,8 @@ Before all, you must know next concepts:
   * Extract an amount in real currency from backup amount.
   * And transfer an amount between backup/default accounts.
 
-Well, returning to our example, you need add an amount to account 4. This account belong to "Point Platform", given that was created by chewbacca@gmail.com user an user create under "Point Platform" entity. Then you must move and amount from backup account(1) to default account(4).
+Well, returning to our example, you need add an amount to account 4. This account belong to "Point Platform", given that was created by chewbacca@gmail.com user an user create under "Point Platform" entity. Then you must move and amount from backup account 1 to default account 4.
+
 
 ### Rest API
 To complete
