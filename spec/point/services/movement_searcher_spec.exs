@@ -23,6 +23,7 @@ defmodule Point.MovementSearcherSpec do
         it "returns movements", do: movements |> to(have_length 1)
         it "returns a transfer movement", do: expect movement.type |> to(eq "transfer")
         it "returns a movement with account as source", do: expect movement.source_id |> to(eq account.id)
+        it "returns a movement with a target account", do: expect movement.target_id |> to(eq target.id)
         it "returns a movement with an amount", do: expect amount(movement) |> to(eq amount)
         it "returns a movement with an rate", do: expect movement.rate |> to(eq one)
       end
@@ -32,6 +33,7 @@ defmodule Point.MovementSearcherSpec do
         it "returns movements", do: movements |> to(have_length 1)
         it "returns a transfer movement", do: expect movement.type |> to(eq "transfer")
         it "returns a movement with account as source", do: expect movement.target_id |> to(eq account.id)
+        it "returns a movement with a target account", do: expect movement.target_id |> to(eq target.id)
         it "returns a movement with an amount", do: expect amount(movement) |> to(eq amount)
         it "returns a movement with an rate", do: expect movement.rate |> to(eq one)
       end
