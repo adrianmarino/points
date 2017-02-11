@@ -1,8 +1,9 @@
 defmodule Point.MovementSearcherSpec do
   use ESpec
+  import ServiceSpecHelper
   alias Point.{AccountFactory, TransferService}
 
-  describe "search account movement before timestamp" do
+  describe "search account movements before timestamp" do
     let movements: described_module.search(for: account, before: time)
     let time: Timex.shift(Timex.now, minutes: -1)
     let backup: AccountFactory.insert(:revel_backup)
@@ -13,21 +14,26 @@ defmodule Point.MovementSearcherSpec do
       let amount: Decimal.new 10.12
       let account: source
       let movement: List.first(movements)
+      let one: Decimal.new(1)
 
       before do: TransferService.transfer(from: source, to: target, amount: amount)
 
-      context "when search movements from an account" do
+      context "when search movements by source account" do
         let account: source
         it "returns movements", do: movements |> to(have_length 1)
         it "returns a transfer movement", do: expect movement.type |> to(eq "transfer")
-        it "returns a from source account", do: expect movement.source_id |> to(eq account.id)
+        it "returns a movement with account as source", do: expect movement.source_id |> to(eq account.id)
+        it "returns a movement with an amount", do: expect amount(movement) |> to(eq amount)
+        it "returns a movement with an rate", do: expect movement.rate |> to(eq one)
       end
 
-      context "when search movements to an account" do
+      context "when search movements by target account" do
         let account: target
         it "returns movements", do: movements |> to(have_length 1)
         it "returns a transfer movement", do: expect movement.type |> to(eq "transfer")
-        it "returns a from source account", do: expect movement.target_id |> to(eq account.id)
+        it "returns a movement with account as source", do: expect movement.target_id |> to(eq account.id)
+        it "returns a movement with an amount", do: expect amount(movement) |> to(eq amount)
+        it "returns a movement with an rate", do: expect movement.rate |> to(eq one)
       end
     end
 
