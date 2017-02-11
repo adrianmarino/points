@@ -14,6 +14,8 @@ defmodule Point.TransferServiceSpec do
     let source: AccountFactory.insert(:obiwan_kenoby_revel, issuer: backup.owner)
     let target: AccountFactory.insert(:han_solo_revel, issuer: backup.owner, currency: source.currency)
 
+    it "should creates an transfer movement", do: expect(transfer.type).to(eq "transfer")
+
     it "should increases target account balance to transfered amount" do
       expect fn-> transfer end |> to(change amount(target), plus(target, amount))
     end
@@ -48,6 +50,8 @@ defmodule Point.TransferServiceSpec do
     let issuer_owner_rate: %ExchangeRate{value: 10, source: source_backup.currency, target: source.currency}
 
     before do: insert!(issuer_owner_rate)
+
+    it "should creates an transfer movement", do: expect(transfer.type).to(eq "transfer")
 
     it "should decreases source account to transfered amount" do
       expect fn-> transfer end |> to(change amount(source), minus(source, amount))
@@ -85,6 +89,8 @@ defmodule Point.TransferServiceSpec do
       insert!(owner_owner_rate)
     end
 
+    it "should creates an transfer movement", do: expect(transfer.type).to(eq "transfer")
+
     it "should decreases source account to transfered amount" do
       expect fn-> transfer end |> to(change amount(source), minus(source, amount))
     end
@@ -117,6 +123,8 @@ defmodule Point.TransferServiceSpec do
       insert!(issuer_issuer_rate)
       insert!(owner_owner_rate)
     end
+    
+    it "should creates an transfer movement", do: expect(transfer.type).to(eq "transfer")
 
     it "should decreases source account to transfered amount" do
       expect fn-> transfer end |> to(change amount(source), minus(source, amount))

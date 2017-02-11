@@ -19,6 +19,8 @@ defmodule Point.DepositServiceSpec do
     end
 
     it "should creates a movement with the deposited amount", do: expect(deposit.amount).to(eq amount)
+
+    it "should creates a deposit movement", do: expect(deposit.type).to(eq "deposit")
   end
 
   context "when deposit an amount to default account" do
