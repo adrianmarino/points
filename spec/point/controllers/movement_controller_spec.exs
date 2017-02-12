@@ -3,7 +3,7 @@ defmodule Point.MovementControllerSpec do
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
   import Point.DecimalUtil
-  alias Point.{AccountFactory, TransferService, TimeUtil}
+  alias Point.{AccountFactory, TransferService}
 
   let backup: AccountFactory.insert(:revel_backup)
   let source: AccountFactory.insert(:obiwan_kenoby_revel, issuer: backup.owner)
@@ -12,7 +12,7 @@ defmodule Point.MovementControllerSpec do
 
   let movements: json_response(response, 200)
   let movement: List.first(movements)
-  let movement_date: Timex.parse(movement["date"], "{ISO:Extended}")
+  let movement_date: elem(Timex.parse(movement["date"], "{ISO:Extended}"), 1)
   let movement_amount: round(movement["amount"], 2)
 
   before do: TransferService.transfer(from: source, to: target, amount: amount)
@@ -36,12 +36,8 @@ defmodule Point.MovementControllerSpec do
     it "returns a movement with a target account with owner email" do
       expect movement["target"]["owner_email"] |> to(eq owner_email(target))
     end
-    it "returns a movement with date >= from" do
-      expect TimeUtil.is(movement_date, greater_or_equal_that: from) |> to(be_truthy)
-    end
-    it "returns a movement with date <= to" do
-      expect TimeUtil.is(to, greater_or_equal_that: movement_date) |> to(be_truthy)
-    end
+    it "returns a movement with date >= from", do: expect Timex.compare(movement_date, from) |> to(be :>=, 0)
+    it "returns a movement with date <= to", do: expect Timex.compare(movement_date, to) |> to(be :<=, 0)
   end
 
   describe "search movements with account after timestamp" do
@@ -51,9 +47,7 @@ defmodule Point.MovementControllerSpec do
 
     it "returns movements", do: movements |> to(have_length 1)
     it "returns a movement with an amount", do: expect movement_amount |> to(eq mult(-1, amount))
-    it "returns a movement with date >= time" do
-      expect TimeUtil.is(movement_date, greater_or_equal_that: time) |> to(be_truthy)
-    end
+    it "returns a movement with date >= time", do: expect Timex.compare(movement_date, time) |> to(be :>=, 0)
   end
 
   defp to_str(time), do: elem(Timex.format(time, "{YYYY}{0M}{0D}_{h24}{m}"), 1)
