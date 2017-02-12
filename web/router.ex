@@ -51,5 +51,10 @@ defmodule Point.Router do
       put "/:name", TransactionController, :update
       patch "/:name", TransactionController, :update
     end
+
+    scope "/movements" do
+      get "/:from/:to", MovementController, :search_between
+      get "/:owner_email/:currency_code/:after", MovementController, :search_by_account_after
+    end
   end
 end

@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Points.Client.Accounts do
+defmodule Mix.Tasks.Cli.Accounts do
   use Mix.Task.Point.Client
   @shortdoc "Show accounts. Params: token"
   defrun fn(token) -> points(base_url, token) |> accounts end

@@ -19,7 +19,7 @@ defmodule Point.ExtractService do
 
       {:ok, %{extract: movement}} = Multi.new
         |> Multi.update(:decrease_amount, decrease_changeset(account, amount))
-        |> Multi.insert(:extract, deposit(account, amount))
+        |> Multi.insert(:extract, extract(account, amount))
         |> transaction
 
       debug(movement)

@@ -21,7 +21,7 @@ config :ecto_ttl,
 config :point, Point.Repo,
   adapter: Ecto.Adapters.MySQL,
   username: "root",
-  password: "",
+  password: "1234",
   database: "point_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
