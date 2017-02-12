@@ -4,7 +4,7 @@ defmodule Point.MovementSearcherSpec do
   alias Point.{AccountFactory, TransferService}
 
   describe "search account movements before timestamp" do
-    let movements: described_module.search(for: account, before: time)
+    let movements: described_module.search(for: account, after: time)
     let time: Timex.shift(Timex.now, minutes: -1)
     let backup: AccountFactory.insert(:revel_backup)
 
