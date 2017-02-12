@@ -127,6 +127,20 @@ defmodule Point.Client do
   end
 
 
+  def movements(client, search: %Point.Client.Dto.AccountMovement{owner_email: owner_email, currency_code: currency_code,
+    after_timestamp: after_timestamp}) do
+    request(
+      method: :get,
+      url: url(client, "movements/#{owner_email}/#{currency_code}/#{after_timestamp}"),
+      body: %{},
+      headers: %{token: client.token}
+      )
+  end
+  def movements(client, search: %Point.Client.Dto.Between{from: from, to: to}) do
+    request(method: :get, url: url(client, "movements/#{from}/#{to}"), body: %{}, headers: %{token: client.token})
+  end
+
+
   def transactions(client) do
     request(method: :get, url: url(client, "transactions"), body: %{}, headers: %{token: client.token})
   end

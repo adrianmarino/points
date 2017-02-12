@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Points.Client.Currencies do
+defmodule Mix.Tasks.Cli.Currencies do
   use Mix.Task.Point.Client
   @shortdoc "Show currencies. Params: token"
   defrun fn(token) -> points(base_url, token) |> currencies end

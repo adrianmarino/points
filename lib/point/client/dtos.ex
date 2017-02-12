@@ -31,6 +31,18 @@ defmodule Point.Client.Dto do
     def create([owner_email, currency_code]), do: %Account{owner_email: owner_email, currency_code: currency_code}
   end
 
+  defmodule AccountMovement do
+    defstruct [:owner_email, :currency_code, :after_timestamp]
+    def create([owner_email, currency_code, after_timestamp]) do
+      %AccountMovement{owner_email: owner_email, currency_code: currency_code, after_timestamp: after_timestamp}
+    end
+  end
+
+  defmodule Between do
+    defstruct [:from, :to]
+    def create([from, to]), do: %Between{from: from, to: to}
+  end
+
   defmodule Transaction do
     defstruct [:name, :source]
     def new([name, source]), do: %Transaction{name: name, source: source}

@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.Points.Client.Transactions.Exec do
+defmodule Mix.Tasks.Cli.Transactions.Exec do
   use Mix.Task.Point.Client
   @shortdoc "Execute a transaction. Params: token name params(as json: '{...}')"
   defrun fn([token | [name | [params | _]]]) -> points(base_url, token) |> transactions(exec: name, params: params) end

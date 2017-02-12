@@ -24,10 +24,22 @@ defmodule Point.MovementControllerSpec do
 
     it "returns movements", do: movements |> to(have_length 1)
     it "returns a movement with an amount", do: expect movement_amount |> to(eq amount)
-    it "returns a movement_date >= from" do
+    it "returns a movement with a source account with currency code" do
+      expect movement["source"]["currency_code"] |> to(eq currency_code(source))
+    end
+    it "returns a movement with a target account with currency code" do
+      expect movement["target"]["currency_code"] |> to(eq currency_code(target))
+    end
+    it "returns a movement with a source account with owner email" do
+      expect movement["source"]["owner_email"] |> to(eq owner_email(source))
+    end
+    it "returns a movement with a target account with owner email" do
+      expect movement["target"]["owner_email"] |> to(eq owner_email(target))
+    end
+    it "returns a movement with date >= from" do
       expect TimeUtil.is(movement_date, greater_or_equal_that: from) |> to(be_truthy)
     end
-    it "returns a movement_date <= to" do
+    it "returns a movement with date <= to" do
       expect TimeUtil.is(to, greater_or_equal_that: movement_date) |> to(be_truthy)
     end
   end
@@ -39,7 +51,7 @@ defmodule Point.MovementControllerSpec do
 
     it "returns movements", do: movements |> to(have_length 1)
     it "returns a movement with an amount", do: expect movement_amount |> to(eq mult(-1, amount))
-    it "returns a movement date greater than query date" do
+    it "returns a movement with date >= time" do
       expect TimeUtil.is(movement_date, greater_or_equal_that: time) |> to(be_truthy)
     end
   end

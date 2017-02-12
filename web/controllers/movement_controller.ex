@@ -4,6 +4,7 @@ defmodule Point.MovementController do
   alias Point.{MovementSearcher, AccountService}
 
   @timestamp_format "{YYYY}{0M}{0D}_{h24}{m}"
+  @date_format "{YYYY}{0M}{0D}"
 
   def search_between(conn, %{"from" => from, "to" => to}) do
     case to_timestamp(from) do
@@ -36,7 +37,12 @@ defmodule Point.MovementController do
     end
   end
 
-  def to_timestamp(value), do: Timex.parse!(value, @timestamp_format)
+  def to_timestamp(value) do
+    case Timex.parse(value, @timestamp_format) do
+      {:error, _} -> Timex.parse!(value, @date_format)
+      {:ok, timestamp} -> timestamp
+    end
+  end
   def invalid_date_resp(conn, field) do
     send_resp(conn, :bad_request, "Invalid #{to_string field} value. must be YYYYMMDD_HHMM.")
   end

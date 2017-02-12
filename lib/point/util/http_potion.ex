@@ -30,7 +30,7 @@ defmodule Point.HTTPotion.Logger do
   import PointLogger
 
   def request(method, url, body, headers) do
-    info "Request - #{upcase(to_string method)} #{url}#{to_desc("\nHeaders", headers)}#{to_desc("\nBody", body)}"
+    debug "Request - #{upcase(to_string method)} #{url}#{to_desc("\nHeaders", headers)}#{to_desc("\nBody", body)}"
   end
 
   def response(%HTTPotion.ErrorResponse{message: message}), do: error "Response - Error: #{message}"
