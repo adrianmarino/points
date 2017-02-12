@@ -7,5 +7,7 @@ defmodule Point.MovementSearcher do
               where: m.inserted_at >= ^time and m.source_id == ^account.id or m.target_id == ^account.id)
   end
 
-  def search(after: time), do: Repo.all(from m in Movement, where: m.inserted_at >= ^time)
+  def search(from: from, to: to) do
+    Repo.all(from m in Movement, where: m.inserted_at >= ^from and m.inserted_at <= ^to)
+  end
 end

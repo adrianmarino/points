@@ -53,7 +53,7 @@ defmodule Point.Router do
     end
 
     scope "/movements" do
-      get "/:after", MovementController, :search_after
+      get "/:from/:to", MovementController, :search_between
       get "/:owner_email/:currency_code/:after", MovementController, :search_by_account_after
     end
   end

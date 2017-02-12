@@ -5,13 +5,17 @@ defmodule Point.MovementController do
 
   @timestamp_format "{YYYY}{0M}{0D}_{h24}{m}"
 
-  def search_after(conn, %{"after" => str_timestamp}) do
-    case to_timestamp(str_timestamp) do
-      {:error, _} -> send_resp(conn, :bad_request, "Invalid after value. must be YYYYMMDD_HHMM.")
-      timestamp ->
-        case MovementSearcher.search(after: timestamp) do
-          [] -> send_resp(conn, :not_found, "")
-          movements -> render(conn, "index.json", movements: movements)
+  def search_between(conn, %{"from" => from, "to" => to}) do
+    case to_timestamp(from) do
+      {:error, _} -> invalid_date_resp(conn, :from)
+      from ->
+        case to_timestamp(to) do
+          {:error, _} -> invalid_date_resp(conn, :to)
+          to ->
+            case MovementSearcher.search(from: from, to: to) do
+              [] -> send_resp(conn, :not_found, "")
+              movements -> render(conn, "index.json", movements: movements)
+            end
         end
     end
   end
@@ -33,4 +37,7 @@ defmodule Point.MovementController do
   end
 
   def to_timestamp(value), do: Timex.parse!(value, @timestamp_format)
+  def invalid_date_resp(conn, field) do
+    send_resp(conn, :bad_request, "Invalid #{to_string field} value. must be YYYYMMDD_HHMM.")
+  end
 end
