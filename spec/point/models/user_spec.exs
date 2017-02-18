@@ -20,6 +20,23 @@ defmodule Point.UserSpec do
     end
   end
 
+  context "role_changeset" do
+    let changeset: User.role_changeset(%User{}, attrs)
+
+    context "when has a valid role" do
+      let attrs: %{role: :normal_user}
+      it do: expect changeset.valid? |> to(be_truthy)
+    end
+    context "when an unknow role" do
+      let attrs: %{role: :any}
+      it do: expect changeset.valid? |> to(be_falsy)
+    end
+    context "when hasn't role" do
+      let attrs: %{}
+      it do: expect changeset.valid? |> to(be_falsy)
+    end
+  end
+
   context "password_changeset" do
     let changeset: User.password_changeset(%User{}, attrs)
 
@@ -60,14 +77,25 @@ defmodule Point.UserSpec do
   end
 
   context "insert_changeset" do
-    let attrs: %{email: "adrianmarino@gmail.com", password: "Whatever10", first_name: "Adrian", last_name: "Marino"}
+    let attrs: %{
+      email: "adrianmarino@gmail.com",
+      password: "Whatever10",
+      first_name: "Adrian",
+      last_name: "Marino",
+      role: "normal_user"
+    }
     let changeset: User.insert_changeset(%User{}, attrs)
 
     it do: expect changeset.valid? |> to(be_truthy)
   end
 
   context "update_changeset" do
-    let attrs: %{password: "Whatever10", first_name: "Adrian", last_name: "Marino"}
+    let attrs: %{
+      password: "Whatever10",
+      first_name: "Adrian",
+      last_name: "Marino",
+      role: "normal_user"
+    }
     let changeset: User.update_changeset(%User{}, attrs)
 
     it do: expect changeset.valid? |> to(be_truthy)

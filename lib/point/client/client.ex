@@ -44,6 +44,10 @@ defmodule Point.Client do
   end
   def users(client), do: request(method: :get, url: url(client, "users"), body: %{}, headers: %{token: client.token})
 
+
+  def roles(client), do: request(method: :get, url: url(client, "roles"), body: %{}, headers: %{token: client.token})
+
+
   def currencies(client, create: %Point.Client.Dto.Currency{code: code, name: name}) do
     request(
       method: :post,
