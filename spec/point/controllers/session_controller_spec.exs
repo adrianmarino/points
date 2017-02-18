@@ -5,8 +5,13 @@ defmodule Point.SessionControllerSpec do
   alias Point.{Session, UserService, SessionService}
 
   let ip: "127.0.0.1"
-  let valid_user_attrs: %{email: "adrianmarino@gmail.com", password: "Whatever1123", first_name: "adrian",
-    last_name: "marino"}
+  let valid_user_attrs: %{
+    email: "adrianmarino@gmail.com",
+    password: "Whatever1123",
+    first_name: "adrian",
+    last_name: "marino",
+    role: "normal_user"
+  }
   let valid_attrs: sub_map(valid_user_attrs, [:email, :password])
 
   describe "sign_in" do

@@ -6,14 +6,7 @@ defmodule ESpec.Phoenix.Helper do
 
       alias Point.{Repo, Session, User}
 
-      let :current_user do
-        Repo.insert! User.insert_changeset(%User{}, %{
-          email: "session_test_user@gmail.com",
-          password: "Whatever10",
-          first_name: "Test",
-          last_name: "User"
-        })
-      end
+      let current_user: Point.UserFactory.insert(:session_test_user)
 
       let current_session: Repo.insert!(%Session{token: "token", remote_ip: "127.0.0.1", user_id: current_user.id})
 

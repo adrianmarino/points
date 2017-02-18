@@ -1,11 +1,4 @@
 defmodule Point.User do
-  @moduledoc """
-  Represent a platform user. A user:
-    - Could be a issuer or a normal user.
-    - Belong to entities.
-    - Could issue currency.
-    - Has accounts.
-  """
   use Point.Web, :model
   use Timex.Ecto.Timestamps, usec: true
 
@@ -15,6 +8,7 @@ defmodule Point.User do
     field :password, :string, virtual: true
     field :first_name, :string
     field :last_name, :string
+    field :role, UserRole
 
     many_to_many :entities, Point.Entity, join_through: "users_entities"
     has_many :currencies, Point.Currency
@@ -24,6 +18,10 @@ defmodule Point.User do
 
   def first_last_name_changeset(model, params \\ %{}) do
     model |> cast_and_validate_required(params, [:first_name, :last_name])
+  end
+
+  def role_changeset(model, params \\ %{}) do
+    model |> cast_and_validate_required(params, [:role])
   end
 
   defp put_password_hash(changeset) do
@@ -53,11 +51,13 @@ defmodule Point.User do
       |> email_changeset(params)
       |> password_changeset(params)
       |> first_last_name_changeset(params)
+      |> role_changeset(params)
   end
 
   def update_changeset(model, params \\ %{}) do
     model
       |> first_last_name_changeset(params)
+      |> role_changeset(params)
       |> password_changeset(params)
   end
 end
