@@ -1,4 +1,4 @@
-defmodule Point.CurrencyControllerTest do
+defmodule Point.CurrencyControllerSpec do
   use ESpec.Phoenix, controller: Point.CurrencyController
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
@@ -10,19 +10,19 @@ defmodule Point.CurrencyControllerTest do
   let invalid_attrs: %{code: "", name: ""}
 
   describe "create" do
-    let response: post(sec_conn, currency_path(sec_conn, :create), currency)
+    let response: post(sec_conn, currency_path(sec_conn, :create), attrs)
 
     context "when data is valid" do
-      let currency: valid_attrs
+      let attrs: valid_attrs
       before do: response
 
       it "returns created status", do: expect response.status |> to(eq 201)
-      it "returns the inserted currency code", do: expect json_response(response, 201)["code"] |> to(eq currency.code)
-      it "inserts the currency in database", do: expect CurrencyService.by(code: currency.code) |> to(be_truthy)
+      it "returns the inserted currency code", do: expect json_response(response, 201)["code"] |> to(eq attrs.code)
+      it "inserts the currency in database", do: expect CurrencyService.by(code: attrs.code) |> to(be_truthy)
     end
 
     context "when data is invalid" do
-      let currency: invalid_attrs
+      let attrs: invalid_attrs
       it "returns unprocessable_entity status", do: expect(response.status).to(eq 422)
       it "returns errors description", do: expect json_response(response, 422)["errors"] |> not_to(be_empty)
     end
@@ -43,8 +43,8 @@ defmodule Point.CurrencyControllerTest do
       let response_body: json_response(response, 200)
 
       it "returns ok status", do: expect response.status |> to(eq 200)
-      it "returns account code", do: expect response_body["code"] |> to(eq currency.code)
-      it "returns account name", do: expect response_body["name"] |> to(eq currency.name)
+      it "returns currency code", do: expect response_body["code"] |> to(eq currency.code)
+      it "returns currency name", do: expect response_body["name"] |> to(eq currency.name)
     end
 
     context "when not found a currency" do
@@ -62,7 +62,7 @@ defmodule Point.CurrencyControllerTest do
       let response_body: json_response(response, 200)
 
       it "returns ok status", do: expect response.status |> to(eq 200)
-      it "returns account name", do: expect response_body["name"] |> to(eq attrs.name)
+      it "returns currency name", do: expect response_body["name"] |> to(eq attrs.name)
     end
 
     context "when data is invalid" do

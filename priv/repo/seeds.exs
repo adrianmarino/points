@@ -67,9 +67,9 @@ insert! %Account{
 #------------------------------------------------------------------------------
 # Entities
 #------------------------------------------------------------------------------
-platform = insert! %Entity{name: "Point Platform", users: [chewbacca]}
-revelion = insert! %Entity{name: "Rebellion",      users: [obiwan_kenoby]}
-empire = insert! %Entity{name: "Empire",         users: [anakin_skywalker]}
+platform = insert! %Entity{code: "platform", name: "Point Platform", users: [chewbacca]}
+revelion = insert! %Entity{code: "rebelion", name: "Start wars rebellion", users: [obiwan_kenoby]}
+empire   = insert! %Entity{code: "empire", name: "Start wars empire", users: [anakin_skywalker]}
 #
 #
 #
