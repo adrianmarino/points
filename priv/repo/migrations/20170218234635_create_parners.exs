@@ -1,4 +1,4 @@
-defmodule Point.Repo.Migrations.AddEntitiesToEntities do
+defmodule Point.Repo.Migrations.CreatePartners do
   use Ecto.Migration
 
   def up do
