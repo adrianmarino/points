@@ -22,7 +22,7 @@ defmodule Point.TransactionService do
   def delete(name: name, issuer_id: issuer_id) do
     case by(name: name, issuer_id: issuer_id) do
       nil -> {:error, "Not found"}
-      _ -> {:ok, "Transaction removed"}
+      transaction -> Repo.delete(transaction)
     end
   end
 end

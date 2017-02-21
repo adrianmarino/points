@@ -5,7 +5,7 @@ defmodule Point.TransactionControllerSpec do
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
   import Point.DecimalUtil
-  alias Point.AccountFactory
+  alias Point.{AccountFactory, Transaction}
   import String, only: [replace: 3]
 
   @transfer_path "./lib/point/transaction/default/transfer.ex"
@@ -106,9 +106,17 @@ defmodule Point.TransactionControllerSpec do
     let response: delete(content_type(sec_conn, text_plain), transaction_path(sec_conn, :delete, valid_attrs.name))
 
     context "when exist the transaction" do
-      before do: post(content_type(sec_conn, text_plain), transaction_path(sec_conn, :create, valid_attrs.name),
-        valid_attrs.source)
+      before do
+        post(content_type(sec_conn, text_plain),
+            transaction_path(sec_conn, :create, valid_attrs.name),
+            valid_attrs.source)
+        response
+      end
+
       it "returns deleted status", do: expect response.status |> to(eq 204)
+      it "removes transaction from database" do
+        expect Repo.get_by(Transaction, name: valid_attrs.name) |> to(eq nil)
+      end
     end
 
     it "returns not found status when non-exist the transaction", do: expect response.status |> to(eq 404)
