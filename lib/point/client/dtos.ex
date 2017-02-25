@@ -16,6 +16,16 @@ defmodule Point.Client.Dto do
     def new([code, name]), do: %Currency{code: code, name: name}
   end
 
+  defmodule Entity do
+    defstruct [:code, :name]
+    def new([code, name]), do: %Entity{code: code, name: name}
+  end
+
+  defmodule Partner do
+    defstruct [:entity_code, :code]
+    def new([entity_code, code]), do: %Partner{entity_code: entity_code, code: code}
+  end
+
   defmodule ExchangeRateId do
     defstruct [:source, :target]
     def new([source, target]), do: %ExchangeRateId{source: source, target: target}

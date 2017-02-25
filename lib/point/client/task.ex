@@ -16,6 +16,8 @@ defmodule Mix.Task.Point.Client do
       alias Point.Client.Dto.Currency
       alias Point.Client.Dto.AccountMovement
       alias Point.Client.Dto.Between
+      alias Point.Client.Dto.Entity
+      alias Point.Client.Dto.Partner
     end
   end
 

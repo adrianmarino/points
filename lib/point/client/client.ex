@@ -11,6 +11,7 @@ defmodule Point.Client do
     %Point.Client{base_url: base_url, token: token}
   end
 
+
   def sessions(client, sign_in: %Point.Client.Dto.Session{email: email, password: password}) do
     sign_in_resp(
       request(method: :post, url: url(client, "sign_in"), body: %{email: email, password: password}, headers: %{}),
@@ -114,7 +115,7 @@ defmodule Point.Client do
     request(
       method: :delete,
       url: url(client, "accounts/#{account.owner_email}/#{account.currency_code}"),
-      body: account,
+      body: %{},
       headers: %{token: client.token}
     )
   end
@@ -184,6 +185,65 @@ defmodule Point.Client do
       headers: %{token: client.token}
     )
   end
+
+
+  def entities(client, create: %Point.Client.Dto.Entity{} = entity) do
+    request(method: :post, url: url(client, "entities"), body: entity, headers: %{token: client.token})
+  end
+  def entities(client, update: %Point.Client.Dto.Entity{} = entity) do
+    request(
+      method: :put,
+      url: url(client, "entities/#{entity.code}"),
+      body: %{name: entity.name},
+      headers: %{token: client.token}
+    )
+  end
+  def entities(client, delete: entity_code) do
+    request(
+      method: :delete,
+      url: url(client, "entities/#{entity_code}"),
+      body: %{},
+      headers: %{token: client.token}
+    )
+  end
+  def entities(client, show: entity_code) do
+    request(
+      method: :get,
+      url: url(client, "entities/#{entity_code}"),
+      body: %{},
+      headers: %{token: client.token}
+    )
+  end
+  def entities(client) do
+    request(method: :get, url: url(client, "entities"), body: %{}, headers: %{token: client.token})
+  end
+
+
+  def partners(client, entity_code: entity_code) do
+    request(
+    method: :get,
+    url: url(client, "entities/#{entity_code}/partners"),
+    body: %{},
+    headers: %{token: client.token}
+    )
+  end
+  def partners(client, create: %Point.Client.Dto.Partner{} = partner) do
+    request(
+      method: :post,
+      url: url(client, "entities/#{partner.entity_code}/partners"),
+      body: %{code: partner.code},
+      headers: %{token: client.token}
+    )
+  end
+  def partners(client, delete: %Point.Client.Dto.Entity{} = partner) do
+    request(
+      method: :delete,
+      url: url(client, "entities/#{partner.entity_code}/partners/#{partner.code}"),
+      body: %{},
+      headers: %{token: client.token}
+    )
+  end
+
 
   defp sign_in_resp(%HTTPotion.Response{status_code: 401} = response, _), do: {:error, response}
   defp sign_in_resp(%HTTPotion.Response{status_code: 201, body: body} = response, client) do
