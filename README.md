@@ -49,6 +49,7 @@ You can interact with the rest api through mix tasks without need to use curl or
 What can you do with points api? 
 Run next on points directory:
 ```bash
+$ mix help | grep cli
 mix cli.accounts                   # Show accounts. Params: token
 mix cli.accounts.create            # Create an account. Params: token owner_email currency_code
 mix cli.accounts.delete            # Delete an account. Params: token owner_email currency_code
