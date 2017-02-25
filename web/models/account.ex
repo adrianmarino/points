@@ -13,7 +13,7 @@ defmodule Point.Account do
     belongs_to :issuer, Point.User
     belongs_to :currency, Point.Currency
 
-    timestamps()
+    timestamps
   end
 
   # Only for test purpouse!

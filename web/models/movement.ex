@@ -13,7 +13,7 @@ defmodule Point.Movement do
     belongs_to :source, Point.Account
     belongs_to :target, Point.Account
 
-    timestamps()
+    timestamps
   end
 
   def changeset(model, params \\ %{}), do: model |> cast_and_validate_required(params, [:type, :amount])

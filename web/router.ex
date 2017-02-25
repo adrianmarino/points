@@ -23,7 +23,9 @@ defmodule Point.Router do
 
     resources "/currencies", CurrencyController, except: [:new, :edit], param: "code"
 
-    resources "/entities", EntityController, except: [:new, :edit], param: "code"
+    resources "/entities", EntityController, except: [:new, :edit], param: "code" do
+      resources "/partners", PartnerController, only: [:create, :delete, :index], param: "code"
+    end
 
     scope "/accounts" do
       get "/", AccountController, :index
