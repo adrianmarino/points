@@ -1,6 +1,7 @@
 defmodule Point.Model do
   alias Point.{ModelMap, JSON}
-  def to_string(model), do: model |> ModelMap.to_map |> JSON.to_pretty_json
+  def to_string(model), do: to_map(model) |> JSON.to_pretty_json
+  def to_map(model), do: ModelMap.to_map(model)
 end
 
 defprotocol Point.ModelMap, do: def to_map(model)

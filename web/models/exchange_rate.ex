@@ -16,7 +16,7 @@ defmodule Point.ExchangeRate do
     belongs_to :source, Point.Currency
     belongs_to :target, Point.Currency
 
-    timestamps()
+    timestamps
   end
 
   def changeset(model, params \\ %{}) do
@@ -29,6 +29,7 @@ defmodule Point.ExchangeRate do
       |> validate_required([:value, :source_code, :target_code])
       |> map_from(:source_code, to: :source_id, resolver: &(CurrencyService.by(code: &1)))
       |> map_from(:target_code, to: :target_id, resolver: &(CurrencyService.by(code: &1)))
+      |> validate_required([:source_id, :target_id])
   end
 
   def update_changeset(model , params \\ %{}), do: model |> cast_and_validate_required(params, [:value])

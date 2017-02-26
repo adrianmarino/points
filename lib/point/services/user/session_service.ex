@@ -6,12 +6,11 @@ defmodule Point.SessionService do
   alias Point.{Repo, Session, User, Config}
 
   def all() do
-    Repo.all(from s in Session, join: u in User,
-              where: s.user_id == u.id,
-              select: %{inserted_at: s.inserted_at, ttl: s.ttl, email: u.email,
-                        token: s.token, remote_ip: s.remote_ip}
-    )
-      |> map((&(put(&1, :seconds_left, sec_left(&1.inserted_at, &1.ttl)))))
+    Repo.all(
+      from s in Session, join: u in User,
+      where: s.user_id == u.id,
+      select: %{inserted_at: s.inserted_at, ttl: s.ttl, email: u.email, token: s.token, remote_ip: s.remote_ip})
+    |> map((&(put(&1, :seconds_left, sec_left(&1.inserted_at, &1.ttl)))))
   end
 
   def open(for_user: user, from: remote_ip) do
@@ -27,7 +26,7 @@ defmodule Point.SessionService do
   def close(token: token) do
     case by(token: token) do
       nil -> { :error, "Session doesn't found for #{token} token"}
-      session -> {:ok, Repo.delete!(session)}
+      session -> Repo.delete(session)
     end
   end
 

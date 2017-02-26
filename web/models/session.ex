@@ -8,7 +8,7 @@ defmodule Point.Session do
 
     belongs_to :user, Point.User
 
-    timestamps()
+    timestamps
   end
 
   def changeset(model, params \\ :empty) do

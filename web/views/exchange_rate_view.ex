@@ -12,6 +12,6 @@ defmodule Point.ExchangeRateView do
     source = Repo.assoc(exchange_rate, :source).code
     target = Repo.assoc(exchange_rate, :target).code
 
-    %{source: source, target: target, value: exchange_rate.value}
+    %{source: source, target: target, value: to_string(exchange_rate.value)}
   end
 end

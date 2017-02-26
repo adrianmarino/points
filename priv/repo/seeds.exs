@@ -1,5 +1,5 @@
 import Point.Repo
-alias Point.{User, Entity, Account, Currency, ExchangeRate}
+alias Point.{User, Entity, Partner, Account, Currency, ExchangeRate}
 
 #------------------------------------------------------------------------------
 # Users
@@ -67,6 +67,15 @@ insert! %Account{
 #------------------------------------------------------------------------------
 # Entities
 #------------------------------------------------------------------------------
-insert! %Entity{name: "Point Platform", users: [chewbacca]}
-insert! %Entity{name: "Rebellion",      users: [obiwan_kenoby]}
-insert! %Entity{name: "Empire",         users: [anakin_skywalker]}
+platform = insert! %Entity{code: "platform", name: "Point Platform", users: [chewbacca]}
+revelion = insert! %Entity{code: "rebelion", name: "Start wars rebellion", users: [obiwan_kenoby]}
+empire   = insert! %Entity{code: "empire", name: "Start wars empire", users: [anakin_skywalker]}
+#
+#
+#
+#------------------------------------------------------------------------------
+# Partners
+#------------------------------------------------------------------------------
+insert! %Partner{entity: platform, partner: revelion}
+insert! %Partner{entity: platform, partner: empire}
+insert! %Partner{entity: revelion, partner: empire}

@@ -35,7 +35,16 @@ defmodule Point.HTTPotion.Logger do
 
   def response(%HTTPotion.ErrorResponse{message: message}), do: error "Response - Error: #{message}"
   def response(%HTTPotion.Response{status_code: status_code, body: body}) do
-    info "Response - Status: #{status_code}#{to_desc(", Body", to_struct(body))}"
+    info "Response - Status: #{status_code}#{to_desc(", Body", to_result(body))}"
+  end
+
+  defp to_result(body) do
+    case to_struct(body) do
+      nil -> "Empty"
+      [] -> "Empty"
+      "" -> "Empty"
+      result -> result
+    end
   end
 
   defp to_desc(desc, %{} = map) do

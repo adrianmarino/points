@@ -13,7 +13,7 @@ defmodule Point.Account do
     belongs_to :issuer, Point.User
     belongs_to :currency, Point.Currency
 
-    timestamps()
+    timestamps
   end
 
   # Only for test purpouse!
@@ -27,6 +27,7 @@ defmodule Point.Account do
       |> validate_required([:type, :owner_email, :issuer_id, :currency_code])
       |> map_from(:owner_email, to: :owner_id, resolver: &(UserService.by(email: &1)))
       |> map_from(:currency_code, to: :currency_id, resolver: &(CurrencyService.by(code: &1)))
+      |> validate_required([:owner_id, :currency_id])
       |> set_default_value_to(field: :amount, value: DecimalUtil.zero)
   end
 

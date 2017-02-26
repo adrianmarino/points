@@ -52,7 +52,7 @@ defmodule Point.ExchangeRateControllerSpec do
 
   describe "update" do
     let response: put(sec_conn, exchange_rate_path(sec_conn, :update, attrs.source, attrs.target), attrs)
-    let db_rate_value: ExchangeRateService.by!(source_code: attrs.source, target_code: attrs.target)
+    let db_rate: ExchangeRateService.by(source_code: attrs.source, target_code: attrs.target)
 
     before do
       post(sec_conn, exchange_rate_path(sec_conn, :create), valid_attrs)
@@ -66,14 +66,14 @@ defmodule Point.ExchangeRateControllerSpec do
       it "returns exchange rate with then updated value" do
         expect json_response(response, 201)["value"] |> to(eq to_string attrs.value)
       end
-      it "updates exchange rate value in database", do: expect db_rate_value |> to(eq attrs.value)
+      it "updates exchange rate value in database", do: expect to_string(db_rate.value) |> to(eq attrs.value)
     end
 
     context "when has invalid data" do
       let attrs: %{valid_attrs | value: ""}
 
       it "returns unprocessable_entity status", do: expect response.status |> to(eq 422)
-      it "doesn't updates exchange rate value in database", do: expect db_rate_value |> to(eq valid_attrs.value)
+      it "doesn't updates exchange rate value in database", do: expect to_string(db_rate.value) |> to(eq valid_attrs.value)
     end
   end
 

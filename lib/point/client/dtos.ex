@@ -5,15 +5,25 @@ defmodule Point.Client.Dto do
   end
 
   defmodule User do
-    defstruct [:email, :password, :first_name, :last_name]
-    def new([email, password, first_name, last_name]) do
-      %User{email: email, password: password, first_name: first_name, last_name: last_name}
+    defstruct [:email, :password, :role, :first_name, :last_name]
+    def new([email, password, role, first_name, last_name]) do
+      %User{email: email, password: password, role: role, first_name: first_name, last_name: last_name}
     end
   end
 
   defmodule Currency do
     defstruct [:code, :name]
     def new([code, name]), do: %Currency{code: code, name: name}
+  end
+
+  defmodule Entity do
+    defstruct [:code, :name]
+    def new([code, name]), do: %Entity{code: code, name: name}
+  end
+
+  defmodule Partner do
+    defstruct [:entity_code, :code]
+    def new([entity_code, code]), do: %Partner{entity_code: entity_code, code: code}
   end
 
   defmodule ExchangeRateId do

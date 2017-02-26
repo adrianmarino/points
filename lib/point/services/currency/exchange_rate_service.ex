@@ -1,36 +1,28 @@
 defmodule Point.ExchangeRateService do
   alias Point.{ExchangeRate, DecimalUtil, Repo, Currency}
   import Ecto.Query
-
-  def by!(source_code: source_code, target_code: target_code) do
-    with {:ok, model } = by(source_code: source_code, target_code: target_code), do: to_string(model.value)
-  end
+  import ExchangeRate
 
   def by(source_code: source_code, target_code: target_code) do
-    model = Repo.one(from r in ExchangeRate,
-    join: s in Currency,
-    join: t in Currency,
-    where: r.source_id == s.id and r.target_id == t.id and s.code == ^source_code and t.code == ^target_code)
+    Repo.one(
+      from r in ExchangeRate,
+      join: s in Currency, join: t in Currency,
+      where: r.source_id == s.id and r.target_id == t.id and s.code == ^source_code and t.code == ^target_code)
+  end
 
-    case model do
-      nil  -> {:error, "Not found exchange rate #{source_code} to #{target_code}"}
-      exchange_rate -> {:ok, exchange_rate}
-    end
+  def by(source: source, target: target) do
+    Repo.one(from r in ExchangeRate, where: r.source_id == ^source.currency_id and r.target_id == ^target.currency_id)
   end
 
   def rate_between(%{currency_id: source}, %{currency_id: target}) when source == target, do: {:ok, Decimal.new(1)}
   def rate_between(source, target) do
-    case Repo.one(from r in ExchangeRate, where: r.source_id == ^source.currency_id
-      and r.target_id == ^target.currency_id)
-    do
-      rate when rate != nil -> {:ok , Decimal.new(rate.value)}
-      _ ->
-        case Repo.one(from r in ExchangeRate, where: r.source_id == ^target.currency_id
-              and r.target_id == ^source.currency_id)
-        do
-          rate when rate != nil -> {:ok, DecimalUtil.inverse(rate.value) }
-          _ -> {:error, missing_exchange_rate_message(source, target)}
+    case by(source: source, target: target) do
+      nil ->
+        case by(source: target, target: source) do
+          nil -> {:error, missing_exchange_rate_message(source, target)}
+          rate -> {:ok, DecimalUtil.inverse(rate.value) }
         end
+      rate -> {:ok , Decimal.new(rate.value)}
     end
   end
 
@@ -45,18 +37,11 @@ defmodule Point.ExchangeRateService do
     Repo.insert!(insert_changeset(source_code, target_code, value))
   end
   def update(source_code: source_code, target_code: target_code, value: value) do
-    case by(source_code: source_code, target_code: target_code) do
-      {:ok, exchange_rate} ->
-        changeset = ExchangeRate.update_changeset(exchange_rate, %{value: value})
-        Repo.update(changeset)
-      error -> error
-    end
+    search(source_code: source_code, target_code: target_code,
+      found: fn(exchange_rate) -> Repo.update(update_changeset(exchange_rate, %{value: value})) end)
   end
   def delete(source_code: source_code, target_code: target_code) do
-    case by(source_code: source_code, target_code: target_code) do
-      {:ok, exchange_rate} -> Repo.delete(exchange_rate)
-      error -> error
-    end
+    search(source_code: source_code, target_code: target_code, found: fn(exchange_rate) -> Repo.delete(exchange_rate) end)
   end
 
   defp missing_exchange_rate_message(source, target) do
@@ -66,9 +51,13 @@ defmodule Point.ExchangeRateService do
   end
 
   defp insert_changeset(source_code, target_code, value) do
-    ExchangeRate.insert_changeset(
-      %ExchangeRate{},
-      %{source_code: source_code, target_code: target_code, value: value}
-    )
+    insert_changeset(%ExchangeRate{}, %{source_code: source_code, target_code: target_code, value: value})
+  end
+
+  defp search(source_code: source_code, target_code: target_code, found: found) do
+    case by(source_code: source_code, target_code: target_code) do
+      nil -> {:error, :not_found }
+      model -> found.(model)
+    end
   end
 end

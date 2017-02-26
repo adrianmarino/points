@@ -11,23 +11,18 @@ defmodule Point.TransactionService do
   # Crud
   def all, do: Repo.all(Transaction)
   def insert(attrs) do
-    case CLI.compile(attrs.name, attrs.source) do
-      {:ok, _} -> Repo.insert(Transaction.insert_changeset(%Transaction{}, attrs))
-      error -> error
-    end
+    with {:ok, _} <- CLI.compile(attrs.name, attrs.source),
+      do: Repo.insert(Transaction.insert_changeset(%Transaction{}, attrs))
   end
   def update(transaction, source: source) do
-    case CLI.compile(transaction.name, source) do
-      {:ok, _} ->
-        changeset = Transaction.update_changeset(transaction, %{source: source})
-        Repo.update(changeset)
-      error -> error
-    end
+    with {:ok, _} <- CLI.compile(transaction.name, source),
+         changeset <- Transaction.update_changeset(transaction, %{source: source}),
+      do: Repo.update(changeset)
   end
   def delete(name: name, issuer_id: issuer_id) do
     case by(name: name, issuer_id: issuer_id) do
       nil -> {:error, "Not found"}
-      _ -> {:ok, "Transaction removed"}
+      transaction -> Repo.delete(transaction)
     end
   end
 end
