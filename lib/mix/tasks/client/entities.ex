@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Cli.Entities do
   use Mix.Task.Point.Client
   @shortdoc "Show entities. Params: token"
-  defrun fn(token) -> points(base_url, token) |> entities end
+  defrun fn([token | _]) -> points(base_url, token) |> entities end
 
   defmodule Show do
     use Mix.Task.Point.Client

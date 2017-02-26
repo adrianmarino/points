@@ -5,9 +5,9 @@ defmodule Point.Client.Dto do
   end
 
   defmodule User do
-    defstruct [:email, :password, :first_name, :last_name]
-    def new([email, password, first_name, last_name]) do
-      %User{email: email, password: password, first_name: first_name, last_name: last_name}
+    defstruct [:email, :password, :role, :first_name, :last_name]
+    def new([email, password, role, first_name, last_name]) do
+      %User{email: email, password: password, role: role, first_name: first_name, last_name: last_name}
     end
   end
 

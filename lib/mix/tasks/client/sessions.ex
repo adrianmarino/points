@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Cli.Sessions do
   use Mix.Task.Point.Client
   @shortdoc "Show sessions"
-  defrun fn(token)-> points(base_url, token) |> sessions end
+  defrun fn([token | _])-> points(base_url, token) |> sessions end
 
   defmodule SignIn do
     use Mix.Task.Point.Client
