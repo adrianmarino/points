@@ -36,7 +36,8 @@ config :point, Point.Repo,
   password: "1234",
   database: "point_prod",
   hostname: "database",
-  pool_size: 100
+  pool_size: 100,
+  ownership_timeout: 60_000
 
 # ## SSL Support
 #

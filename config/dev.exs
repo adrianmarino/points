@@ -38,4 +38,5 @@ config :point, Point.Repo,
   password: "1234",
   database: "point_dev",
   hostname: "database",
-  pool_size: 10
+  pool_size: 10,
+  ownership_timeout: 60_000
