@@ -9,7 +9,7 @@ defmodule Point.Partner do
     belongs_to :entity, Point.Entity
     belongs_to :partner, Point.Entity
 
-    timestamps
+    timestamps()
   end
 
   def changeset(model, params \\ %{}) do

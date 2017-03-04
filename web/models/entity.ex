@@ -14,7 +14,7 @@ defmodule Point.Entity do
     many_to_many :users, Point.User, join_through: "users_entities"
     many_to_many :partners, Point.Entity, join_through: Point.Partner, join_keys: [entity_id: :id, partner_id: :id]
 
-    timestamps
+    timestamps()
   end
 
   def insert_changeset(model, params \\ %{}) do

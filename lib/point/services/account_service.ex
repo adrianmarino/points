@@ -16,7 +16,7 @@ defmodule Point.AccountService do
       nil -> {:error, "Account not found"}
       account ->
         cond do
-          is(account.amount, greater_that: zero) -> {:error, "Account must be empty to be deleted"}
+          is(account.amount, greater_that: zero()) -> {:error, "Account must be empty to be deleted"}
           true -> Repo.delete(account)
         end
     end

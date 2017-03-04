@@ -23,7 +23,7 @@ config :point, Point.Repo,
   username: "root",
   password: "1234",
   database: "point_test",
-  hostname: "localhost",
+  hostname: "database",
   pool: Ecto.Adapters.SQL.Sandbox
 
 config :comeonin, :bcrypt_log_rounds, 4

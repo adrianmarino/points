@@ -6,7 +6,7 @@ defmodule Point.Repo.Migrations.CreatePartners do
       add :entity_id, references(:entities, on_delete: :nothing), primary_key: true
       add :partner_id, references(:entities, on_delete: :nothing), primary_key: true
 
-      timestamps
+      timestamps()
     end
     create unique_index(:partners, [:entity_id, :partner_id])
   end

@@ -1,5 +1,5 @@
 defmodule Point.HTTPotion do
-  import Map, only: [to_list: 1]
+  import Point.MapUtil, only: [to_keyword_list: 1]
   alias Point.HTTPotion.{Logger, RequestBuilder}
 
   defmacro request(method: method, url: url, body: body, headers: headers) do
@@ -8,7 +8,8 @@ defmodule Point.HTTPotion do
       Logger.request(method, url, body, headers)
 
       body = RequestBuilder.format_body(body, headers["Content-Type"])
-      response = HTTPotion.request(method, url, [body: body, headers: to_list(headers)])
+
+      response = HTTPotion.request(method, url, [body: body, headers: to_keyword_list(headers)])
       Logger.response(response)
       response
     end
@@ -17,9 +18,10 @@ end
 
 defmodule Point.HTTPotion.RequestBuilder do
   import Point.JSON, only: [to_json: 1]
-  import Map, only: [merge: 2]
 
-  def default_headers(headers), do: merge(%{"Content-Type" => "application/json"}, headers)
+  def default_headers(headers) do
+    Map.merge(%{"Content-Type" => "application/json"}, headers)
+  end
   def format_body(body, "application/json"), do: to_json(body)
   def format_body(body, "application/text"), do: body
 end
@@ -30,7 +32,7 @@ defmodule Point.HTTPotion.Logger do
   import PointLogger
 
   def request(method, url, body, headers) do
-    debug "Request - #{upcase(to_string method)} #{url}#{to_desc("\nHeaders", headers)}#{to_desc("\nBody", body)}"
+    info "Request - #{upcase(to_string method)} #{url}#{to_desc("\nHeaders", headers)}#{to_desc("\nBody", body)}"
   end
 
   def response(%HTTPotion.ErrorResponse{message: message}), do: error "Response - Error: #{message}"

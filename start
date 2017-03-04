@@ -1,0 +1,14 @@
+#!/bin/bash
+export MIX_ENV=${1:-dev}
+export MYSQL_ROOT_PASSWORD=${3-1234}
+export MYSQL_PORT=${4-3306}
+
+echo -e "\nUpdate points image..."
+docker build .
+
+echo -e "\n============================================"
+"MIX_ENV=$MIX_ENV"
+echo "============================================"
+
+echo -e "\nStart images..."
+docker-compose up

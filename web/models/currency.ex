@@ -8,7 +8,7 @@ defmodule Point.Currency do
 
     belongs_to :issuer, Point.User
 
-    timestamps
+    timestamps()
   end
 
   def insert_changeset(model, params \\ %{}) do

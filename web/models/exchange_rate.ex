@@ -16,7 +16,7 @@ defmodule Point.ExchangeRate do
     belongs_to :source, Point.Currency
     belongs_to :target, Point.Currency
 
-    timestamps
+    timestamps()
   end
 
   def changeset(model, params \\ %{}) do
