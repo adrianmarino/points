@@ -1,7 +1,7 @@
 database:
   image: "mariadb:10"
   ports:
-    - "3306:3306"
+    - "3307:3306"
   environment:
     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     MYSQL_DATABASE: "point_${MIX_ENV}"
@@ -12,6 +12,7 @@ database_storage:
   image: "busybox"
   volumes:
     - /var/lib/mysql
+  command: "true"
 
 points:
   build: "."

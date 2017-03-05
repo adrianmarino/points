@@ -8,14 +8,14 @@ defmodule ESpec.Phoenix.Helper do
 
       let current_user: Point.UserFactory.insert(:session_test_user)
 
-      let current_session: Repo.insert!(%Session{token: "token", remote_ip: "127.0.0.1", user_id: current_user.id})
+      let current_session: Repo.insert!(%Session{token: "token", remote_ip: "127.0.0.1", user_id: current_user().id})
 
-      let session_token: current_session.token
+      let session_token: current_session().token
     end
   end
 
   defmacro sec_conn do
-    quote do: build_conn |> put_token_in_header(current_session.token)
+    quote do: build_conn() |> put_token_in_header(current_session().token)
   end
 
   defmacro remote_ip(conn, ip) do

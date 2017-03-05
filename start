@@ -7,7 +7,7 @@ echo -e "\nUpdate points image..."
 docker build .
 
 echo -e "\n============================================"
-"MIX_ENV=$MIX_ENV"
+echo "MIX_ENV=$MIX_ENV"
 echo "============================================"
 
 echo -e "\nStart images..."
