@@ -15,7 +15,8 @@ database_storage:
   command: "true"
 
 points:
-  build: "."
+  # build: "."
+  image: adrianmarino/phoenix-mysql-server:${VERSION}
   environment:
     MIX_ENV: ${MIX_ENV}
   ports:
