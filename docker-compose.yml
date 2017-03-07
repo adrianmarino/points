@@ -16,7 +16,7 @@ database_storage:
 
 points:
   # build: "."
-  image: adrianmarino/phoenix-mysql-server:${VERSION}
+  image: adrianmarino/points:${VERSION}
   environment:
     MIX_ENV: ${MIX_ENV}
   ports:
