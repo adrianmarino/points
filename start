@@ -1,5 +1,5 @@
 #!/bin/bash
-export VERSION=$1
+export VERSION=${1:-$(mix point.version)}
 export MIX_ENV=${2:-dev}
 export MYSQL_ROOT_PASSWORD=${3-1234}
 export MYSQL_PORT=${4-3306}
