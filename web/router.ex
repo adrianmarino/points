@@ -18,7 +18,14 @@ defmodule Point.Router do
     get "/sessions", SessionController, :index
 
     resources "/users", UserController, except: [:new, :edit], param: "email"
+
+    resources "/roles", RoleController, only: [:index]
+
     resources "/currencies", CurrencyController, except: [:new, :edit], param: "code"
+
+    resources "/entities", EntityController, except: [:new, :edit], param: "code" do
+      resources "/partners", PartnerController, only: [:create, :delete, :index], param: "code"
+    end
 
     scope "/accounts" do
       get "/", AccountController, :index
@@ -50,6 +57,11 @@ defmodule Point.Router do
 
       put "/:name", TransactionController, :update
       patch "/:name", TransactionController, :update
+    end
+
+    scope "/movements" do
+      get "/:from/:to", MovementController, :search_between
+      get "/:owner_email/:currency_code/:after", MovementController, :search_by_account_after
     end
   end
 end

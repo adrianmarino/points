@@ -5,7 +5,8 @@ defmodule Elixir.Point.Repo.Migrations.AddManyUsersToManyEntities do
     create table(:users_entities) do
       add :user_id, references(:users)
       add :entity_id, references(:entities)
-      timestamps
+
+      timestamps()
     end
   end
 

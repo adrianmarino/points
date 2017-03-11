@@ -14,18 +14,16 @@ defmodule Mix.Task.Point.Client do
       alias Point.Client.Dto.Account
       alias Point.Client.Dto.Transaction
       alias Point.Client.Dto.Currency
+      alias Point.Client.Dto.AccountMovement
+      alias Point.Client.Dto.Between
+      alias Point.Client.Dto.Entity
+      alias Point.Client.Dto.Partner
     end
   end
 
   defmacro defrun(block) do
     quote do
-      def run(params) do
-        # try do
-          unquote(block).(params) |> response
-        #rescue
-        #  err -> error inspect(err)
-        #end
-      end
+      def run(params), do: unquote(block).(params) |> response
     end
   end
 

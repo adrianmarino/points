@@ -5,7 +5,7 @@ defmodule Point.Transaction.CLI do
   import PointLogger
   alias Point.Config
 
-  def compile(name, source), do: loader |> load(name: name, source: source)
+  def compile(name, source), do: loader() |> load(name: name, source: source)
 
   def execute(name, params) when is_bitstring(name) or is_atom(name) do
     try do
@@ -16,7 +16,7 @@ defmodule Point.Transaction.CLI do
   end
   def execute(transaction, params) do
     try do
-      loader |> load(name: transaction.name, source: transaction.source, last_update: transaction.updated_at)
+      loader() |> load(name: transaction.name, source: transaction.source, last_update: transaction.updated_at)
       exec_source(transaction.name, params)
     catch
       error -> {:error, error}

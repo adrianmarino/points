@@ -4,12 +4,14 @@ defmodule Point.EntityFactory do
 
   def universe_factory do
     %Entity{
+      code: "universe",
       name: "Universe Entity",
       users: [UserFactory.build(:chewbacca)]
     }
   end
 
-  def revel_factory, do: %Entity{
+  def revelion_factory, do: %Entity{
+    code: "revelion",
     name: "Revelion",
     users: [
       UserFactory.build(:luke_skywalker),
@@ -17,9 +19,10 @@ defmodule Point.EntityFactory do
     ]
   }
 
-  def boston_factory do
+  def empire_factory do
     %Entity{
-      name: "Boston",
+      code: "empire",
+      name: "Empire",
       users: [
         UserFactory.build(:anakin_skywalker),
         UserFactory.build(:jango_fett)

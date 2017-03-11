@@ -19,24 +19,31 @@
 
 ## Beginning
 
-**Step 1:** Download project.
-```bash
-git clone https://github.com/adrianmarino/points.git; cd points
-```
-**Step 2:** Install dependencies.
-```bash
-mix deps.get
-```
-**Step 3:** Create your dev database.
-```bash
-mix ecto.create
-mix ecto.migrate
-MIX_ENV=dev mix ecto.reset
-```
-**Step 4:** Start server.
-```bash
-mix phoenix.server
-```
+  **Step 1:** Download project.
+  ```bash
+  git clone https://github.com/adrianmarino/points.git; cd points
+  ```
+
+  **Step 1**: Install dependencies.
+  ```bash
+  $ mix deps.get
+  ```
+
+  **Step 2**: Create and populate points database.
+  ```bash
+  $ MIX_ENV=dev mix ecto.reset
+  ```
+
+  **Step 3**: Start server.
+  ```bash
+  $ mix phoenix.server
+  ```
+
+## Beginning with docker
+
+  ```bash
+  $ ./docker-server-init
+  ```
 
 ## Guide
 
@@ -44,9 +51,9 @@ This guide introduces you how can interact with points platform through easy exa
 
 ### Client Tasks
 
-You can interact with the rest api through mix tasks without need to use curl or any rest client. This tasks actually use a rest client as we'll see later. 
+You can interact with the rest api through mix tasks without need to use curl or any rest client. This tasks actually use a rest client as we'll see later.
 
-What can you do with points api? 
+What can you do with points api?
 Run next on points directory:
 ```bash
 $ mix help | grep cli
@@ -63,7 +70,7 @@ mix cli.entities                   # Show entities. Params: token
 mix cli.entities.create            # Create an entity. Params: token code name
 mix cli.entities.delete            # Delete an entity. Params: token code
 mix cli.entities.partners          # Show entity partners. Params: token entity_code
-mix cli.entities.partners.create   # Create an entity partner. Params: token partner_code entity_code 
+mix cli.entities.partners.create   # Create an entity partner. Params: token partner_code entity_code
 mix cli.entities.partners.delete   # Delete an entity partner. Params: token partner_code entity_code
 mix cli.entities.show              # Show an entity. Params: token code
 mix cli.entities.update            # Update entity name. Params: token code name
@@ -125,7 +132,7 @@ $ mix cli.currencies.show OHpIUENHak9FTTAzUCtwaHB1dnk3dz09 XPT
 ```bash
 $ mix help | grep cli.users.create
 mix cli.users.create               # Create a user. Params: session_token email password first_name last_name
-$ mix cli.users.create OHpIUENHak9FTTAzUCtwaHB1dnk3dz09 adrianmarino@gmail.com 1234567890 "Adrian Norberto" Marino 
+$ mix cli.users.create OHpIUENHak9FTTAzUCtwaHB1dnk3dz09 adrianmarino@gmail.com 1234567890 "Adrian Norberto" Marino
 22:20:53.900 [info]  Response - Status: 201, Body: {
   "email": "adrianmarino@gmail.com",
   "first_name": "Adrian Norberto",
@@ -252,3 +259,11 @@ To complete
 
 ### Custom Transactions
 To complete
+
+## Docker
+
+* docker-server-init: create/poulate database and run server in docker-compose env.
+* docker-server: Run server on docker-compose env.
+* docker-test: Run test on docker-compose env.
+* docker-reset: Reset(drop/create/migrate/populate) database in docker-compose env.
+* docker-clean: Clean(drop/create/migrate) database in docker-compose env.

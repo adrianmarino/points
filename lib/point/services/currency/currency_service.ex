@@ -12,9 +12,7 @@ defmodule Point.CurrencyService do
       nil -> {:error, "Not found"}
       currency ->
         case AccountService.by(currency_code: code) do
-          [] ->
-            Repo.delete!(currency)
-            {:ok, "currency removed"}
+          [] -> Repo.delete(currency)
           _ -> {:error, "there are account that use this currency"}
         end
     end

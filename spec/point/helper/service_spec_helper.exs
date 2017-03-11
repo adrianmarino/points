@@ -1,12 +1,13 @@
 defmodule ServiceSpecHelper do
   import Decimal
   import Point.Repo
-  alias Point.{AccountService, ExchangeRateService}
+  alias Point.{Account, Movement, AccountService, ExchangeRateService}
 
   def plus(account, amount), do: round(add(account.amount, amount), 2)
   def minus(account, amount), do: round(sub(account.amount, amount), 2)
 
-  def amount(account), do: fn-> round(AccountService.get!(account.id).amount, 2) end
+  def amount(%Account{} = account), do: fn-> round(AccountService.get!(account.id).amount, 2) end
+  def amount(%Movement{amount: amount}), do: round(amount, 2)
 
   def currency_code(account), do: assoc(account, :currency).code
 
