@@ -7,7 +7,8 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with brunch.io to recompile .js and .css sources.
 config :point, Point.Endpoint,
-  http: [port: 4000],
+  http: [port: 3000],
+  url: [host: "localhost", port: 3000],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -36,5 +37,6 @@ config :point, Point.Repo,
   username: "root",
   password: "1234",
   database: "point_dev",
-  hostname: "localhost",
-  pool_size: 10
+  hostname: System.get_env("DB_HOST") || "localhost",
+  pool_size: 10,
+  ownership_timeout: 60_000

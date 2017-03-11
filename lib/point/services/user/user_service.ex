@@ -6,7 +6,7 @@ defmodule Point.UserService do
   # Auth
   def check(that_user: user, has_password: password), do: checkpw(password, user.password_hash)
 
-  def dummy_check_password(), do: dummy_checkpw
+  def dummy_check_password(), do: dummy_checkpw()
 
   # Crud
   def all, do: Repo.all(User)

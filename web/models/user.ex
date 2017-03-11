@@ -13,7 +13,7 @@ defmodule Point.User do
     many_to_many :entities, Point.Entity, join_through: "users_entities"
     has_many :currencies, Point.Currency
 
-    timestamps
+    timestamps()
   end
 
   def first_last_name_changeset(model, params \\ %{}) do

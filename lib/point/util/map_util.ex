@@ -11,4 +11,8 @@ defmodule Point.MapUtil do
   def map(hash, block), do: Enum.map(to_list(hash), &(block.(elem(&1, 0), elem(&1, 1))))
   def sub_map(hash, keys), do: elem(Map.split(hash, keys), 0)
   def comp_map(hash, keys), do: elem(Map.split(hash, keys), 1)
+
+  def to_keyword_list(map) do
+    Enum.map(map, fn({key, value}) -> {String.to_atom(key), value} end)
+  end
 end

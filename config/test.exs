@@ -23,8 +23,9 @@ config :point, Point.Repo,
   username: "root",
   password: "1234",
   database: "point_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  hostname: System.get_env("DB_HOST") || "localhost",
+  pool: Ecto.Adapters.SQL.Sandbox,
+  ownership_timeout: 60_000
 
 config :comeonin, :bcrypt_log_rounds, 4
 config :comeonin, :pbkdf2_rounds, 1
