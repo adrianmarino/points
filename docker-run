@@ -1,0 +1,13 @@
+#!/bin/bash
+COMMAND=$1
+
+export MIX_ENV=${2:-dev}
+export MYSQL_ROOT_PASSWORD=${3:-1234}
+
+echo "=========================================================="
+echo "Environment: $MIX_ENV"
+echo "Password: $MYSQL_ROOT_PASSWORD"
+echo "Command: $COMMAND"
+echo "=========================================================="
+
+docker-compose run -p3000:3000 --rm points sh -c "$COMMAND"

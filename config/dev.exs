@@ -37,6 +37,6 @@ config :point, Point.Repo,
   username: "root",
   password: "1234",
   database: "point_dev",
-  hostname: "database",
+  hostname: System.get_env("DB_HOST") || "localhost",
   pool_size: 10,
   ownership_timeout: 60_000

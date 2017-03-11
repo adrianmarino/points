@@ -44,3 +44,11 @@ GET /api/v1/sessions
   }
 ]
 ```
+
+# Docker
+
+* docker-server-init: create/poulate database and run serber in docker-compose env.
+* docker-server: Run server on docker-compose env.
+* docker-test: Run test on docker-compose env.
+* docker-reset: Reset(drop/create/migrate/populate) database in docker-compose env.
+* docker-clean: Clean(drop/create/migrate) database in docker-compose env.

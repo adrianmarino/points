@@ -1,0 +1,2 @@
+#!/bin/bash
+bash docker-run "mix phoenix.server" $1 $2
