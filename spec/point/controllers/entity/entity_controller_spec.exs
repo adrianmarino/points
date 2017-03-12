@@ -30,7 +30,7 @@ defmodule Point.EntityControllerSpec do
   end
 
   describe "update" do
-    let entity: EntityFactory.insert(:revelion)
+    let entity: EntityFactory.insert(:rebelion)
     let response: put(sec_conn(), entity_path(sec_conn(), :update, entity().code), sub_map(attrs(), [:name]))
 
     context "when data is valid" do
@@ -63,7 +63,7 @@ defmodule Point.EntityControllerSpec do
 
     context "when delete an entity with a partner" do
       let entity: EntityService.insert!(valid_attrs())
-      let partner: EntityFactory.insert(:revelion)
+      let partner: EntityFactory.insert(:rebelion)
       let entity_code: entity().code
       before do
         EntityService.add_partner(entity(), partner())
@@ -74,7 +74,7 @@ defmodule Point.EntityControllerSpec do
     end
 
     context "when delete an entity have users" do
-      let entity_code: EntityFactory.insert(:revelion).code
+      let entity_code: EntityFactory.insert(:rebelion).code
       before do: response()
 
       it "returns locked status", do: expect response().status |> to(eq 423)
@@ -82,7 +82,7 @@ defmodule Point.EntityControllerSpec do
     end
 
     context "when delete an entity have accounts" do
-      let entity: EntityFactory.insert(:revelion)
+      let entity: EntityFactory.insert(:rebelion)
       let user: Enum.at(EntityService.load(entity(), :users), 0)
       let account: AccountFactory.insert(:obiwan_kenoby_revel, issuer: user())
       let entity_code: entity().code
@@ -110,7 +110,7 @@ defmodule Point.EntityControllerSpec do
     let response: get(sec_conn(), entity_path(sec_conn(), :show, entity().code))
 
     context "when found a entity" do
-      let entity: EntityFactory.insert(:revelion)
+      let entity: EntityFactory.insert(:rebelion)
       let response_body: json_response(response(), 200)
 
       it "returns ok status", do: expect response().status |> to(eq 200)

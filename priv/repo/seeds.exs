@@ -68,7 +68,7 @@ insert! %Account{
 # Entities
 #------------------------------------------------------------------------------
 platform = insert! %Entity{code: "platform", name: "Point Platform", users: [chewbacca]}
-revelion = insert! %Entity{code: "rebelion", name: "Start wars rebellion", users: [obiwan_kenoby]}
+rebelion = insert! %Entity{code: "rebelion", name: "Start wars rebellion", users: [obiwan_kenoby]}
 empire   = insert! %Entity{code: "empire", name: "Start wars empire", users: [anakin_skywalker]}
 #
 #
@@ -76,6 +76,6 @@ empire   = insert! %Entity{code: "empire", name: "Start wars empire", users: [an
 #------------------------------------------------------------------------------
 # Partners
 #------------------------------------------------------------------------------
-insert! %Partner{entity: platform, partner: revelion}
+insert! %Partner{entity: platform, partner: rebelion}
 insert! %Partner{entity: platform, partner: empire}
-insert! %Partner{entity: revelion, partner: empire}
+insert! %Partner{entity: rebelion, partner: empire}
