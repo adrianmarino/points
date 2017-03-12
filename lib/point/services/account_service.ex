@@ -2,7 +2,11 @@ defmodule Point.AccountService do
   import Ecto.Query
   import Decimal
   import Point.DecimalUtil, only: [is: 2, zero: 0]
-  alias Point.{Repo, Account, Currency, User}
+  alias Point.{Repo, Account, Currency, User, PartnerService}
+
+  def is_transfer_allowed?(between: source, and: target) do
+    PartnerService.are_they_partners?(source.entity_id, target.entity_id)
+  end
 
   # Crud
   def all, do: Repo.all(Account)

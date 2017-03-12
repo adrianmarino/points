@@ -3,7 +3,7 @@ defmodule Point.TransferService do
   Transfer an amount between two accounts with same/distinct currency.
   """
   alias Ecto.Multi
-  alias Point.{Account, ExchangeRateService}
+  alias Point.{Account, ExchangeRateService, AccountService}
 
   import Point.Repo
   import Point.MovementFactory
@@ -13,6 +13,8 @@ defmodule Point.TransferService do
   def transfer(from:    %Account{type: "default"} = source,
                to:      %Account{type: "default"} = target,
                amount:  amount) do
+    assert_transfer_allowed(between: source, and: target)
+
     backup_target = backup_account_of(target)
     backup_source = backup_account_of(source)
     backup_amount = Decimal.mult(amount, rate_between(source, backup_source))
@@ -27,6 +29,10 @@ defmodule Point.TransferService do
     result[move_name(source, target)]
   end
 
+  defp assert_transfer_allowed(between: source, and: target) do
+    unless AccountService.is_transfer_allowed?(between: source, and: target),
+      do: raise "Transfer Denied: Accounts must be under partner entities or under same entity."
+  end
   defp rate_between(source, target) do
     case ExchangeRateService.rate_between(source, target) do
       {:error, message} ->

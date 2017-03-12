@@ -56,9 +56,8 @@ empire   = insert! %Entity{code: "empire", name: "Start wars empire", issuers: [
 #------------------------------------------------------------------------------
 # Partners
 #------------------------------------------------------------------------------
-insert! %Partner{entity: platform, partner: rebelion}
-insert! %Partner{entity: platform, partner: empire}
 insert! %Partner{entity: rebelion, partner: empire}
+insert! %Partner{entity: empire, partner: rebelion}
 #
 #
 #

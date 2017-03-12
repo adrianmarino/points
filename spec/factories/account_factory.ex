@@ -23,7 +23,7 @@ defmodule Point.AccountFactory do
     }
   end
 
-  def obiwan_kenoby_revel_factory do
+  def obiwan_kenoby_factory do
     %Account{
       type: "default",
       amount: Decimal.new(15000),
@@ -33,7 +33,7 @@ defmodule Point.AccountFactory do
     }
   end
 
-  def han_solo_revel_factory do
+  def han_solo_factory do
     %Account{
       type: "default",
       amount: Decimal.new(15000),
@@ -54,7 +54,7 @@ defmodule Point.AccountFactory do
     }
   end
 
-  def jango_fett_empire_factory do
+  def jango_fett_factory do
     %Account{
       type: "default",
       amount: Decimal.new(15000),

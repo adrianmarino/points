@@ -2,6 +2,11 @@ defmodule Point.EntityService do
   import Ecto.Query
   alias Point.{Entity, User, Repo, UserService, AccountService, PartnerService}
 
+  def associate(entity_a, entity_b) do
+    add_partner(entity_a, entity_b)
+    add_partner(entity_b, entity_a)
+  end
+
   def add_partner(entity, partner), do: PartnerService.insert!(entity, partner)
   def remove_partner(entity, partner), do: PartnerService.delete!(entity, partner)
 

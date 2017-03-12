@@ -9,9 +9,9 @@ defmodule Point.MovementSearcherSpec do
     let backup: AccountFactory.insert(:revel_backup)
 
     context "when there is a movement within last minute" do
-      let source: AccountFactory.insert(:obiwan_kenoby_revel,
+      let source: AccountFactory.insert(:obiwan_kenoby,
         issuer: backup().owner, entity: backup().entity)
-      let target: AccountFactory.insert(:han_solo_revel,
+      let target: AccountFactory.insert(:han_solo,
         issuer: backup().owner, currency: source().currency, entity: backup().entity)
       let amount: Decimal.new 10.12
       let account: source()

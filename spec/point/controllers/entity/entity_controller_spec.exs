@@ -84,7 +84,7 @@ defmodule Point.EntityControllerSpec do
     context "when delete an entity have accounts" do
       let entity: EntityFactory.insert(:rebelion)
       let user: Enum.at(EntityService.load(entity(), :users), 0)
-      let account: AccountFactory.insert(:obiwan_kenoby_revel, issuer: user())
+      let account: AccountFactory.insert(:obiwan_kenoby, issuer: user())
       let entity_code: entity().code
 
       before do: response()
