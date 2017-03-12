@@ -4,7 +4,7 @@ defmodule ESpec.Phoenix.Helper do
       import unquote(__MODULE__)
       import Point.Phoenix.ConnUtil
 
-      alias Point.{Repo, Session, User, UserFactory, EntityFactory}
+      alias Point.{Repo, Session, User, EntityFactory}
 
       let current_entity: EntityFactory.insert(:test_entity)
       let current_user: List.first(current_entity.issuers)
