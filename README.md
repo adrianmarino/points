@@ -49,6 +49,30 @@
 
 This guide introduces you how can interact with points platform through easy examples. Adicionally, I'll show you how to configure the server.
 
+## Roles
+
+Each user has a role that allow perform different actions on the platform. Next I'll show each role and its associated actions.
+
+### Normal
+Is a platform user. They can: 
+* Exchange amounts between accounts on same entity or entities that have associacion with their entity.
+* Query account status
+* Query account movements.
+### EntityAdmin
+This user is created by a _System Admin_ user only and their actions modify the context of entity under this was created. The entity user belong to one entity and can:
+* Manage normal users that belong to entity.
+* Is an account issuer, this means that can manage default accounts that belong to entity.
+* Deposit/Extract amount to/from backup accounts that belong to entity.
+* Manage custom transations that belong to entity.
+### Admin
+Can perfom all functions like a root user on linux OS, but any normal functions can be:
+* Manage entities.
+* Manage users.
+* Manage currencies.
+* Manage exchange rates.
+* Manage transactions (basic/custom).
+
+
 ### Client Tasks
 
 You can interact with the rest api through mix tasks without need to use curl or any rest client. This tasks actually use a rest client as we'll see later.
