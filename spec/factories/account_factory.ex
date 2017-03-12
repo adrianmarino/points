@@ -19,7 +19,7 @@ defmodule Point.AccountFactory do
       currency: CurrencyFactory.build(:ars),
       owner: UserFactory.build(:luke_skywalker),
       issuer: UserFactory.build(:chewbacca),
-      entity: EntityFactory.insert(:revelion)
+      entity: EntityFactory.insert(:rebelion)
     }
   end
 

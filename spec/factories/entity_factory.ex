@@ -18,9 +18,9 @@ defmodule Point.EntityFactory do
     }
   end
 
-  def revelion_factory, do: %Entity{
-    code: "revelion",
-    name: "Revelion",
+  def rebelion_factory, do: %Entity{
+    code: "rebelion",
+    name: "Rebelion",
     issuers: [
       UserFactory.build(:luke_skywalker),
       UserFactory.build(:obiwan_kenoby)

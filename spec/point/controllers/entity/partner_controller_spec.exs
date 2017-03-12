@@ -4,7 +4,7 @@ defmodule Point.PartnerControllerSpec do
   alias Point.{EntityFactory, PartnerService}
 
   describe "create" do
-    let entity: EntityFactory.insert(:revelion)
+    let entity: EntityFactory.insert(:rebelion)
     let partner: EntityFactory.insert(:empire)
     let response: post(sec_conn(), entity_partner_path(sec_conn(), :create, entity().code), code: partner().code)
     let db_partner: PartnerService.by(entity: entity(), partner: partner())
@@ -21,7 +21,7 @@ defmodule Point.PartnerControllerSpec do
   end
 
   describe "index" do
-    let entity: EntityFactory.insert(:revelion)
+    let entity: EntityFactory.insert(:rebelion)
     let partner: EntityFactory.insert(:empire)
     let response: get(sec_conn(), entity_partner_path(sec_conn(), :index, entity().code))
     let partners: json_response(response(), 200)
@@ -41,7 +41,7 @@ defmodule Point.PartnerControllerSpec do
     let response: delete(sec_conn(), entity_partner_path(sec_conn(), :delete, entity().code, partner().code))
 
     context "when there is an entity partner" do
-      let entity: EntityFactory.insert(:revelion)
+      let entity: EntityFactory.insert(:rebelion)
       let partner: EntityFactory.insert(:empire)
       let db_partner: PartnerService.by(code: partner().code, entity_code: entity().code)
 
@@ -55,7 +55,7 @@ defmodule Point.PartnerControllerSpec do
     end
 
     context "when there aren't partners" do
-      let entity: EntityFactory.insert(:revelion)
+      let entity: EntityFactory.insert(:rebelion)
       let partner: EntityFactory.insert(:empire)
 
       before do: response()
