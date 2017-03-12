@@ -45,31 +45,11 @@ insert_all [
 #
 #
 #------------------------------------------------------------------------------
-# Accounts
-#------------------------------------------------------------------------------
-initial_amount = Decimal.new(10000)
-
-insert! %Account{
-  amount: initial_amount, type: "backup", currency: ars,
-  owner: chewbacca, issuer: chewbacca
-}
-insert! %Account{
-  amount: initial_amount, type: "default", currency: rebel_point,
-  owner: obiwan_kenoby, issuer: chewbacca
-}
-insert! %Account{
-  amount: initial_amount, type: "default", currency: empire_point,
-  owner: anakin_skywalker, issuer: chewbacca
-}
-#
-#
-#
-#------------------------------------------------------------------------------
 # Entities
 #------------------------------------------------------------------------------
-platform = insert! %Entity{code: "platform", name: "Point Platform", users: [chewbacca]}
-revelion = insert! %Entity{code: "rebelion", name: "Start wars rebellion", users: [obiwan_kenoby]}
-empire   = insert! %Entity{code: "empire", name: "Start wars empire", users: [anakin_skywalker]}
+platform = insert! %Entity{code: "platform", name: "Point Platform", issuers: [chewbacca]}
+revelion = insert! %Entity{code: "rebelion", name: "Start wars rebellion", issuers: [obiwan_kenoby]}
+empire   = insert! %Entity{code: "empire", name: "Start wars empire", issuers: [anakin_skywalker]}
 #
 #
 #
@@ -79,3 +59,23 @@ empire   = insert! %Entity{code: "empire", name: "Start wars empire", users: [an
 insert! %Partner{entity: platform, partner: revelion}
 insert! %Partner{entity: platform, partner: empire}
 insert! %Partner{entity: revelion, partner: empire}
+#
+#
+#
+#------------------------------------------------------------------------------
+# Accounts
+#------------------------------------------------------------------------------
+initial_amount = Decimal.new(10000)
+
+insert! %Account{
+  amount: initial_amount, type: "backup", currency: ars,
+  owner: chewbacca, issuer: chewbacca, entity: platform
+}
+insert! %Account{
+  amount: initial_amount, type: "default", currency: rebel_point,
+  owner: obiwan_kenoby, issuer: chewbacca, entity: empire
+}
+insert! %Account{
+  amount: initial_amount, type: "default", currency: empire_point,
+  owner: anakin_skywalker, issuer: chewbacca, entity: empire
+}

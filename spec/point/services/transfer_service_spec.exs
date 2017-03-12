@@ -11,8 +11,10 @@ defmodule Point.TransferServiceSpec do
   context "when transfer amount between accounts with same currency and backup account" do
     let backup: AccountFactory.insert(:revel_backup)
 
-    let source: AccountFactory.insert(:obiwan_kenoby_revel, issuer: backup().owner)
-    let target: AccountFactory.insert(:han_solo_revel, issuer: backup().owner, currency: source().currency)
+    let source: AccountFactory.insert(:obiwan_kenoby_revel,
+      issuer: backup().owner, entity: backup.entity)
+    let target: AccountFactory.insert(:han_solo_revel,
+      issuer: backup().owner, currency: source().currency, entity: backup.entity)
 
     it "should creates an transfer movement", do: expect(transfer().type).to(eq "transfer")
 
@@ -42,10 +44,12 @@ defmodule Point.TransferServiceSpec do
 
   context "when transfer amount between accounts with same currency and distinct issuer with same backup account currency" do
     let source_backup: AccountFactory.insert(:revel_backup)
-    let source: AccountFactory.insert(:han_solo_revel, issuer: source_backup().owner)
+    let source: AccountFactory.insert(:han_solo_revel,
+      issuer: source_backup().owner, entity: source_backup.entity)
 
     let target_backup: AccountFactory.insert(:empire_backup, currency: source_backup().currency)
-    let target: AccountFactory.insert(:jango_fett_empire, issuer: target_backup().owner, currency: source().currency)
+    let target: AccountFactory.insert(:jango_fett_empire,
+      issuer: target_backup().owner, currency: source().currency, entity: target_backup.entity)
 
     let issuer_owner_rate: %ExchangeRate{value: 10, source: source_backup().currency, target: source().currency}
 
@@ -78,8 +82,10 @@ defmodule Point.TransferServiceSpec do
 
   context "when transfer an amount between accounts with distinct currency and same issuer" do
     let backup: AccountFactory.insert(:revel_backup)
-    let source: AccountFactory.insert(:han_solo_revel, issuer: backup().owner)
-    let target: AccountFactory.insert(:jango_fett_empire, issuer: backup().owner)
+    let source: AccountFactory.insert(:han_solo_revel,
+      issuer: backup().owner, entity: backup.entity)
+    let target: AccountFactory.insert(:jango_fett_empire,
+      issuer: backup().owner, entity: backup.entity)
 
     let issuer_owner_rate: %ExchangeRate{value: 5, source: backup().currency, target: source().currency}
     let owner_owner_rate: %ExchangeRate{value: 2, source: source().currency, target: target().currency}
@@ -109,10 +115,12 @@ defmodule Point.TransferServiceSpec do
 
   context "when transfer an amount between accounts with distinct currency and issuer" do
     let source_backup: AccountFactory.insert(:revel_backup)
-    let source: AccountFactory.insert(:han_solo_revel, issuer: source_backup().owner)
+    let source: AccountFactory.insert(:han_solo_revel,
+      issuer: source_backup().owner, entity: source_backup.entity)
 
     let target_backup: AccountFactory.insert(:empire_backup)
-    let target: AccountFactory.insert(:jango_fett_empire, issuer: target_backup().owner)
+    let target: AccountFactory.insert(:jango_fett_empire,
+      issuer: target_backup().owner, entity: target_backup.entity)
 
     let issuer_owner_rate: %ExchangeRate{value: 5, source: source_backup().currency, target: source().currency}
     let issuer_issuer_rate: %ExchangeRate{value: 10, source: source_backup().currency, target: target_backup().currency}

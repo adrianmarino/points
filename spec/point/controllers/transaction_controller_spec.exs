@@ -51,8 +51,11 @@ defmodule Point.TransactionControllerSpec do
 
       let source_backup: AccountFactory.insert(:revel_backup)
       let target_backup: AccountFactory.insert(:empire_backup)
-      let source: AccountFactory.insert(:obiwan_kenoby_revel, issuer: source_backup().owner)
-      let target: AccountFactory.insert(:jango_fett_empire, issuer: target_backup().owner)
+
+      let source: AccountFactory.insert(:obiwan_kenoby_revel,
+        issuer: source_backup().owner, entity: source_backup().entity)
+      let target: AccountFactory.insert(:jango_fett_empire,
+        issuer: target_backup().owner, entity: target_backup().entity)
 
       before do
         rate(source_backup(), source(), 1)

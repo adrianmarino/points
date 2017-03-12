@@ -2,18 +2,26 @@ defmodule Point.EntityFactory do
   use ExMachina.Ecto, repo: Point.Repo
   alias Point.{Entity, UserFactory}
 
+  def test_entity_factory do
+    %Entity{
+      code: "test_entity",
+      name: "Test Entity",
+      issuers: [UserFactory.insert(:session_test_user)]
+    }
+  end
+
   def universe_factory do
     %Entity{
       code: "universe",
       name: "Universe Entity",
-      users: [UserFactory.build(:chewbacca)]
+      issuers: [UserFactory.build(:chewbacca)]
     }
   end
 
   def revelion_factory, do: %Entity{
     code: "revelion",
     name: "Revelion",
-    users: [
+    issuers: [
       UserFactory.build(:luke_skywalker),
       UserFactory.build(:obiwan_kenoby)
     ]
@@ -23,7 +31,7 @@ defmodule Point.EntityFactory do
     %Entity{
       code: "empire",
       name: "Empire",
-      users: [
+      issuers: [
         UserFactory.build(:anakin_skywalker),
         UserFactory.build(:jango_fett)
       ]

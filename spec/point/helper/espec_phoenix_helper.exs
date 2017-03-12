@@ -4,9 +4,10 @@ defmodule ESpec.Phoenix.Helper do
       import unquote(__MODULE__)
       import Point.Phoenix.ConnUtil
 
-      alias Point.{Repo, Session, User}
+      alias Point.{Repo, Session, User, UserFactory, EntityFactory}
 
-      let current_user: Point.UserFactory.insert(:session_test_user)
+      let current_entity: EntityFactory.insert(:test_entity)
+      let current_user: List.first(current_entity.issuers)
 
       let current_session: Repo.insert!(%Session{token: "token", remote_ip: "127.0.0.1", user_id: current_user().id})
 

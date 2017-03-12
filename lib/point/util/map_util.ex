@@ -1,7 +1,6 @@
 defmodule Point.MapUtil do
   import Enum, only: [reduce: 3]
   import Map, only: [to_list: 1, put: 3]
-  import String, only: [to_atom: 1]
 
   def keys_to_atom(map) when is_map(map) do
     map |> reduce(%{}, fn ({key, val}, acc) -> put(acc, to_atom(key), keys_to_atom(val)) end)
@@ -13,6 +12,13 @@ defmodule Point.MapUtil do
   def comp_map(hash, keys), do: elem(Map.split(hash, keys), 1)
 
   def to_keyword_list(map) do
-    Enum.map(map, fn({key, value}) -> {String.to_atom(key), value} end)
+    Enum.map(map, fn({key, value}) -> {to_atom(key), value} end)
+  end
+
+  defp to_atom(value) do
+    cond do
+      is_atom(value) -> value
+      true -> String.to_atom(value)
+    end
   end
 end

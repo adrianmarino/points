@@ -1,13 +1,14 @@
 defmodule Point.AccountFactory do
   use ExMachina.Ecto, repo: Point.Repo
-  alias Point.{Account, CurrencyFactory, UserFactory}
+  alias Point.{Account, CurrencyFactory, UserFactory, EntityFactory}
 
   def universe_backup_factory do
     %Account{
       type: "backup",
       amount: Decimal.new(15000),
       currency: CurrencyFactory.build(:ars),
-      owner: UserFactory.build(:chewbacca)
+      owner: UserFactory.build(:chewbacca),
+      entity: EntityFactory.insert(:universe)
     }
   end
 
@@ -17,7 +18,8 @@ defmodule Point.AccountFactory do
       amount: Decimal.new(15000),
       currency: CurrencyFactory.build(:ars),
       owner: UserFactory.build(:luke_skywalker),
-      issuer: UserFactory.build(:chewbacca)
+      issuer: UserFactory.build(:chewbacca),
+      entity: EntityFactory.insert(:revelion)
     }
   end
 
@@ -47,7 +49,8 @@ defmodule Point.AccountFactory do
       amount: Decimal.new(15000),
       currency: CurrencyFactory.build(:ars),
       owner: UserFactory.build(:anakin_skywalker),
-      issuer: UserFactory.build(:chewbacca)
+      issuer: UserFactory.build(:chewbacca),
+      entity: EntityFactory.insert(:empire)
     }
   end
 

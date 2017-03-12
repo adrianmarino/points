@@ -1,5 +1,6 @@
 defmodule Point.EntityService do
-  alias Point.{Entity, Repo, UserService, AccountService, PartnerService}
+  import Ecto.Query
+  alias Point.{Entity, User, Repo, UserService, AccountService, PartnerService}
 
   def add_partner(entity, partner), do: PartnerService.insert!(entity, partner)
   def remove_partner(entity, partner), do: PartnerService.delete!(entity, partner)
@@ -13,6 +14,15 @@ defmodule Point.EntityService do
   def update(code, params), do: Repo.update(Entity.update_changeset(by(code: code), params))
 
   def by(code: code), do: Repo.get_by(Entity, code: code)
+
+  def by(issuer_email: issuer_email) do
+    Repo.one(
+      from e in Entity,
+      join: ue in "users_entities",
+      join: u in User,
+      where: e.id == ue.entity_id and ue.user_id == u.id and u.email == ^issuer_email
+    )
+  end
 
   def delete(code) do
     case by(code: code) do
