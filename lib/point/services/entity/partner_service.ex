@@ -5,15 +5,13 @@ defmodule Point.PartnerService do
 
   def are_they_partners?(%Entity{id: a_id}, %Entity{id: b_id}), do: are_they_partners?(a_id, b_id)
   def are_they_partners?(a_id, b_id) do
-    a_id == b_id or (is_entity?(a_id, partner_of: b_id) and is_entity?(b_id, partner_of: a_id))
-  end
-
-  def is_entity?(parner_id, partner_of: entity_id) do
+    a_id == b_id or
     Repo.one(
       from ep in Partner,
-      where: ep.partner_id == ^parner_id and ep.entity_id == ^entity_id,
+      where: (ep.partner_id == ^a_id and ep.entity_id == ^b_id) or
+             (ep.partner_id == ^b_id and ep.entity_id == ^a_id),
       select: count(ep.id)
-    ) > 0
+    ) == 2
   end
 
   def all, do: Repo.all(Partner)
