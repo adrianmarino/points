@@ -5,7 +5,7 @@ defmodule Point.TransactionControllerSpec do
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
   import Point.DecimalUtil
-  alias Point.{AccountFactory, Transaction}
+  alias Point.{AccountFactory, Transaction, EntityService}
   import String, only: [replace: 3]
 
   @transfer_path "./lib/point/transaction/default/transfer.ex"
@@ -51,13 +51,19 @@ defmodule Point.TransactionControllerSpec do
 
       let source_backup: AccountFactory.insert(:revel_backup)
       let target_backup: AccountFactory.insert(:empire_backup)
-      let source: AccountFactory.insert(:obiwan_kenoby_revel, issuer: source_backup().owner)
-      let target: AccountFactory.insert(:jango_fett_empire, issuer: target_backup().owner)
+
+      let source_entity: source_backup().entity
+      let target_entity: target_backup().entity
+
+      let source: AccountFactory.insert(:obiwan_kenoby, issuer: source_backup().owner, entity: source_entity())
+      let target: AccountFactory.insert(:jango_fett, issuer: target_backup().owner, entity: target_entity())
 
       before do
         rate(source_backup(), source(), 1)
         rate(target_backup(), target(), 2)
         rate(source(), target(), 3)
+
+        EntityService.associate(source_entity, target_entity)
 
         post(content_type(sec_conn(), text_plain()), transaction_path(sec_conn(), :create, valid_attrs().name),
           valid_attrs().source)

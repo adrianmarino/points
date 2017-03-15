@@ -11,7 +11,7 @@ defmodule Point.Entity do
 
     has_many :accounts, Point.Account
 
-    many_to_many :users, Point.User, join_through: "users_entities"
+    many_to_many :issuers, Point.User, join_through: "users_entities"
     many_to_many :partners, Point.Entity, join_through: Point.Partner, join_keys: [entity_id: :id, partner_id: :id]
 
     timestamps()

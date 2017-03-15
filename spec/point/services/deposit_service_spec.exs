@@ -24,7 +24,7 @@ defmodule Point.DepositServiceSpec do
   end
 
   context "when deposit an amount to default account" do
-    let account: AccountFactory.insert(:obiwan_kenoby_revel)
+    let account: AccountFactory.insert(:obiwan_kenoby)
 
     it "should raises and error", do: expect fn-> deposit() end |> to(raise_exception())
   end
