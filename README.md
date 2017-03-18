@@ -399,7 +399,30 @@ To complete
 
 ### Server configuration
 
-To complete
+You can change configuration settings from config/XXX.exs file where XXX is the name of environmnet where
+_points_ could run: dev, test or prod.
+
+#### session_ttl
+
+* Is the time that can last a session.
+* Is expresed in milliseconds.
+* Default value: 1800 (30 minutes).
+
+#### simultaneous_sessions_by_user_and_remote_ip
+
+* Specifies the max number of user sessions by remote ip, where remote IP is the IP from that was performed the sign_in action.
+* Default value: 3.
+
+#### tmp_path
+
+* Path used to create and load custom transaction files
+* Default value: "./tmp"
+
+#### http_potion_log_request_as_info_level
+
+* User to show request information of cli.RESOURCE.ACTION tasks.
+* :yes and :no are the possible values.
+* Default value: :no.
 
 ## Docker
 
