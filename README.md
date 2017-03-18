@@ -24,17 +24,17 @@
   git clone https://github.com/adrianmarino/points.git; cd points
   ```
 
-  **Step 1**: Install dependencies.
+  **Step 2**: Install dependencies.
   ```bash
   $ mix deps.get
   ```
 
-  **Step 2**: Create and populate points database.
+  **Step 3**: Create and populate points database.
   ```bash
   $ MIX_ENV=dev mix ecto.reset
   ```
 
-  **Step 3**: Start server.
+  **Step 4**: Start server.
   ```bash
   $ mix phoenix.server
   ```
@@ -363,7 +363,6 @@ To complete
 Suppose that X company sell flights through a web site and would like to grant point for each time that a client buy a flight an giving their clients the opportunity to use these points in the following purchase.
 
 How we implement this with _points_?
-
 To complete
 
 ##### Example 2: Share points between X and Y companies
@@ -372,7 +371,6 @@ Suppose that Y company that has a web site to sell products of any type offer to
 share points between their giving their clients the opportunity to use these points(X+Y) in the following purchase in either company.
 
 How we implement this with _points_?
-
 To complete
 
 ##### Example 3: X company offer buy with points that belong to Y company clients.
@@ -380,16 +378,22 @@ To complete
 This example differs from _Example 1_ in that X company give their clients the opportunity to use points of Y company.
 
 How we implement this with _points_?
-
 To complete
 
-### Rest API
+### Rest API interface
+
 To complete
 
 ### Client
+
 To complete
 
-### Custom Transactions
+### Custom transactions
+
+To complete
+
+### Server configuration
+
 To complete
 
 ## Docker
