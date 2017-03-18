@@ -1,0 +1,2 @@
+#!/bin/bash
+bash scripts/docker-run "mix espec --format=doc" test $2

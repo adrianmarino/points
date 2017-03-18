@@ -6,10 +6,15 @@ defmodule Point.HTTPotion do
     quote bind_quoted: [method: method, url: url, body: body, headers: headers] do
       headers = RequestBuilder.default_headers(headers)
       Logger.request(method, url, body, headers)
-
-      body = RequestBuilder.format_body(body, headers["Content-Type"])
-
-      response = HTTPotion.request(method, url, [body: body, headers: to_keyword_list(headers)])
+      response = HTTPotion.request(
+        method,
+        url,
+        [
+          body: RequestBuilder.format_body(body, headers["Content-Type"]),
+          headers: to_keyword_list(headers),
+          timeout: 60_000
+        ]
+      )
       Logger.response(response)
       response
     end

@@ -7,7 +7,7 @@ defmodule Point.DepositService do
   import Point.MovementFactory
   import Point.AccountService
 
-  def deposit(amount: _, on: %Account{type: "default"} = _),
+  def deposit(amount: _, to: %Account{type: "default"} = _),
     do: raise "Deposite only is supported in default accounts!"
   def deposit(amount: amount, to: %Account{type: "backup"} = account) do
     {:ok, %{deposit: movement}} = Multi.new

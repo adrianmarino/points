@@ -5,17 +5,17 @@ defmodule Mix.Tasks.Cli.Transactions.Exec do
 
   defmodule Transfer do
     use Mix.Task.Point.Client
-    @shortdoc "Transfer. Params: token name params(as json: '{...}')"
+    @shortdoc "Transfer. Params: token params(as json: '{...}')"
     defrun fn([token, params]) -> points(base_url(), token) |> transactions(exec: :transfer, params: params) end
   end
   defmodule Deposit do
     use Mix.Task.Point.Client
-    @shortdoc "Deposit. Params: token name params(as json: '{...}')"
+    @shortdoc "Deposit. Params: token params(as json: '{...}')"
     defrun fn([token, params]) -> points(base_url(), token) |> transactions(exec: :deposit, params: params) end
   end
   defmodule Extract do
     use Mix.Task.Point.Client
-    @shortdoc "Extract. Params: token name params(as json: '{...}')"
+    @shortdoc "Extract. Params: token params(as json: '{...}')"
     defrun fn([token, params]) -> points(base_url(), token) |> transactions(exec: :extract, params: params) end
   end
 end

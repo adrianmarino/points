@@ -1,5 +1,6 @@
 defmodule Point.UserController do
   use Point.Web, :controller
+  import Point.Phoenix.ConnUtil
   alias Point.{UserService, ChangesetView}
 
   def index(conn, _params), do: render(conn, "index.json", users: UserService.all)
@@ -7,7 +8,7 @@ defmodule Point.UserController do
   def show(conn, %{"email" => email}), do: render(conn, "show.json", user: UserService.by(email: email))
 
   def create(conn, user_params) do
-    case UserService.register(user_params) do
+    case UserService.register(user_params, current_entity(conn)) do
       {:ok, user} ->
         conn
           |> put_status(:created)

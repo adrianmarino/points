@@ -7,6 +7,10 @@ defmodule Point.EntityService do
     add_partner(entity_b, entity_a)
   end
 
+  def add_issuer(entity, issuer) do
+    Repo.insert_all("users_entities", [[user_id: issuer.id, entity_id: entity.id]])
+  end
+
   def add_partner(entity, partner), do: PartnerService.insert!(entity, partner)
   def remove_partner(entity, partner), do: PartnerService.delete!(entity, partner)
 

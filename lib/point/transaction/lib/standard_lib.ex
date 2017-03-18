@@ -14,7 +14,7 @@ defmodule StandardLib do
     TransferService.transfer(from: source, to: target, amount: dec(amount))
   end
   def extract(amount: amount, from: account), do: ExtractService.extract(amount: dec(amount), from: account)
-  def deposit(amount: amount, on: account), do: DepositService.deposit(amount: dec(amount), on: account)
+  def deposit(amount: amount, on: account), do: DepositService.deposit(amount: dec(amount), to: account)
 
   def print(message) do
     case message do

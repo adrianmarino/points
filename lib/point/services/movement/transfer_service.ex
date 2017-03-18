@@ -14,8 +14,8 @@ defmodule Point.TransferService do
     PartnerService.are_they_partners?(source.entity_id, target.entity_id)
   end
 
-  def transfer(from:    %Account{type: "default"} = source,
-               to:      %Account{type: "default"} = target,
+  def transfer(from:    %Account{} = source,
+               to:      %Account{} = target,
                amount:  amount) do
     assert_transfer_allowed(between: source, and: target)
 

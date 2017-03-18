@@ -1,0 +1,2 @@
+#!/bin/bash
+bash scripts/docker-run "mix ecto.reset" $1 $2
