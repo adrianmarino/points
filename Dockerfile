@@ -1,4 +1,4 @@
-FROM elixir:1.4
+FROM elixir:1.3
 
 RUN apt-get update
 RUN apt-get -y -q install mysql-client libmysqlclient-dev
