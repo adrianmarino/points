@@ -30,9 +30,15 @@ defmodule Point.HTTPotion.Logger do
   import Point.JSON, only: [to_pretty_json: 1, to_struct: 1]
   import String, only: [upcase: 1]
   import PointLogger
+  alias Point.Config
 
   def request(method, url, body, headers) do
-    debug "Request - #{upcase(to_string method)} #{url}#{to_desc("\nHeaders", headers)}#{to_desc("\nBody", body)}"
+    message = "Request - #{upcase(to_string method)} #{url}#{to_desc("\nHeaders", headers)}#{to_desc("\nBody", body)}"
+
+    case Config.get(:http_potion_log_request_as_info_level) do
+      :yes -> info(message)
+      _ -> debug(message)
+    end
   end
 
   def response(%HTTPotion.ErrorResponse{message: message}), do: error "Response - Error: #{message}"

@@ -7,7 +7,8 @@ config :point, Point.Endpoint,
   server: false,
   session_ttl: 1_800,
   simultaneous_sessions_by_user_and_remote_ip: 1,
-  tmp_path: "./tmp"
+  tmp_path: "./tmp",
+  http_potion_log_request_as_info_level: :no
 
 # Print only warnings and errors during test
 config :logger, level: :error
