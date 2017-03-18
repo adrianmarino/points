@@ -1,0 +1,1 @@
+Point.SessionService.close_all

@@ -31,6 +31,8 @@ defmodule Point.SessionService do
     end
   end
 
+  def close_all, do: Repo.delete_all(Session)
+
   def by(token: token), do: Repo.one(from s in Session, where: s.token == ^token)
 
   defp count_by(user: user, and_remote_ip: remote_ip) do

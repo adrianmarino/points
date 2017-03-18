@@ -177,6 +177,11 @@ $ mix cli.sessions $TOKEN
 $ mix cli.sessions.sign_out $TOKEN
 ```
 
+**Note**: To close all session from server side use:
+```bash
+$ mix run scripts/sessions_close_all.exs
+```
+
 #### Users
 
 *Step 1:* Create a user.
