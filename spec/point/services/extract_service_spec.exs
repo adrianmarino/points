@@ -5,7 +5,7 @@ defmodule Point.ExtractServiceSpec do
   alias Point.{ExchangeRate, AccountFactory}
 
   let backup: AccountFactory.insert(:revel_backup)
-  let account: AccountFactory.insert(:han_solo_revel, issuer: backup().owner)
+  let account: AccountFactory.insert(:han_solo, issuer: backup().owner)
   let issuer_owner_rate: %ExchangeRate{value: 5, source: backup().currency, target: account().currency}
   let extract: described_module().extract(amount: amount(), from: backup())
 

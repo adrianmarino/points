@@ -11,7 +11,7 @@ defmodule Point.AccountController do
   end
 
   def create(conn, params) do
-    case AccountService.insert(put_issuer_id(conn, to: params)) do
+    case AccountService.insert(put_issuer_and_entity_id(conn, to: params)) do
       {:ok, account} ->
         conn
           |> put_status(:created)

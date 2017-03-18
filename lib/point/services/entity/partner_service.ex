@@ -3,6 +3,18 @@ defmodule Point.PartnerService do
   import Point.Partner
   alias Point.{Repo, Partner, Entity}
 
+  def are_they_partners?(%Entity{id: a_id}, %Entity{id: b_id}), do: are_they_partners?(a_id, b_id)
+  def are_they_partners?(a_id, b_id) do
+    a_id == b_id or
+    Repo.one(
+      from ep in Partner,
+      where: (ep.partner_id == ^a_id and ep.entity_id == ^b_id) or
+             (ep.partner_id == ^b_id and ep.entity_id == ^a_id),
+      select: count(ep.id)
+    ) == 2
+  end
+
+  def all, do: Repo.all(Partner)
   def insert(params), do: Repo.insert(changeset %Partner{}, params)
   def insert!(entity, partner), do: Repo.insert!(changeset %Partner{}, %{code: partner.code, entity_code: entity.code})
 
