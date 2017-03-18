@@ -2,18 +2,17 @@
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
 
 # Points
-  * Is a bank of virtual money.
-  * Can be used to point management or any type of currency.
-  * Each user belongs to entities.
-  * Each user has many accounts.
-  * Each account has an amount in a currency.
-  * Two type of accounts: Backup, Default.
-  * You can:
+  * Is a virtual bank where users can exchange money under real or virtual currency(e.g. dolars, points).
+  * Each user has accounts under entities.
+  * Each account has an amount under a currency.
+  * Is possible exchange amount between diferent currencies.
+  * Each entity have backup accounts under real currency.
+  * Each user can:
     * Deposit to backup account.
     * Extract from backup account.
-    * Transfer between accounts (any type).
+    * Transfer between accounts of any type an currency.
 
-## Start
+## Begining
 
   **Step 1**: Install dependencies.
   ```bash
@@ -30,7 +29,7 @@
   $ mix phoenix.server
   ```
 
-## Start with docker
+## Begining with docker
 
   ```bash
   $ ./docker-server-init
