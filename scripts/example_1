@@ -1,13 +1,27 @@
 #!/bin/bash
-function sign_in() {
-  echo $(mix cli.sessions.sign_in $1 $2 | grep token | awk -F'"' '$0=$4')
-}
+#------------------------------------------------------------------------------
+# Variables
+#------------------------------------------------------------------------------
+SYSTEM_ADMIN=chewbacca@gmail.com
+ENTITY_ADMIN=adrianmarino@gmail.com
+NORMAL_USER_A=a@gmail.com
+NORMAL_USER_B=b@gmail.com
+PASSWORD=12345678910
 
-# Note: This is a user with sys_admin roles.
-USERNAME=chewbacca@gmail.com
-PASSWORD=1234567891012345678910
-TOKEN=$(sign_in $USERNAME $PASSWORD)
-
+MIX_ENV=dev
+#
+#
+#
+#------------------------------------------------------------------------------
+# Pre actions
+#------------------------------------------------------------------------------
+# Start server
+bash scripts/server-restart
+# Reset db
+mix ecto.reset
+#
+#
+#
 #=========================================================================
 # Example 1
 #=========================================================================
@@ -15,9 +29,58 @@ TOKEN=$(sign_in $USERNAME $PASSWORD)
 # clients the opportunity to use these points in the following purchase.
 # to grant point for each time that a client buy a flight an giving their
 #=========================================================================
+function sign_in() {
+  echo $(mix cli.sessions.sign_in $1 $2 | grep token | awk -F'"' '$0=$4')
+}
+
+# Sign_in as system_admin user...
+TOKEN=$(sign_in $SYSTEM_ADMIN $PASSWORD)
 
 # Create and entity_admin user for X company...
-mix cli.users.create $TOKEN adrianmarino@gmail.com 12345678910 entity_admin Adrian Marino
+mix cli.users.create $TOKEN $ENTITY_ADMIN $PASSWORD entity_admin Adrian Marino
 
 # Create X company...
 mix cli.entities.create $TOKEN X "X company"
+
+# Create backup account for issuer user under ARS currency...
+mix cli.accounts.create $TOKEN adrianmarino@gmail.com ARS backup
+
+# Create two normal user...
+mix cli.users.create $TOKEN $NORMAL_USER_A $PASSWORD normal_user FirstName LastName
+mix cli.users.create $TOKEN $NORMAL_USER_B $PASSWORD normal_user FirstName LastName
+
+# Sign_out
+mix cli.sessions.sign_out $TOKEN
+
+# Sign_in as entity_admin user...
+TOKEN=$(sign_in $ENTITY_ADMIN $PASSWORD)
+
+# Create a virtual currency under entity...
+mix cli.currencies.create $TOKEN XPT "X points"
+
+# Create exchange rate between ARS  and XPT  1 ARS = 1000 XPT
+mix cli.exchange_rates.create $TOKEN ARS XPT 1000
+
+# Create two account for users A and B in X company under XPT currency...
+mix cli.accounts.create $TOKEN $NORMAL_USER_A XPT
+mix cli.accounts.create $TOKEN $NORMAL_USER_B XPT
+
+# Deposit 10.000 ARS to backup account...
+mix cli.transactions.exec.deposit $TOKEN \
+  '{"to":{"email":"adrianmarino@gmail.com","currency":"ARS"},"amount":10000}'
+
+# Transfer 10.0000 XPT to NORMAL_USER_A...
+mix cli.transactions.exec.transfer $TOKEN \
+  '{"from":{"email":"adrianmarino@gmail.com","currency":"ARS"},"to":{"email":"a@gmail.com","currency":"XPT"},"amount":10}'
+
+# Transfer 5.000 XPT from NORMAL_USER_A to NORMAL_USER_B...
+mix cli.transactions.exec.transfer $TOKEN \
+  '{"from":{"email":"a@gmail.com","currency":"XPT"},"to":{"email":"b@gmail.com","currency":"XPT"},"amount":5000}'
+
+# Show all accounts...
+mix cli.accounts.show $TOKEN $ENTITY_ADMIN ARS
+mix cli.accounts.show $TOKEN $NORMAL_USER_A XPT
+mix cli.accounts.show $TOKEN $NORMAL_USER_B XPT
+
+# Sign_out
+mix cli.sessions.sign_out $TOKEN

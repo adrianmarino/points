@@ -16,7 +16,7 @@ defmodule Point.SessionControllerSpec do
 
   describe "sign_in" do
     let response: post(remote_ip(build_conn(), ip()), session_path(build_conn(), :sign_in), attrs())
-    before do: UserService.register!(valid_user_attrs())
+    before do: UserService.register!(valid_user_attrs(), current_entity())
 
     context "when a valid session is opened" do
       let attrs: valid_attrs()
@@ -56,7 +56,7 @@ defmodule Point.SessionControllerSpec do
       let sign_in: post(remote_ip(build_conn(), ip()), session_path(build_conn(), :sign_in), valid_user_attrs())
       let token: json_response(sign_in(), 201)["token"]
       before do
-        UserService.register!(valid_user_attrs())
+        UserService.register!(valid_user_attrs(), current_entity())
         sign_in()
         response()
       end

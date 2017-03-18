@@ -2,9 +2,16 @@ defmodule Point.Phoenix.ConnUtil do
   alias Point.{Repo, EntityService}
 
   def remote_ip(conn), do: conn.remote_ip |> Tuple.to_list |> Enum.join(".")
+
   def current_session(conn), do: conn.assigns[:current_session]
   def current_user(conn), do: Repo.assoc(current_session(conn), :user)
   def current_user_id(conn), do: current_user(conn).id
+  def current_entity(conn) do
+    user = current_user(conn)
+    EntityService.by(issuer_email: user.email)
+  end
+  def current_entity_id(conn), do: current_entity(conn).id
+
   def put_issuer_id(conn, to: params) do
     Map.put(params, "issuer_id", current_user_id(conn))
   end
