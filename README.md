@@ -363,14 +363,20 @@ To complete
 
 #### Learning by example
 
-##### Example 1: X company offer points to its clients
+##### Exercise 1: X company offer points to its clients
 
 Suppose that X company sell flights through a web site and would like to grant point for each time that a client buy a flight an giving their clients the opportunity to use these points in the following purchase.
 
 How we implement this with _points_?
-To complete
 
-##### Example 2: Share points between X and Y companies
+[Exercise Resolution](script/execise_1)
+
+To execute the exercise resolution:
+```bash
+$ bash script/execise_1
+```
+
+##### Exercise 2: Share points between X and Y companies
 
 Suppose that Y company that has a web site to sell products of any type offer to X company
 share points between their giving their clients the opportunity to use these points(X+Y) in the following purchase in either company.
@@ -378,9 +384,9 @@ share points between their giving their clients the opportunity to use these poi
 How we implement this with _points_?
 To complete
 
-##### Example 3: X company offer buy with points that belong to Y company clients.
+##### Exercise 3: X company offer buy with points that belong to Y company clients.
 
-This example differs from _Example 1_ in that X company give their clients the opportunity to use points of Y company.
+This example differs from _Exercise 1_ in that X company give their clients the opportunity to use points of Y company.
 
 How we implement this with _points_?
 To complete
