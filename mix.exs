@@ -65,7 +65,8 @@ defmodule Point.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "ecto.clean": ["ecto.drop", "ecto.create", "ecto.migrate"]
+      "ecto.clean": ["ecto.drop", "ecto.create", "ecto.migrate"],
+      "cli.sessions.delete_all": ["run scripts/delete_sessions.exs"]
     ]
   end
 end
