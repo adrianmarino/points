@@ -15,7 +15,8 @@ config :point, Point.Endpoint,
   watchers: [],
   session_ttl: 9000000,
   simultaneous_sessions_by_user_and_remote_ip: 3,
-  tmp_path: "./tmp"
+  tmp_path: "./tmp",
+  http_potion_log_request_as_info_level: :no
 
 config :ecto_ttl,
     ignore_newest_seconds: 0,
