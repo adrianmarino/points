@@ -369,11 +369,11 @@ Suppose that X company sell flights through a web site and would like to grant p
 
 How we implement this with _points_?
 
-[Exercise Resolution](script/execise_1)
+[Exercise Resolution](scripts/exercise_1)
 
 To execute the exercise resolution:
 ```bash
-$ bash script/execise_1
+$ bash scripts/exercise_1
 ```
 
 ##### Exercise 2: Share points between X and Y companies
