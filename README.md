@@ -42,7 +42,7 @@
 ## Beginning with docker
 
   ```bash
-  $ ./docker-server-init
+  $ bash scripts/docker-server-init
   ```
 
 ## Guide
@@ -432,8 +432,8 @@ _points_ could run: dev, test or prod.
 
 ## Docker
 
-* docker-server-init: create/poulate database and run server in docker-compose env.
-* docker-server: Run server on docker-compose env.
-* docker-test: Run test on docker-compose env.
-* docker-reset: Reset(drop/create/migrate/populate) database in docker-compose env.
-* docker-clean: Clean(drop/create/migrate) database in docker-compose env.
+* scripts/docker-server-init: create/poulate database and run server in docker-compose env.
+* scripts/docker-server: Run server on docker-compose env.
+* scripts/docker-test: Run test on docker-compose env.
+* scripts/docker-reset: Reset(drop/create/migrate/populate) database in docker-compose env.
+* scripts/docker-clean: Clean(drop/create/migrate) database in docker-compose env.
