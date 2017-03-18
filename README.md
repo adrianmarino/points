@@ -1,5 +1,5 @@
 # <img src="https://cdn.rawgit.com/adrianmarino/points/features/basic-readme/images/logo.svg" width="35" height="35" /> Points
-  Points is a platform used to exchange amounts in both virtual and real currency between registered users.
+  Points is a platform used to exchange money under both virtual and real currency between registered users.
 
   [![Build Status](https://travis-ci.org/adrianmarino/points.svg?branch=master)](https://travis-ci.org/adrianmarino/points)
   [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
@@ -14,8 +14,8 @@
 
 ## Requirements
 
-* MySQL/MariaDB 10.x
 * Elixir >= 1.3.x
+* MySQL/MariaDB 10.x
 
 ## Beginning
 
@@ -47,44 +47,57 @@
 
 ## Guide
 
-This guide introduces you how can interact with points platform through easy examples. Adicionally, I'll show you how to configure the server.
+This guide introduces you how can interact with points platform through easy examples. Adicionally, I'll show you how to configure the server api.
 
-### Roles
+### User Roles
 
 Each user has a role that allow perform different actions on the platform. Next I'll show each role and its associated actions.
 
-#### Normal
+#### normal_user
 Is a platform user. They can:
-* Exchange amounts between accounts on same entity or entities that have associacion with their entity.
-* Query account status
-* Query account movements.
+* Exchange amounts between accounts under same entity or between partner entities.
+* Check account status or last movements.
 
-#### EntityAdmin
-This user is created by a _System Admin_ user only and their actions modify the context of entity under this was created. The entity user belong to one entity and can:
-* Manage normal users that belong to entity.
-* Is an account issuer, this means that can manage default accounts that belong to entity.
-* Deposit/Extract amount to/from backup accounts that belong to entity.
-* Manage custom transations that belong to entity.
+#### entity_admin
+Cant be created by a _system_admin_ user only and their actions modify the context of the entity.
+An entity_admin:
+* Could administrate many entities.
+* Can deposit/extract amount to/from backup accounts under an entity.
+* Can manage custom transations that belong to entity.
+* Can manage partner associations.
+* Is an account issuer, this means that can manage default accounts under an entity. Keep in mind that when an entity_admin user creates an account, **that account belong to same issuer entity**.
 
-#### Admin
-Can perfom all functions like a root user on linux OS, but any normal functions can be:
-* Manage entities.
-* Manage users.
-* Manage currencies.
-* Manage exchange rates.
-* Manage transactions (basic/custom)
+#### system_admin
+Can perfom all functions like a root user on Linux OS.
 
-#### Importante Note
-Keep in mind that when  and issuer user creates an account, **that account belong to same issuer entity**.
+### Account types
 
-### Client Tasks
+There are two account types.
+
+#### Default accounts
+
+These accounts belongs to a _normal_user_ could be used to trasnfer amounts between accounts only.
+
+#### Backup accounts
+
+These accounts contain money in real currency only. They are used to support amounts in virtual currency in other accounts (default accounts). An emiter entity has one backup account by real currency and many default accounts by user registered in itself. These default accounts has money y real or virtual currency but all supported by entity backup accounts.
+
+#### Accounts and allow movements
+
+You can:
+  * Deposit an amount in real currency to backup account.
+  * Extract an amount in real currency from backup amount.
+  * And transfer an amount between backup/default accounts.
+
+### Mix Tasks
 
 You can interact with the rest api through mix tasks without need to use curl or any rest client. This tasks actually use a rest client as we'll see later.
 
-What can you do with points api?
-Run next on points directory:
+What can you do with _points_?
+Let's begin by run next command under _points_ path:
 ```bash
 $ mix help | grep cli
+
 mix cli.accounts                   # Show accounts. Params: token
 mix cli.accounts.create            # Create an account. Params: token owner_email currency_code
 mix cli.accounts.delete            # Delete an account. Params: token owner_email currency_code
@@ -109,7 +122,6 @@ mix cli.exchange_rates.show        # Show a exchange rate. Params: token source 
 mix cli.exchange_rates.update      # Update a exchange rate. Params: token source target value
 mix cli.movements.between          # Show movements between dates. Params: from to (format: YYYYMMDD_HHMM)
 mix cli.movements.by_account_after # Show account movements after a date. Params: token owner_email currency_code timestamp (after format: YYYYMMDD_HHMM)
-mix cli.roles                      # Show roles. Param: token
 mix cli.sessions                   # Show sessions
 mix cli.sessions.sign_in           # Open a session
 mix cli.sessions.sign_out          # Close a session
@@ -123,161 +135,253 @@ mix cli.transactions.exec.transfer # Transfer. Params: token name params(as json
 mix cli.transactions.show          # Show a transaction. Params: token name
 mix cli.transactions.update        # Update a transaction. Params: token name source
 mix cli.users                      # Show users
-mix cli.users.create               # Create a user. Params: token email password first_name last_name
+mix cli.users.create               # Create a user. Params: token email password role first_name last_name
 mix cli.users.delete               # Delete a user. Params: token email
+mix cli.users.roles                # Show roles. Param: token
 mix cli.users.show                 # Show a user. Params: token email
-mix cli.users.update               # Update a user. Params: token email password first_name last_name
+mix cli.users.update               # Update a user. Params: token email password role first_name last_name
 ```
-But, How could you use these tasks?
-Well, let's see these in action:
+As we can see, all _points_ interactions was grouped under _cli_ namespace and then are grouped by resource name namespace. Each task has a tiny description and show you params required to perform this.
 
-*Step 1:* First at all, we need get a session to interact with the api:
+Up to this point very nice but, how could you use these tasks?
+Well, let's see _points_ in action in next section.
+
+#### Sessions
+
+*Step 1:* Get a session to interact with _points_:
 ```bash
 $ mix cli.sessions.sign_in chewbacca@gmail.com 12345678910
 23:52:53.774 [info]  Response - Status: 201, Body: {"token":"aHZEWXV2VGdWUGI5SWR1U2p1Q3cwZz09"}
 ```
-This request generate a session token witch has a 30 minutes lifetime(It can be configured). Also must be passed to any task as first parameter.
+This request generate a session token witch has a 30 minutes lifetime(It can be modified) and must be passed to any task as first parameter.
 
-*Step 2:* Create a new currency.
+*Step 2:* Save token value to env variable to reuse this:
 ```bash
-$ mix help | grep cli.currencies.create
-mix cli.currencies.create          # Create a currency. Params: session_token code name
-$ mix cli.currencies.create OHpIUENHak9FTTAzUCtwaHB1dnk3dz09 XPT "X-Men Points"
-22:11:30.158 [info]  Response - Status: 201, Body: {"code":"XPT","issuer_email":"chewbacca@gmail.com","name":"X-Men Points"}
-```
-You see that a currency as a issues_email. A user is represented by an uniq email and belong to an emiter entity.
-
-*Step 3:* Let's see XPT currency:
-```bash$
-$ mix help | grep cli.currencies.show                                                                                        
-mix cli.currencies.show            # Show a currency. Params: session_token code
-$ mix cli.currencies.show OHpIUENHak9FTTAzUCtwaHB1dnk3dz09 XPT            
-22:16:43.070 [info]  Response - Status: 200, Body: {"code":"XPT","issuer_email":"chewbacca@gmail.com","name":"X-Men Points"}
+$ export TOKEN=aHZEWXV2VGdWUGI5SWR1U2p1Q3cwZz09aHZEWXV2VGdWUGI5SWR1U2p1Q3cwZz09
 ```
 
-*Step 4:* Create a user.
+*Step 3:* Show opened sessions info:
+```bash
+$ mix cli.sessions $TOKEN                             
+12:11:18.545 [info]  Response - Status: 200, Body: [
+  {
+    "email": "chewbacca@gmail.com",
+    "remote_ip": "127.0.0.1",
+    "timeout": "29 minutes, 42 seconds"
+  }
+]
+```
+
+*Step 4:* After interact with points you can close the session:
+```bash
+$ mix cli.sessions.sign_out $TOKEN
+```
+
+#### Users
+
+*Step 1:* Create a user.
 
 ```bash
 $ mix help | grep cli.users.create
-mix cli.users.create               # Create a user. Params: session_token email password first_name last_name
-$ mix cli.users.create OHpIUENHak9FTTAzUCtwaHB1dnk3dz09 adrianmarino@gmail.com 1234567890 "Adrian Norberto" Marino
-22:20:53.900 [info]  Response - Status: 201, Body: {
+mix cli.users.create               # Create a user. Params: token email password role first_name last_name
+$ mix cli.users.create $TOKEN adrianmarino@gmail.com 12345678910 normal_user Adrian Marino                          
+12:15:36.546 [info]  Response - Status: 201, Body: {
   "email": "adrianmarino@gmail.com",
-  "first_name": "Adrian Norberto",
-  "last_name": "Marino"
+  "first_name": "Adrian",
+  "last_name": "Marino",
+  "role": "normal_user"
 }
 ```
-*Step 5:* Create and account for adrianmarino@gmail.com with XPT currency.
+
+*Step 2:* Modifiy user role and password.
+
+```bash
+$ mix help | grep cli.users.update                                                         
+mix cli.users.update               # Update a user. Params: token email password role first_name last_name
+$ mix cli.users.update $TOKEN adrianmarino@gmail.com acbd5678910 entity_admin Adrian Marino
+12:49:29.238 [info]  Response - Status: 200, Body: {
+  "email": "adrianmarino@gmail.com",
+  "first_name": "Adrian",
+  "last_name": "Marino",
+  "role": "entity_admin"
+}
+```
+
+*Step 3:* Show user info.
+
+```bash
+$ mix help | grep cli.users.show  
+mix cli.users.show                 # Show a user. Params: token email
+$ mix cli.users.show $TOKEN adrianmairno@gmail.com
+12:52:38.119 [info]  Response - Status: 200, Body: {
+  "email": "adrianmairno@gmail.com",
+  "first_name": "Adrian",
+  "last_name": "Marino",
+  "role": "entity_admin"
+}
+```
+
+*Step 4:* Delete user.
+
+```bash
+$ mix help | grep cli.users.delete                  
+mix cli.users.delete               # Delete a user. Params: token email
+$ mix cli.users.delete $TOKEN adrianmairno@gmail.com
+12:54:16.146 [info]  Response - Status: 204
+```
+
+#### Currencies
+
+*Step 1:* Create a currency.
+```bash
+$ mix help | grep cli.currencies.create  
+mix cli.currencies.create          # Create a currency. Params: token code name
+$ mix cli.currencies.create $TOKEN PTS Points             
+13:29:42.110 [info]  Response - Status: 201, Body: {"code":"PTS","issuer_email":"chewbacca@gmail.com","name":"Points"}
+```
+As we can see, this currency was created by an issuer user (with entity_admin/system_admin role).
+_Note:_ An user is represented by an uniq email.
+
+*Step 2:* Let's see PTS currency:
+```bash
+$ mix help | grep cli.currencies.show                     
+mix cli.currencies.show            # Show a currency. Params: token code
+$ mix cli.currencies.show $TOKEN PTS
+13:33:19.279 [info]  Response - Status: 200, Body: {"code":"PTS","issuer_email":"chewbacca@gmail.com","name":"Points"}
+```
+
+*Step 3:* Update currency name:
+```bash
+$ mix help | grep cli.currencies.update
+mix cli.currencies.update          # Update currency name. Params: token code name
+$ mix cli.currencies.update $TOKEN PTS "Points currency"
+13:34:34.249 [info]  Response - Status: 200, Body: {"code":"PTS","issuer_email":"chewbacca@gmail.com","name":"Points currency"}
+```
+
+*Step 4:* Delete currency.
+```bash
+$ mix help | grep cli.currencies.delete                 
+mix cli.currencies.delete          # Delete a currency. Params: token code
+$ mix cli.currencies.delete $TOKEN PTS
+13:36:11.204 [info]  Response - Status: 204
+```
+
+#### Accounts
+
+*Step 1:* Create an account for adrianmarino@gmail.com under PTS currency.
 ```bash
 $ mix help | grep cli.accounts.create  
-mix cli.accounts.create            # Create an account. Params: session_token owner_email currency_code
-$ mix cli.accounts.create OHpIUENHak9FTTAzUCtwaHB1dnk3dz09 adrianmarino@gmail.com XPT                         
-22:24:53.213 [info]  Response - Status: 201, Body: {
+mix cli.accounts.create            # Create an account. Params: token owner_email currency_code
+$ mix cli.accounts.create $TOKEN adrianmarino@gmail.com PTS
+13:41:26.641 [info]  Response - Status: 201, Body: {
   "amount": "0.00",
-  "currency": "XPT",
+  "currency": "PTS",
   "id": 4,
   "issuer_email": "chewbacca@gmail.com",
   "owner_email": "adrianmarino@gmail.com",
   "type": "default"
 }
 ```
-*Step 6:* Show currency currencies.
+
+*Step 2:* Show account for adrianmarino@gmail.com under PTS currency.
 ```bash
-$ mix cli.currencies OHpIUENHak9FTTAzUCtwaHB1dnk3dz09
-22:32:29.429 [info]  Response - Status: 200, Body: [
-  {
-    "code": "ARS",
-    "issuer_email": "chewbacca@gmail.com",
-    "name": "Pesos"
-  },
-  {
-    "code": "RBL",
-    "issuer_email": "chewbacca@gmail.com",
-    "name": "Rebel Points"
-  },
-  {
-    "code": "EMP",
-    "issuer_email": "chewbacca@gmail.com",
-    "name": "Empire Points"
-  },
-  {
-    "code": "XPT",
-    "issuer_email": "chewbacca@gmail.com",
-    "name": "X-Men Points"
-  }
-]
-```
-*Step 7:* Create an exchange rate between ARS and XPT and other between XPT and RBL.
-```bash
-$ mix help | grep cli.exchange_rates.create                                
-mix cli.exchange_rates.create   # Create a exchange rate. Params: session_token source target value (target = source * value)
-$ mix cli.exchange_rates.create OHpIUENHak9FTTAzUCtwaHB1dnk3dz09 ARS XPT 0.1
-22:53:00.810 [info]  Response - Status: 201, Body: {"source":"ARS","target":"XPT","value":"0.1"}
-$ mix cli.exchange_rates.create OHpIUENHak9FTTAzUCtwaHB1dnk3dz09 XPT RBL 10
-22:38:28.031 [info]  Response - Status: 201, Body: {"source":"XPT","target":"RBL","value":"10"}
+$ mix help | grep cli.accounts.show  
+mix cli.accounts.show              # Show an account. Params: token owner_email currency_code
+$ mix cli.accounts.show $TOKEN adrianmarino@gmail.com PTS
+13:44:16.733 [info]  Response - Status: 200, Body: {
+  "amount": "0.00",
+  "currency": "PTS",
+  "id": 4,
+  "issuer_email": "chewbacca@gmail.com",
+  "owner_email": "adrianmarino@gmail.com",
+  "type": "default"
+}
 ```
 
-*Step 7:* show accounts.
+*Step 3:* Delete account.
 ```bash
-$ mix cli.accounts OHpIUENHak9FTTAzUCtwaHB1dnk3dz09
-22:43:14.078 [info]  Response - Status: 401, Body: {"message":"Session expired or closed"}
+$ mix help | grep cli.accounts.delete                    
+mix cli.accounts.delete            # Delete an account. Params: token owner_email currency_code
+$ mix cli.accounts.delete $TOKEN adrianmarino@gmail.com PTS
+13:45:21.783 [info]  Response - Status: 204
 ```
-But session was expired, try again:
+
+#### Exchange rates
+
+```
+*Step 1:* Create an exchange rate between ARS and PTS.
 ```bash
-$ mix cli.sessions.sign_in chewbacca@gmail.com 12345678910
-22:43:29.479 [info]  Response - Status: 201, Body: {"token":"bGJnODBXVnoySUZBVkh2eEV4UVk5UT09"}
+$ mix help | grep cli.exchange_rates.create
+mix cli.exchange_rates.create      # Create a exchange rate. Params: token source target value
+$ mix cli.exchange_rates.create $TOKEN ARS PTS 1000
+13:49:39.557 [info]  Response - Status: 201, Body: {"source":"ARS","target":"PTS","value":"1000.00"}
 ```
-Ok, let's do it:
+
+```
+*Step 2:* Modify exchange rate between ARS and PTS.
 ```bash
-$ mix cli.accounts bGJnODBXVnoySUZBVkh2eEV4UVk5UT09       
-22:46:02.607 [info]  Response - Status: 200, Body: [
-  {
-    "amount": "10000.00",
-    "currency": "ARS",
-    "id": 1,
-    "issuer_email": "chewbacca@gmail.com",
-    "owner_email": "chewbacca@gmail.com",
-    "type": "backup"
-  },
-  {
-    "amount": "10000.00",
-    "currency": "RBL",
-    "id": 2,
-    "issuer_email": "chewbacca@gmail.com",
-    "owner_email": "obiwankenoby@gmail.com",
-    "type": "default"
-  },
-  {
-    "amount": "10000.00",
-    "currency": "EMP",
-    "id": 3,
-    "issuer_email": "chewbacca@gmail.com",
-    "owner_email": "anakinskywalker@gmail.com",
-    "type": "default"
-  },
-  {
-    "amount": "0.00",
-    "currency": "XPT",
-    "id": 4,
-    "issuer_email": "chewbacca@gmail.com",
-    "owner_email": "adrianmarino@gmail.com",
-    "type": "default"
-  }
-]
+$ mix help | grep cli.exchange_rates.update
+mix cli.exchange_rates.update      # Update a exchange rate. Params: token source target value
+$ mix cli.exchange_rates.update $TOKEN ARS PTS "123.5"
+13:51:23.122 [info]  Response - Status: 201, Body: {"source":"ARS","target":"PTS","value":"123.50"}
 ```
-*Step 8*: Transfer an amount from backup account 1 to default account 4.
 
-Before all, you must know next concepts:
-* There are two account types:
-  * Backup accounts: These accounts contain money in real currency only. They are used to support amounts in virtual currency in other accounts (default accounts). An emiter entity has one backup account by real currency and many default accounts by user registered in itself. These default accounts has money y real or virtual currency but all supported by entity backup accounts.
-  * Default account: These accounts belongs to normal users (The opposite of an issuer user).
-* You can:
-  * Deposit an amount in real currency to backup account.
-  * Extract an amount in real currency from backup amount.
-  * And transfer an amount between backup/default accounts.
+*Step 3:* Show exchange rate between ARS and PTS.
+```bash
+$ mix help | grep cli.exchange_rates.show     
+mix cli.exchange_rates.show        # Show a exchange rate. Params: token source target
+$ mix cli.exchange_rates.show $TOKEN ARS PTS  
+13:57:14.520 [info]  Response - Status: 200, Body: {"source":"ARS","target":"PTS","value":"1000.00"}
+```
 
-Well, returning to our example, you need add an amount to account 4. This account belong to "Point Platform", given that was created by chewbacca@gmail.com user an user create under "Point Platform" entity. Then you must move and amount from backup account 1 to default account 4.
+*Step 4:* Delete exchange rate between ARS and PTS.
+```bash
+$ mix help | grep cli.exchange_rates.delete           
+mix cli.exchange_rates.delete      # Delete a exchange rate. Params: token source target
+$ mix cli.exchange_rates.delete $TOKEN ARS PTS
+13:52:38.674 [info]  Response - Status: 204
+```
 
+#### Entities
+
+To complete
+
+#### Transactions
+
+##### Basic
+
+To complete
+
+##### Custom
+
+To complete
+
+#### Learning by example
+
+##### Example 1: X company offer points to its clients
+
+Suppose that X company sell flights through a web site and would like to grant point for each time that a client buy a flight an giving their clients the opportunity to use these points in the following purchase.
+
+How we implement this with _points_?
+
+To complete
+
+##### Example 2: Share points between X and Y companies
+
+Suppose that Y company that has a web site to sell products of any type offer to X company
+share points between their giving their clients the opportunity to use these points(X+Y) in the following purchase in either company.
+
+How we implement this with _points_?
+
+To complete
+
+##### Example 3: X company offer buy with points that belong to Y company clients.
+
+This example differs from _Example 1_ in that X company give their clients the opportunity to use points of Y company.
+
+How we implement this with _points_?
+
+To complete
 
 ### Rest API
 To complete
