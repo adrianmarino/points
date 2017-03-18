@@ -41,7 +41,9 @@ defmodule Point.Client.Dto do
     def create([owner_email, currency_code, type]) do
       %Account{type: type, owner_email: owner_email, currency_code: currency_code}
     end
-    def create([owner_email, currency_code]), do: %Account{owner_email: owner_email, currency_code: currency_code}
+    def create([owner_email, currency_code]) do
+      %Account{type: "default", owner_email: owner_email, currency_code: currency_code}
+    end
   end
 
   defmodule AccountMovement do
