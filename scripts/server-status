@@ -1,0 +1,2 @@
+#!/bin/bash
+ps -fea | grep phoenix.server | grep -v grep

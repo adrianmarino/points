@@ -1,0 +1,5 @@
+#!/bin/bash
+MIX_ENV=${1:-dev}
+PORT=${2:-3000}
+
+elixir --detached -S mix phoenix.server
