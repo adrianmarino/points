@@ -1,0 +1,23 @@
+#!/bin/bash
+function sign_in() {
+  echo $(mix cli.sessions.sign_in $1 $2 | grep token | awk -F'"' '$0=$4')
+}
+
+# Note: This is a user with sys_admin roles.
+USERNAME=chewbacca@gmail.com
+PASSWORD=1234567891012345678910
+TOKEN=$(sign_in $USERNAME $PASSWORD)
+
+#=========================================================================
+# Example 1
+#=========================================================================
+# Suppose that X company sell flights through a web site and would like
+# clients the opportunity to use these points in the following purchase.
+# to grant point for each time that a client buy a flight an giving their
+#=========================================================================
+
+# Create and entity_admin user for X company...
+mix cli.users.create $TOKEN adrianmarino@gmail.com 12345678910 entity_admin Adrian Marino
+
+# Create X company...
+mix cli.entities.create $TOKEN X "X company"

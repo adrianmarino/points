@@ -37,7 +37,10 @@ defmodule Point.Client.Dto do
   end
 
   defmodule Account do
-    defstruct [:owner_email, :currency_code]
+    defstruct [:type, :owner_email, :currency_code]
+    def create([owner_email, currency_code, type]) do
+      %Account{type: type, owner_email: owner_email, currency_code: currency_code}
+    end
     def create([owner_email, currency_code]), do: %Account{owner_email: owner_email, currency_code: currency_code}
   end
 

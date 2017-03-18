@@ -99,7 +99,7 @@ Let's begin by run next command under _points_ path:
 $ mix help | grep cli
 
 mix cli.accounts                   # Show accounts. Params: token
-mix cli.accounts.create            # Create an account. Params: token owner_email currency_code
+mix cli.accounts.create            # Create an account. Params: token owner_email currency_code type(Optional: default/backup)
 mix cli.accounts.delete            # Delete an account. Params: token owner_email currency_code
 mix cli.accounts.show              # Show an account. Params: token owner_email currency_code
 mix cli.currencies                 # Show currencies. Params: token
@@ -276,7 +276,7 @@ $ mix cli.currencies.delete $TOKEN PTS
 *Step 1:* Create an account for adrianmarino@gmail.com under PTS currency.
 ```bash
 $ mix help | grep cli.accounts.create  
-mix cli.accounts.create            # Create an account. Params: token owner_email currency_code
+mix cli.accounts.create            # Create an account. Params: token owner_email currency_code type(Optional: default/backup)
 $ mix cli.accounts.create $TOKEN adrianmarino@gmail.com PTS
 13:41:26.641 [info]  Response - Status: 201, Body: {
   "amount": "0.00",

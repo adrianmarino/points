@@ -25,10 +25,10 @@ defmodule Point.Account do
   def insert_changeset(model , params \\ %{}) do
     model
       |> cast(params, [:type, :owner_email, :issuer_id, :currency_code, :entity_id])
-      |> validate_required([:type, :owner_email, :issuer_id, :currency_code])
       |> map_from(:owner_email, to: :owner_id, resolver: &(UserService.by(email: &1)))
       |> map_from(:currency_code, to: :currency_id, resolver: &(CurrencyService.by(code: &1)))
       |> validate_required([:owner_id, :currency_id])
+      |> set_default_value_to(field: :type, value: "default")
       |> set_default_value_to(field: :amount, value: DecimalUtil.zero)
   end
 
