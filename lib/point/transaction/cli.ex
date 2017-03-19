@@ -12,6 +12,8 @@ defmodule Point.Transaction.CLI do
       exec_source(to_string(name), params)
     catch
       error -> {:error, error}
+    rescue
+      error -> {:error, error.message}
     end
   end
   def execute(transaction, params) do
@@ -20,6 +22,8 @@ defmodule Point.Transaction.CLI do
       exec_source(transaction.name, params)
     catch
       error -> {:error, error}
+    rescue
+      error -> {:error, error.message}
     end
   end
 
