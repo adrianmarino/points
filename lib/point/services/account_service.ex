@@ -2,7 +2,17 @@ defmodule Point.AccountService do
   import Ecto.Query
   import Decimal
   import Point.DecimalUtil, only: [is: 2, zero: 0]
-  alias Point.{Repo, Account, Currency, User}
+  import Enum, only: [map: 2, reduce: 3]
+  alias Point.{Repo, Account, Currency, User, ExchangeRateService}
+
+  def system_amount(backup_account) do
+    Repo.all(from a in Account, where: a.issuer_id == ^backup_account.owner_id and a.type == "default" )
+      |> map(fn(account)->
+          {:ok, rate } = ExchangeRateService.rate_between(account, backup_account)
+          Decimal.mult(Decimal.new(account.amount), rate)
+        end)
+      |> reduce(Decimal.new(0), &Decimal.add/2)
+  end
 
   # Crud
   def all, do: Repo.all(Account)

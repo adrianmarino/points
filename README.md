@@ -403,11 +403,39 @@ $ mix cli.transactions.exec.deposit $TOKEN '{"to":{"email":"adrianmarino@gmail.c
 ```bash
 $ mix help | grep cli.transactions.exec.extract                                                                       
 mix cli.transactions.exec.extract  # Extract. Params: token params(as json: '{...}')
-
-
+$ mix cli.transactions.exec.extract $TOKEN '{"from":{"email":"adrianmarino@gmail.com","currency":"ARS"},"amount":100}'
+01:39:56.843 [info]  Response - Status: 200, Body: {
+  "amount": "100.00",
+  "source": {
+    "amount": "9890.00",
+    "currency": "ARS",
+    "type": "backup"
+  },
+  "target": "non",
+  "type": "extract"
+}
 ```
 
-
+*Transfer:* Transfer an amount between accounts.
+```bash
+$ mix help | grep cli.transactions.exec.transfer
+mix cli.transactions.exec.transfer # Transfer. Params: token params(as json: '{...}')
+$ mix cli.transactions.exec.transfer $TOKEN '{"from":{"email":"a@gmail.com","currency":"XPT"},"to":{"email":"b@gmail.com","currency":"XPT"},"amount":5000}'
+01:41:03.264 [info]  Response - Status: 200, Body: {
+  "amount": "5000.00",
+  "source": {
+    "amount": "0.00",
+    "currency": "XPT",
+    "owner": "a@gmail.com"
+  },
+  "target": {
+    "amount": "10000.00",
+    "currency": "XPT",
+    "owner": "b@gmail.com"
+  },
+  "type": "transfer"
+}
+```
 
 ##### Custom
 
