@@ -96,8 +96,7 @@ You can interact with the rest api through mix tasks without need to use curl or
 What can you do with _points_?
 Let's begin by run next command under _points_ path:
 ```bash
-$ mix help | grep cli
-
+$ mix help | grep cli                
 mix cli.accounts                   # Show accounts. Params: token
 mix cli.accounts.create            # Create an account. Params: token owner_email currency_code type(Optional: default/backup)
 mix cli.accounts.delete            # Delete an account. Params: token owner_email currency_code
@@ -122,19 +121,19 @@ mix cli.exchange_rates.show        # Show a exchange rate. Params: token source 
 mix cli.exchange_rates.update      # Update a exchange rate. Params: token source target value
 mix cli.movements.between          # Show movements between dates. Params: from to (format: YYYYMMDD_HHMM)
 mix cli.movements.by_account_after # Show account movements after a date. Params: token owner_email currency_code timestamp (after format: YYYYMMDD_HHMM)
-mix cli.sessions                   # Show sessions
-mix cli.sessions.sign_in           # Open a session
-mix cli.sessions.sign_out          # Close a session
+mix cli.sessions                   # Show sessions. Params: token
+mix cli.sessions.sign_in           # Open a session. Params: email password
+mix cli.sessions.sign_out          # Close a session. Params: token
 mix cli.transactions               # Show transactions. Params: token
 mix cli.transactions.create        # Create a transaction. Params: token name source
 mix cli.transactions.delete        # Delete a transaction. Params: token name
 mix cli.transactions.exec          # Execute a transaction. Params: token name params(as json: '{...}')
-mix cli.transactions.exec.deposit  # Deposit. Params: token name params(as json: '{...}')
-mix cli.transactions.exec.extract  # Extract. Params: token name params(as json: '{...}')
-mix cli.transactions.exec.transfer # Transfer. Params: token name params(as json: '{...}')
+mix cli.transactions.exec.deposit  # Deposit. Params: token params(as json: '{...}')
+mix cli.transactions.exec.extract  # Extract. Params: token params(as json: '{...}')
+mix cli.transactions.exec.transfer # Transfer. Params: token params(as json: '{...}')
 mix cli.transactions.show          # Show a transaction. Params: token name
 mix cli.transactions.update        # Update a transaction. Params: token name source
-mix cli.users                      # Show users
+mix cli.users                      # Show users.
 mix cli.users.create               # Create a user. Params: token email password role first_name last_name
 mix cli.users.delete               # Delete a user. Params: token email
 mix cli.users.roles                # Show roles. Param: token
@@ -313,7 +312,6 @@ $ mix cli.accounts.delete $TOKEN adrianmarino@gmail.com PTS
 
 #### Exchange rates
 
-```
 *Step 1:* Create an exchange rate between ARS and PTS.
 ```bash
 $ mix help | grep cli.exchange_rates.create
@@ -322,7 +320,6 @@ $ mix cli.exchange_rates.create $TOKEN ARS PTS 1000
 13:49:39.557 [info]  Response - Status: 201, Body: {"source":"ARS","target":"PTS","value":"1000.00"}
 ```
 
-```
 *Step 2:* Modify exchange rate between ARS and PTS.
 ```bash
 $ mix help | grep cli.exchange_rates.update
