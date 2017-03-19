@@ -445,7 +445,7 @@ To complete
 
 ##### Exercise 1: X company offer points to its clients
 
-Suppose that X company sell flights through a web site and would like to grant point for each time that a client buy a flight an giving their clients the opportunity to use these points in the following purchase.
+Suppose that X company sell flights through a web site and would like to grant points for each time that a client buy a flight giving their clients the opportunity to use these points in the following purchase.
 
 How we implement this with _points_?
 
@@ -458,7 +458,7 @@ $ bash scripts/exercise_1
 
 ##### Exercise 2: Share points between X and Y companies
 
-Suppose that Y company that has a web site to sell products of any type offer to X company
+Suppose that Y company sell products of any type also through a web site and offer to X company
 share points between their giving their clients the opportunity to use these points(X+Y) in the following purchase in either company.
 
 How we implement this with _points_?
