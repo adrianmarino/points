@@ -380,7 +380,7 @@ $ mix cli.entities.delete $TOKEN XYZ
 
 #### Transactions
 
-##### Primitive types
+##### Primitive transactions
 
 *Deposit:* Deposit an amount to backup account.
 ```bash
@@ -437,9 +437,50 @@ $ mix cli.transactions.exec.transfer $TOKEN '{"from":{"email":"a@gmail.com","cur
 }
 ```
 
-##### Custom
+##### Custom transactions
 
-To complete
+An example:
+```elixir
+defmodule Deposit do
+  use Transaction
+
+  # define required/optional parameters
+  defparams do: %{to: %{email: :required, currency: :required}, amount: :required}
+
+  def perform(params) do
+    deposit(amount: params.amount, on: account(email: params.to.email, currency: params.to.currency))
+  end
+end
+```
+
+You can use many functions of StandardLib
+```elixir
+defmodule StandardLib do
+  def refresh(model)
+  def amount(account)
+  def account(email: email, currency: currency)
+  def transfer(from: source, to: target, amount: amount)
+  def extract(amount: amount, from: account)
+  def deposit(amount: amount, on: account)
+  def print(message)
+  defp dec(value)
+end
+```
+Also you can create your owns modules to use in transactions, only must include the module in your transaction. Create a MyModule under lib path:
+```elixir
+defmodule MyModule do
+  def hello(name), do: IO.puts("Hello #{name}")
+end
+```
+After, import this in your transation.
+```elixir
+defmodule Deposit do
+  import MyModule
+  def perform(_params), do: hello("Adrian")
+end
+```
+
+To Complete
 
 #### Learning by example
 
