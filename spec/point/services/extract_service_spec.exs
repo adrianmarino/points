@@ -21,9 +21,11 @@ defmodule Point.ExtractServiceSpec do
     it "should creates an extract movement", do: expect(extract().type).to(eq "extract")
   end
 
-  context "when extract an amount from backup account that has less than needed backup" do
-    let amount: Decimal.new 15000
+  context "when extract an amount from backup account when has less than needed backup" do
+    it "shouldn't allows extract required amount"
+  end
 
-    it "shouldn't allows extract required amount", do: expect fn-> extract() end |> to(raise_exception())
+  context "when extract an amount from backup account when has greater than needed backup" do
+    it "should allows extract required amount"
   end
 end
