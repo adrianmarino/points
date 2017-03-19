@@ -439,40 +439,67 @@ $ mix cli.transactions.exec.transfer $TOKEN '{"from":{"email":"a@gmail.com","cur
 
 ##### Custom transactions
 
-An example:
+There are times when you need execute a transaction group atomically. _points_ allow this behavior througth _custom transactions_. A _custom transaciton_ actually is an script that can execute many transactions atomically. Also you can create and run there at runtime througth rest api.
+
+###### Defining a custom transaction
+
+A _custom transaction_ must be defined in a elixir module in the following way:
 ```elixir
-defmodule Deposit do
+defmodule MyCustomTransaction do
   use Transaction
 
-  # define required/optional parameters
-  defparams do: %{to: %{email: :required, currency: :required}, amount: :required}
-
   def perform(params) do
-    deposit(amount: params.amount, on: account(email: params.to.email, currency: params.to.currency))
+    # your code
   end
 end
 ```
+_Transaction_ module actually is a behavior module that include all needed functions to execute the transaction as well as many primitive functions that can be used in perform function to build the behavior of your transaction.
 
-You can use many functions of StandardLib
+On the other hand, you can define required and opcional parameters in the following way:
 ```elixir
-defmodule StandardLib do
-  def refresh(model)
-  def amount(account)
-  def account(email: email, currency: currency)
-  def transfer(from: source, to: target, amount: amount)
-  def extract(amount: amount, from: account)
-  def deposit(amount: amount, on: account)
-  def print(message)
-  defp dec(value)
+defmodule MyCustomTransaction2 do
+  use Transaction
+
+  defparams do: %{to: %{user: %{email: "adrianmarino@gmail.com"}, currency: :required}, amount: 100}
+
+  def perform(params) do
+    # any code...
+  end
 end
 ```
-Also you can create your owns modules to use in transactions, only must include the module in your transaction. Create a MyModule under lib path:
+This transaction asign a default value to email("adrianmarino@gmail.com") and amount(100) in case they are not passed but require a currency code.
+
+###### Standard functions
+
+By default _Transaction_ module import _StandardLib_ module that give you many primitive functions as we will see below:
+
+```elixir
+defmodule StandardLib do
+  # Print a messsage under server console.
+  def print(message)
+
+  # Find an account by owner email and currency.
+  def account(email: email, currency: currency)
+  # Get account amount.
+  def amount(account)
+
+  # Primivite tarnsactions
+  def transfer(amount: amount, from: source_account, to: target_account)
+  def extract(amount: amount, from: account)
+  def deposit(amount: amount, to: account)
+
+  # Refresh state of a model (account, rate, entity, user, etc...).
+  def refresh(model)
+end
+```
+
+Also you can create your owns modules to use in transactions, only must include module in your transaction. Create a _MyModule_ under lib path:
 ```elixir
 defmodule MyModule do
   def hello(name), do: IO.puts("Hello #{name}")
 end
 ```
-After, import this in your transation.
+After, import this in your transation:
 ```elixir
 defmodule Deposit do
   import MyModule
@@ -480,7 +507,9 @@ defmodule Deposit do
 end
 ```
 
-To Complete
+###### Create, remove and execute custom transactions
+
+To complete
 
 #### Learning by example
 

@@ -10,11 +10,11 @@ defmodule StandardLib do
       account -> account
     end
   end
-  def transfer(from: source, to: target, amount: amount) do
-    TransferService.transfer(from: source, to: target, amount: dec(amount))
+  def transfer(amount: amount, from: source_account, to: target_account) do
+    TransferService.transfer(from: source_account, to: target_account, amount: dec(amount))
   end
   def extract(amount: amount, from: account), do: ExtractService.extract(amount: dec(amount), from: account)
-  def deposit(amount: amount, on: account), do: DepositService.deposit(amount: dec(amount), to: account)
+  def deposit(amount: amount, to: account), do: DepositService.deposit(amount: dec(amount), to: account)
 
   def print(message) do
     case message do

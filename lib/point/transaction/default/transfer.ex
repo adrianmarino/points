@@ -8,9 +8,9 @@ defmodule Transfer do
 
   def perform(params) do
     transfer(
+      amount: params.amount,
       from: account(email: params.from.email, currency: params.from.currency),
-      to: account(email: params.to.email, currency: params.to.currency),
-      amount: params.amount
+      to: account(email: params.to.email, currency: params.to.currency)
     )
   end
 end
