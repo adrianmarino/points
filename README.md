@@ -380,9 +380,34 @@ $ mix cli.entities.delete $TOKEN XYZ
 
 #### Transactions
 
-##### Basic
+##### Primitive types
 
-To complete
+*Deposit:* Deposit an amount to backup account.
+```bash
+$ mix help | grep cli.transactions.exec.deposit
+mix cli.transactions.exec.deposit  # Deposit. Params: token params(as json: '{...}')
+$ mix cli.transactions.exec.deposit $TOKEN '{"to":{"email":"adrianmarino@gmail.com","currency":"ARS"},"amount":10000}'
+01:01:53.707 [info]  Response - Status: 200, Body: {
+  "amount": "10000.00",
+  "source": "non",
+  "target": {
+    "amount": "19990.00",
+    "currency": "ARS",
+    "type": "backup"
+  },
+  "type": "deposit"
+}
+```
+
+*Extract:* Extract an amount from backup account.
+```bash
+$ mix help | grep cli.transactions.exec.extract                                                                       
+mix cli.transactions.exec.extract  # Extract. Params: token params(as json: '{...}')
+
+
+```
+
+
 
 ##### Custom
 
