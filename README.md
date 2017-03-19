@@ -349,7 +349,37 @@ $ mix cli.exchange_rates.delete $TOKEN ARS PTS
 
 #### Entities
 
-To complete
+*Step 1:* Create an entity.
+```bash
+$ mix help | grep cli.entities.create             
+mix cli.entities.create            # Create an entity. Params: token code name
+$ mix cli.entities.create $TOKEN XYZ "XYZ company"
+22:58:27.000 [info]  Response - Status: 201, Body: {"code":"XYZ","name":"XYZ company"}
+```
+
+*Step 2:* Modify an entity.
+```bash
+$ mix help | grep cli.entities.update
+mix cli.entities.update            # Update entity name. Params: token code name
+$ mix cli.entities.update $TOKEN XYZ "XYZ Company 2"
+23:01:53.665 [info]  Response - Status: 200, Body: {"code":"XYZ","name":"XYZ Company 2"}
+```
+
+*Step 3:* Show an entity.
+```bash
+$ mix help | grep cli.entities.show                 
+mix cli.entities.show              # Show an entity. Params: token code
+$ mix cli.entities.show $TOKEN XYZ
+23:02:54.416 [info]  Response - Status: 200, Body: {"code":"XYZ","name":"XYZ Company 2"}
+```
+
+*Step 4:* Delete an entity.
+```bash
+$ mix help | grep cli.entities.delete
+mix cli.entities.delete            # Delete an entity. Params: token code
+$ mix cli.entities.delete $TOKEN XYZ
+23:03:53.540 [info]  Response - Status: 204
+```
 
 #### Transactions
 
