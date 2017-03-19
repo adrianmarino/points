@@ -13,6 +13,20 @@ MIX_ENV=dev
 #
 #
 #------------------------------------------------------------------------------
+# Shared functions
+#------------------------------------------------------------------------------
+function sign_in() {
+  echo $(mix cli.sessions.sign_in $1 $2 | grep token | awk -F'"' '$0=$4')
+}
+function message() {
+  echo -e "\n--------------------------------------------------------------------"
+  echo $1
+  echo -e "--------------------------------------------------------------------\n"
+}
+#
+#
+#
+#------------------------------------------------------------------------------
 # Pre actions
 #------------------------------------------------------------------------------
 # Start server
@@ -26,17 +40,25 @@ mix ecto.reset
 # Example 1
 #=========================================================================
 # Suppose that X company sell flights through a web site and would like
+# to grant points for each time that a client buy a flight giving their
 # clients the opportunity to use these points in the following purchase.
-# to grant point for each time that a client buy a flight an giving their
+#  Guidelines:
+#    1. The entity grant points to client from a backup amount in real money.
+#    2. Points can be tranfered between clients.
+#    3. Then a client spent N points there are transfered to an entity
+#      acount to control the amount of spent points.
 #=========================================================================
-function sign_in() {
-  echo $(mix cli.sessions.sign_in $1 $2 | grep token | awk -F'"' '$0=$4')
-}
-
+#
+#
+#
+#
+#-------------------------------------------------------------------------
+# First must define the scenario of the problem
+#-------------------------------------------------------------------------
 # Sign_in as system_admin user...
 TOKEN=$(sign_in $SYSTEM_ADMIN $PASSWORD)
 
-# Create and entity_admin user for X company...
+# Create and entity_admin for X company...
 mix cli.users.create $TOKEN $ENTITY_ADMIN $PASSWORD entity_admin Adrian Marino
 
 # Create X company...
@@ -45,12 +67,13 @@ mix cli.entities.create $TOKEN X "X company"
 # Create backup account for issuer user under ARS currency...
 mix cli.accounts.create $TOKEN adrianmarino@gmail.com ARS backup
 
-# Create two normal user...
+# Create two normal users...
 mix cli.users.create $TOKEN $NORMAL_USER_A $PASSWORD normal_user FirstName LastName
 mix cli.users.create $TOKEN $NORMAL_USER_B $PASSWORD normal_user FirstName LastName
 
 # Sign_out
 mix cli.sessions.sign_out $TOKEN
+
 
 # Sign_in as entity_admin user...
 TOKEN=$(sign_in $ENTITY_ADMIN $PASSWORD)
@@ -61,6 +84,9 @@ mix cli.currencies.create $TOKEN XPT "X points"
 # Create exchange rate between ARS  and XPT  1 ARS = 1000 XPT
 mix cli.exchange_rates.create $TOKEN ARS XPT 1000
 
+# Create an account to control the amount of XPT points to spent for users with account under X company.
+mix cli.accounts.create $TOKEN $ENTITY_ADMIN XPT
+
 # Create two account for users A and B in X company under XPT currency...
 mix cli.accounts.create $TOKEN $NORMAL_USER_A XPT
 mix cli.accounts.create $TOKEN $NORMAL_USER_B XPT
@@ -69,16 +95,35 @@ mix cli.accounts.create $TOKEN $NORMAL_USER_B XPT
 mix cli.transactions.exec.deposit $TOKEN \
   '{"to":{"email":"adrianmarino@gmail.com","currency":"ARS"},"amount":10000}'
 
+
+#-------------------------------------------------------------------------
+# Resolution
+#-------------------------------------------------------------------------
+# 1. The entity grant points to client from a backup amount in real money.
 # Transfer 10.0000 XPT to NORMAL_USER_A...
+message "Grant points to $NORMAL_USER_A..."
 mix cli.transactions.exec.transfer $TOKEN \
   '{"from":{"email":"adrianmarino@gmail.com","currency":"ARS"},"to":{"email":"a@gmail.com","currency":"XPT"},"amount":10}'
-
+#
+#
+# 2. Points can be tranfered between clients.
 # Transfer 5.000 XPT from NORMAL_USER_A to NORMAL_USER_B...
+message "Transfer points from $NORMAL_USER_A to $NORMAL_USER_B..."
 mix cli.transactions.exec.transfer $TOKEN \
   '{"from":{"email":"a@gmail.com","currency":"XPT"},"to":{"email":"b@gmail.com","currency":"XPT"},"amount":5000}'
-
-# Show all accounts...
+#
+#
+# 3. Then a client spent N points there are transfered to an entity
+#    acount to control the amount of spent points.
+message "$NORMAL_USER_A user spent points..."
+mix cli.transactions.exec.transfer $TOKEN \
+  '{"from":{"email":"b@gmail.com","currency":"XPT"},"to":{"email":"adrianmarino@gmail.com","currency":"XPT"},"amount":2500}'
+#
+#
+# Show final state for all acounts...
+message "Final accounts state..."
 mix cli.accounts.show $TOKEN $ENTITY_ADMIN ARS
+mix cli.accounts.show $TOKEN $ENTITY_ADMIN XPT
 mix cli.accounts.show $TOKEN $NORMAL_USER_A XPT
 mix cli.accounts.show $TOKEN $NORMAL_USER_B XPT
 

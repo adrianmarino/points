@@ -447,11 +447,13 @@ To complete
 
 Suppose that X company sell flights through a web site and would like to grant points for each time that a client buy a flight giving their clients the opportunity to use these points in the following purchase.
 
+_Guidelines:_
+1. The entity grant points to client from a backup amount in real money.
+2. Points can be tranfered between clients.
+3. Then a client spent N points there are transfered to an entity acount to control the amount of spent points.
+
 How we implement this with _points_?
-
-[Exercise Resolution](scripts/exercise_1)
-
-To execute the exercise resolution:
+You can see the exercise resolution in an executable scenario in [scripts/exercise_1](scripts/exercise_1) script. You must execute next command to run the exercise:
 ```bash
 $ bash scripts/exercise_1
 ```
