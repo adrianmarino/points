@@ -1,4 +1,4 @@
-# <img src="https://cdn.rawgit.com/adrianmarino/points/features/basic-readme/images/logo.svg" width="35" height="35" /> Points
+# <img src="https://raw.githubusercontent.com/adrianmarino/points/master/images/logo.png" width="35" height="35" /> Points
   Points is a platform used to exchange money under both virtual and real currency between registered users.
 
   [![Build Status](https://travis-ci.org/adrianmarino/points.svg?branch=master)](https://travis-ci.org/adrianmarino/points)
