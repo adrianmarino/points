@@ -578,7 +578,7 @@ _points_ could run: dev, test or prod.
 
 #### http_potion_log_request_as_info_level
 
-* User to show request information of cli.RESOURCE.ACTION tasks.
+* Used to show request information of cli.RESOURCE.ACTION tasks.
 * :yes and :no are the possible values.
 * Default value: :no.
 
