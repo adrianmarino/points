@@ -551,10 +551,6 @@ To complete
 
 To complete
 
-### Custom transactions
-
-To complete
-
 ### Server configuration
 
 You can change configuration settings from config/XXX.exs file where XXX is the name of environmnet where
