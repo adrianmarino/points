@@ -15,8 +15,10 @@
 ## Requirements
 
 * Elixir >= 1.3.x
-* Mix >= 1.3.4
+* Mix 1.3.4
 * MySQL/MariaDB 10.x
+* Docker 17.x (Optional)
+* Docker Compose 1.11.x (Optional)
 
 ## Beginning
 
