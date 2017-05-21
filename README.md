@@ -599,5 +599,5 @@ All docker commands has the _docker-_ prefix. Next you can see the available lis
 
 e.g.:
 ```bash
-$ bash docker-server prod pass1234
+$ bash scripts/docker-server prod pass1234
 ```
