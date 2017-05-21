@@ -553,35 +553,50 @@ To complete
 
 ### Server configuration
 
-You can change configuration settings from config/XXX.exs file where XXX is the name of environmnet where
-_points_ could run: dev, test or prod.
+You can change configuration settings from _config/XXX.exs_ file where _XXX_ is the name of environmnet where
+_points_ could run: _dev_, _test_ or _prod_.
 
 #### session_ttl
 
 * Is the time that can last a session.
 * Is expresed in milliseconds.
-* Default value: 1800 (30 minutes).
+* Default value: _1800_ (30 minutes).
 
 #### simultaneous_sessions_by_user_and_remote_ip
 
 * Specifies the max number of user sessions by remote ip, where remote IP is the IP from that was performed the sign_in action.
-* Default value: 3.
+* Default value: _3_.
 
 #### tmp_path
 
 * Path used to create and load custom transaction files
-* Default value: "./tmp"
+* Default value: _./tmp_
 
 #### http_potion_log_request_as_info_level
 
 * Used to show request information of cli.RESOURCE.ACTION tasks.
-* :yes and :no are the possible values.
-* Default value: :no.
+* ```:yes``` and ```:no``` are the possible values.
+* Default value: ```:no```.
 
 ## Docker
 
-* scripts/docker-server-init: create/poulate database and run server in docker-compose env.
-* scripts/docker-server: Run server on docker-compose env.
-* scripts/docker-test: Run test on docker-compose env.
-* scripts/docker-reset: Reset(drop/create/migrate/populate) database in docker-compose env.
-* scripts/docker-clean: Clean(drop/create/migrate) database in docker-compose env.
+Under _scripts_ path there are commands to run normal phoenix actions under a docker maquine. These commands can take the next params:
+* **env**
+  * Fist parameter.
+  * Possible values: _dev_, _test_ and _prod_.
+  * Default value: _dev_.
+* **mysql_root_password**
+  * Second parameter.
+  * Default value: _1234_.
+
+All docker commands has the _docker-_ prefix. Next you can see the available list:
+* **docker-server-init**: Create/poulate database and run server under docker-compose env.
+* **docker-server**: Run server under docker-compose env.
+* **docker-test**: Run tests under docker-compose env.
+* **docker-reset**: Reset(drop/create/migrate/populate) database under docker-compose env.
+* **docker-clean**: Clean(drop/create/migrate) database under docker-compose env.
+
+e.g.:
+```bash
+$ bash docker-server prod pass1234
+```
