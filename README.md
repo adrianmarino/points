@@ -15,6 +15,7 @@
 ## Requirements
 
 * Elixir >= 1.3.x
+* Mix >= 1.3.4
 * MySQL/MariaDB 10.x
 
 ## Beginning
