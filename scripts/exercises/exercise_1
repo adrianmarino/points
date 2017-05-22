@@ -2,52 +2,37 @@
 #------------------------------------------------------------------------------
 # Variables
 #------------------------------------------------------------------------------
-SYSTEM_ADMIN=chewbacca@gmail.com
-ENTITY_ADMIN=adrianmarino@gmail.com
-NORMAL_USER_A=a@gmail.com
-NORMAL_USER_B=b@gmail.com
-PASSWORD=12345678910
-
-MIX_ENV=dev
+# Users:
+  ENTITY_ADMIN=adrianmarino@gmail.com # X company admin user.
+  #
+  NORMAL_USER_A=a@gmail.com # An X company user.
+  NORMAL_USER_B=b@gmail.com # An X company user.
+#
+CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 #
 #
 #
 #------------------------------------------------------------------------------
-# Shared functions
+# Include external files
 #------------------------------------------------------------------------------
-function sign_in() {
-  USERNAME=$1
-  PASSWORD=$2
-  echo $(mix cli.sessions.sign_in $USERNAME $PASSWORD | grep token | awk -F'"' '$0=$4')
-}
-function message() {
-  echo -e "\n--------------------------------------------------------------------"
-  echo $1
-  echo -e "--------------------------------------------------------------------\n"
-}
+# When include 'lib' file:
+#  - Add helper functions/variables for the most frequent tasks.
+#  - Execute exercise preconditions(See 'Exercise preconditions' section in exercises/lib).
+source $CURRENT_PATH/lib
 #
-#
-#
-#------------------------------------------------------------------------------
-# Pre actions
-#------------------------------------------------------------------------------
-# Start server
-bash scripts/server-restart
-# Reset db
-mix ecto.reset
 #
 #
 #
 #=========================================================================
-# Example 1
+# Exercise definition
 #=========================================================================
 # Suppose that X company sell flights through a web site and would like
 # to grant points for each time that a client buy a flight giving their
 # clients the opportunity to use these points in the following purchase.
 #  Guidelines:
-#    1. The entity grant points to client from a backup amount in real money.
+#    1. The entity grant points to clients from a backup amount in real money.
 #    2. Points can be tranfered between clients.
-#    3. Then a client spent N points there are transfered to an entity
+#    3. When a client spent N points there are transfered to an entity
 #      acount to control the amount of spent points.
 #=========================================================================
 #
@@ -74,7 +59,7 @@ mix cli.users.create $TOKEN $NORMAL_USER_A $PASSWORD normal_user FirstNameA Last
 mix cli.users.create $TOKEN $NORMAL_USER_B $PASSWORD normal_user FirstNameB LastNameB
 
 # Sign_out
-mix cli.sessions.sign_out $TOKEN
+sign_out $TOKEN
 
 
 # Sign_in as entity_admin user...
@@ -94,40 +79,47 @@ mix cli.accounts.create $TOKEN $NORMAL_USER_A XPT
 mix cli.accounts.create $TOKEN $NORMAL_USER_B XPT
 
 # Deposit 10.000 ARS to backup account...
+AMOUNT=10000
+print "Deposit $AMOUNT ARS to $ENTITY_ADMIN backup account."
 mix cli.transactions.exec.deposit $TOKEN \
-  '{"to":{"email":"adrianmarino@gmail.com","currency":"ARS"},"amount":10000}'
-
-
+  '{"to":{"email":"'"$ENTITY_ADMIN"'","currency":"ARS"},"amount":'"$AMOUNT"'}'
+#
+#
+#
+#
 #-------------------------------------------------------------------------
 # Resolution
 #-------------------------------------------------------------------------
 # 1. The entity grant points to client from a backup amount in real money.
 # Transfer 10.0000 XPT to NORMAL_USER_A...
-message "Grant points to $NORMAL_USER_A..."
+AMOUNT=10
+print "Grant $AMOUNT ARS in points to $NORMAL_USER_A..."
 mix cli.transactions.exec.transfer $TOKEN \
-  '{"from":{"email":"adrianmarino@gmail.com","currency":"ARS"},"to":{"email":"a@gmail.com","currency":"XPT"},"amount":10}'
+  '{"from":{"email":"'"$ENTITY_ADMIN"'","currency":"ARS"},"to":{"email":"'"$NORMAL_USER_A"'","currency":"XPT"},"amount":'"$AMOUNT"'}'
 #
 #
 # 2. Points can be tranfered between clients.
 # Transfer 5.000 XPT from NORMAL_USER_A to NORMAL_USER_B...
-message "Transfer points from $NORMAL_USER_A to $NORMAL_USER_B..."
+AMOUNT=5000
+print "Transfer $AMOUNT X points from $NORMAL_USER_A to $NORMAL_USER_B..."
 mix cli.transactions.exec.transfer $TOKEN \
-  '{"from":{"email":"a@gmail.com","currency":"XPT"},"to":{"email":"b@gmail.com","currency":"XPT"},"amount":5000}'
+  '{"from":{"email":"'"$NORMAL_USER_A"'","currency":"XPT"},"to":{"email":"'"$NORMAL_USER_B"'","currency":"XPT"},"amount":'"$AMOUNT"'}'
 #
 #
 # 3. Then a client spent 2500 points there are transfered to an entity
 #    acount to control the amount of spent points.
-message "$NORMAL_USER_A user spent points..."
+AMOUNT=2500
+print "$NORMAL_USER_A user spent $AMOUNT X points..."
 mix cli.transactions.exec.transfer $TOKEN \
-  '{"from":{"email":"b@gmail.com","currency":"XPT"},"to":{"email":"adrianmarino@gmail.com","currency":"XPT"},"amount":2500}'
+  '{"from":{"email":"'"$NORMAL_USER_B"'","currency":"XPT"},"to":{"email":"'"$ENTITY_ADMIN"'","currency":"XPT"},"amount":'"$AMOUNT"'}'
 #
 #
 # Show final state for all acounts...
-message "Final accounts state..."
+print "Final accounts state..."
 mix cli.accounts.show $TOKEN $ENTITY_ADMIN ARS
 mix cli.accounts.show $TOKEN $ENTITY_ADMIN XPT
 mix cli.accounts.show $TOKEN $NORMAL_USER_A XPT
 mix cli.accounts.show $TOKEN $NORMAL_USER_B XPT
-
-# Sign_out
-mix cli.sessions.sign_out $TOKEN
+#
+#
+sign_out $TOKEN

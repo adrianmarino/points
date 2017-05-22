@@ -1,0 +1,112 @@
+#!/bin/bash
+#------------------------------------------------------------------------------
+# Variables
+#------------------------------------------------------------------------------
+# Users:
+  ENTITY_ADMIN_A=entity_admin_a@gmail.com # A company admin user.
+  ENTITY_ADMIN_B=entity_admin_b@gmail.com # B company admin user.
+  #
+  NORMAL_USER=adrianmarino@gmail.com # A client with accounts under both companies.
+#
+CURRENT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+#
+#
+#
+#------------------------------------------------------------------------------
+# Include external files
+#------------------------------------------------------------------------------
+# When include 'lib' file:
+#  - Add helper functions/variables for the most frequent tasks.
+#  - Execute exercise preconditions(See  Exercise preconditions in exercises/lib).
+source $CURRENT_PATH/lib
+#
+#
+#
+#
+#=========================================================================
+# Exercise definition
+#=========================================================================
+# Suppose that 'A company' sell products of any type through a web site and
+# offer to 'B company' share points between their giving their clients
+# the opportunity to use these points(A+B) in the following purchase
+# in either company.
+#  Scenario:
+#    1. Both has ARS backup accounts.
+#    2. X client have accounts under both companies in points.
+#  Guidelines:
+#    1. The entity grant points to clients from a backup amount in real money.
+#    2. Points can be tranfered between clients of both compaines.
+#    3. Then a client spent N points there are transfered to an entity
+#      acount to control the amount of spent points.
+#=========================================================================
+#
+#
+#
+#
+#-------------------------------------------------------------------------
+# First must define the scenario of the problem
+#-------------------------------------------------------------------------
+TOKEN=$(sign_in $SYSTEM_ADMIN $PASSWORD)
+#
+print "Create entities each with backup account(ARS) and admin user."
+create_entity_admin_user_and_backup_account $TOKEN A "A company" $ENTITY_ADMIN_A $PASSWORD
+create_entity_admin_user_and_backup_account $TOKEN B "B company" $ENTITY_ADMIN_B $PASSWORD
+#
+AMOUNT=10000
+print "Deposit $AMOUNT ARS to both backup accounts"
+mix cli.transactions.exec.deposit $TOKEN \
+  '{"to":{"email":"'"$ENTITY_ADMIN_A"'","currency":"'"$BACKUP_CURRENCY_CODE"'"},"amount":'"$AMOUNT"'}'
+mix cli.transactions.exec.deposit $TOKEN \
+  '{"to":{"email":"'"$ENTITY_ADMIN_B"'","currency":"'"$BACKUP_CURRENCY_CODE"'"},"amount":'"$AMOUNT"'}'
+#
+print "Create one client"
+mix cli.users.create $TOKEN $NORMAL_USER $PASSWORD normal_user Adrian Marino
+sign_out $TOKEN
+
+
+TOKEN=$(sign_in $ENTITY_ADMIN_A $PASSWORD)
+#
+print "Create A points currencies and exchange rates: APT <--rate--> ARS"
+create_currrency_and_exchange_rates_with_another_currency $TOKEN APT "A points" $BACKUP_CURRENCY_CODE 1000
+#
+print "Create A points account for the client"
+mix cli.accounts.create $TOKEN $NORMAL_USER APT
+#
+AMOUNT=10
+print "Add $AMOUNT A points to client account"
+mix cli.transactions.exec.transfer $TOKEN \
+  '{"from":{"email":"'"$ENTITY_ADMIN_A"'","currency":"'"$BACKUP_CURRENCY_CODE"'"},"to":{"email":"'"$NORMAL_USER"'","currency":"APT"},"amount":'"$AMOUNT"'}'
+sign_out $TOKEN
+
+
+TOKEN=$(sign_in $ENTITY_ADMIN_B $PASSWORD)
+#
+print "Create B points currencies and exchange rates: BPT <--rate--> ARS"
+create_currrency_and_exchange_rates_with_another_currency $TOKEN BPT "B points" $BACKUP_CURRENCY_CODE 100
+#
+print "Create B points account for the client"
+mix cli.accounts.create $TOKEN $NORMAL_USER BPT
+#
+AMOUNT=10
+print "Add $AMOUNT B points to client account"
+mix cli.transactions.exec.transfer $TOKEN \
+  '{"from":{"email":"'"$ENTITY_ADMIN_B"'","currency":"'"$BACKUP_CURRENCY_CODE"'"},"to":{"email":"'"$NORMAL_USER"'","currency":"BPT"},"amount":'"$AMOUNT"'}'
+sign_out $TOKEN
+#
+#
+#
+#
+#-------------------------------------------------------------------------
+# Resolution
+#-------------------------------------------------------------------------
+# TOKEN=$(sign_in $NORMAL_USER $PASSWORD)
+AMOUNT=1000
+# print "$NORMAL_USER transfer $AMOUNT B points to A points account under A company"
+# mix cli.transactions.exec.transfer $TOKEN \
+#  '{"from":{"email":"'"$NORMAL_USER"'","currency":"BPT"},"to":{"email":"'"$NORMAL_USER"'","currency":"APT"},"amount":'"$AMOUNT"'}'
+
+# print "$NORMAL_USER spend all A points to paid a product of by A company"
+# mix cli.transactions.exec.transfer $TOKEN \
+#    '{"from":{"email":"'"$NORMAL_USER"'","currency":"APT"},"to":{"email":"'"$ENTITY_ADMIN_A"'","currency":"'"$BACKUP_CURRENCY_CODE"'"},"amount":'"$AMOUNT"'}'
+
+# sign_out $TOKEN

@@ -16,7 +16,7 @@ defimpl String.Chars, for: Map do
 end
 
 defimpl String.Chars, for: Decimal do
-  def to_string(value), do: Decimal.to_string(Decimal.round(value, 2))
+  def to_string(value), do: Decimal.to_string(value, :normal)
 end
 
 # Domain types
