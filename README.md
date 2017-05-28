@@ -499,12 +499,12 @@ To complete
 
 ##### Exercise 1: X company offer points to its clients
 
-Suppose that X company sell flights through a web site and would like to grant points for each time that a client buy a flight giving their clients the opportunity to use these points in the following purchase.
+Suppose that _X company_ sell flights through a web site and would like to grant points for each time that a client buy a flight giving their clients the opportunity to use these points in the following purchase.
 
 _Guidelines:_
-1. The entity grant points to client from a backup amount in real money.
+1. The entity grant points to clients from an issuer account under a real currency.
 2. Points can be tranfered between clients.
-3. Then a client spent N points there are transfered to an entity acount to control the amount of spent points.
+3. When a client spent N points there are transfered to an entity acount to control the amount of spent points.
 
 How we implement this with _points_?
 You can see the exercise resolution in an executable scenario in [scripts/exercise_1](scripts/exercise_1) script. You must execute next command to run the exercise:
@@ -512,17 +512,27 @@ You can see the exercise resolution in an executable scenario in [scripts/exerci
 $ bash scripts/exercise_1
 ```
 
-##### Exercise 2: Share points between X and Y companies
+##### Exercise 2: Share points between A and B companies
 
-Suppose that Y company sell products of any type also through a web site and offer to X company
-share points between their giving their clients the opportunity to use these points(X+Y) in the following purchase in either company.
+Suppose that _A company_ sell products of any type through a web site and
+offer to _B company_ share points between their giving their clients
+the opportunity to use these points(A+B) in the following purchase
+in either company.
+
+_Guidelines:
+1. The entity grant points to clients from an issuer account under a real currency.
+2. Points can be tranfered between clients of both compaines.
+3. Then a client spent N points there are transfered to an entity acount to control the amount of spent points.
 
 How we implement this with _points_?
-To complete
+You can see the exercise resolution in an executable scenario in [scripts/exercise_2](scripts/exercise_2) script. You must execute next command to run the exercise:
+```bash
+$ bash scripts/exercise_2
+```
 
 ##### Exercise 3: X company offer buy with points that belong to Y company clients.
 
-This example differs from _Exercise 1_ in that X company give their clients the opportunity to use points of Y company.
+This example differs from _Exercise 1_ in that _X company_ give their clients the opportunity to use points of _Y company_.
 
 How we implement this with _points_?
 To complete

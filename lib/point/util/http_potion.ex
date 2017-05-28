@@ -42,7 +42,7 @@ defmodule Point.HTTPotion.Logger do
 
     case Config.get(:http_potion_log_request_as_info_level) do
       :yes -> info(message)
-      _ -> debug(message)
+      _ -> info(message)
     end
   end
 

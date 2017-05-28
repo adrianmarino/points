@@ -1,6 +1,6 @@
 defmodule Point.AccountFactory do
   use ExMachina.Ecto, repo: Point.Repo
-  alias Point.{Account, CurrencyFactory, UserFactory, EntityFactory}
+  alias Point.{Account, CurrencyFactory, UserFactory}
 
   def obiwan_kenoby_factory do
     %Account{
