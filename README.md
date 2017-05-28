@@ -52,7 +52,7 @@
 
 This guide introduces you how can interact with points platform through easy examples. Adicionally, I'll show you how to configure the server api.
 
-### User Roles
+### User Roles (under cosstruction)
 
 Each user has a role that allow perform different actions on the platform. Next I'll show each role and its associated actions.
 
@@ -525,9 +525,9 @@ _Guidelines:
 3. Then a client spent N points there are transfered to an entity acount to control the amount of spent points.
 
 How we implement this with _points_?
-You can see the exercise resolution in an executable scenario in [exercise_2](scripts/exercises/exercise_2) script. You must execute next command to run the exercise:
+You can see the exercise resolution in an executable scenario under [exercise_2](scripts/exercises/exercise_2) script. You must execute next command to run the exercise:
 ```bash
-$ bash scripts/exercises/exercise_1
+$ bash scripts/exercises/exercise_2
 ```
 
 ##### Exercise 3: X company offer buy with points that belong to Y company clients.

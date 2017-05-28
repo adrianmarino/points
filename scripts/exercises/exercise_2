@@ -98,14 +98,14 @@ sign_out $TOKEN
 #-------------------------------------------------------------------------
 # Resolution
 #-------------------------------------------------------------------------
-# TOKEN=$(sign_in $NORMAL_USER $PASSWORD)
+TOKEN=$(sign_in $NORMAL_USER $PASSWORD)
 AMOUNT=1000
-# print "$NORMAL_USER transfer $AMOUNT B points to A points account under A company"
-# mix cli.transactions.exec.transfer $TOKEN \
-#  '{"from":{"email":"'"$NORMAL_USER"'","currency":"BPT"},"to":{"email":"'"$NORMAL_USER"'","currency":"APT"},"amount":'"$AMOUNT"'}'
+print "$NORMAL_USER transfer $AMOUNT B points to A points account under A company"
+mix cli.transactions.exec.transfer $TOKEN \
+  '{"from":{"email":"'"$NORMAL_USER"'","currency":"BPT"},"to":{"email":"'"$NORMAL_USER"'","currency":"APT"},"amount":'"$AMOUNT"'}'
 
-# print "$NORMAL_USER spend all A points to paid a product of by A company"
-# mix cli.transactions.exec.transfer $TOKEN \
-#    '{"from":{"email":"'"$NORMAL_USER"'","currency":"APT"},"to":{"email":"'"$ENTITY_ADMIN_A"'","currency":"'"$ISSUER_ACCOUNT_CURRENCY"'"},"amount":'"$AMOUNT"'}'
+print "$NORMAL_USER spend all A points to paid a product of by A company"
+mix cli.transactions.exec.transfer $TOKEN \
+  '{"from":{"email":"'"$NORMAL_USER"'","currency":"APT"},"to":{"email":"'"$ENTITY_ADMIN_A"'","currency":"'"$ISSUER_ACCOUNT_CURRENCY"'"},"amount":'"$AMOUNT"'}'
 
-# sign_out $TOKEN
+sign_out $TOKEN
