@@ -2,13 +2,11 @@ defmodule Point.AccountControllerSpec do
   use ESpec.Phoenix, controller: Point.AccountController
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
-  alias Point.{AccountFactory, EntityFactory, UserFactory, CurrencyFactory, AccountService, DecimalUtil}
-
-  let rebelion: EntityFactory.insert(:rebelion)
+  alias Point.{AccountFactory, UserFactory, CurrencyFactory, AccountService, DecimalUtil}
 
   describe "index" do
     let response: get(sec_conn(), account_path(sec_conn(), :index))
-    before do: AccountFactory.insert(:han_solo, entity: rebelion())
+    before do: AccountFactory.insert(:han_solo)
 
     it "returns ok status", do: expect(response().status).to(eq 200)
     it "returns accounts", do: expect(json_response(response(), 200)).not_to(be_empty())
@@ -17,28 +15,31 @@ defmodule Point.AccountControllerSpec do
   describe "show" do
     let response: get(sec_conn(), account_path(sec_conn(), :show, owner_email(account()), currency_code(account())))
     let response_body: json_response(response(), 200)
-    let account: AccountFactory.insert(:han_solo, entity: rebelion())
 
-    it "returns ok status", do: expect(response().status).to(eq 200)
+    context "when request a default account" do
+      let account: AccountFactory.insert(:han_solo)
 
-    it "returns account id", do: expect response_body()["id"] |> to(eq account().id)
+      it "returns ok status", do: expect(response().status).to(eq 200)
 
-    it "returns account amount", do: expect response_body()["amount"] |> to(eq to_string(account().amount))
+      it "returns account id", do: expect response_body()["id"] |> to(eq account().id)
 
-    it "returns account currency code", do: expect response_body()["currency"] |> to(eq currency_code(account()))
+      it "returns account amount", do: expect response_body()["amount"] |> to(eq to_string(account().amount))
 
-    it "returns account owner email", do: expect response_body()["owner_email"] |> to(eq owner_email(account()))
+      it "returns account currency code", do: expect response_body()["currency"] |> to(eq currency_code(account()))
 
-    it "returns account issuer email", do: expect response_body()["issuer_email"] |> to(eq issuer_email(account()))
+      it "returns account owner email", do: expect response_body()["owner_email"] |> to(eq owner_email(account()))
+
+      it "returns account issuer email", do: expect response_body()["issuer_email"] |> to(eq issuer_email(account()))
+    end
   end
 
   describe "create" do
     let response: post(sec_conn(), account_path(sec_conn(), :create), attrs())
 
     context "when data is valid" do
-      let owner: UserFactory.insert(:luke_skywalker)
+      let user: UserFactory.insert(:han_solo)
       let currency: CurrencyFactory.insert(:ars)
-      let attrs: %{currency_code: currency().code, owner_email: owner().email}
+      let attrs: %{currency_code: currency().code, owner_email: user().email}
       let response_body: json_response(response(), 201)
 
       it "returns created status", do: expect(response().status).to(eq 201)
