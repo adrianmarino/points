@@ -8,7 +8,7 @@ defmodule Point.AccountView do
   def render("account.json", %{account: account}) do
     currency_code = Repo.assoc(account, :currency).code
     owner_email = Repo.assoc(account, :owner).email
-    amount = to_string account.amount
+    amount = to_string(account.amount)
     view = %{id: account.id, owner_email: owner_email, currency: currency_code, amount: amount}
 
     case Repo.assoc(account, :issuer) do

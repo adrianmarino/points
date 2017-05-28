@@ -23,7 +23,7 @@ defmodule Point.AccountControllerSpec do
 
       it "returns account id", do: expect response_body()["id"] |> to(eq account().id)
 
-      it "returns account amount", do: expect response_body()["amount"] |> to(eq to_string(account().amount))
+      it "returns account amount", do: expect Decimal.new(response_body()["amount"]) |> to(eq account().amount)
 
       it "returns account currency code", do: expect response_body()["currency"] |> to(eq currency_code(account()))
 
@@ -50,7 +50,7 @@ defmodule Point.AccountControllerSpec do
         expect AccountService.get!(response_body()["id"]) |> to(be_truthy())
       end
 
-      it "returns an account amount", do: expect response_body()["amount"] |> to(eq "0.00")
+      it "returns an account amount", do: expect response_body()["amount"] |> to(eq "0")
 
       it "returns an account currency code", do: expect response_body()["currency"] |> to(eq attrs().currency_code)
 
