@@ -75,7 +75,7 @@ Can perfom all functions like a root user on Linux OS.
 
 ### Account
 
-An accounts belongs to a user and contain money under given currency.
+Belongs to an user and contains amount in a given currency.
 
 ### Mix Tasks
 
@@ -507,9 +507,9 @@ _Guidelines:_
 3. When a client spent N points there are transfered to an entity acount to control the amount of spent points.
 
 How we implement this with _points_?
-You can see the exercise resolution in an executable scenario in [scripts/exercise_1](scripts/exercise_1) script. You must execute next command to run the exercise:
+You can see the exercise resolution in an executable scenario in [exercise_1](scripts/exercises/exercise_1) script. You must execute next command to run the exercise:
 ```bash
-$ bash scripts/exercise_1
+$ bash scripts/exercises/exercise_1
 ```
 
 ##### Exercise 2: Share points between A and B companies
@@ -525,9 +525,9 @@ _Guidelines:
 3. Then a client spent N points there are transfered to an entity acount to control the amount of spent points.
 
 How we implement this with _points_?
-You can see the exercise resolution in an executable scenario in [scripts/exercise_2](scripts/exercise_2) script. You must execute next command to run the exercise:
+You can see the exercise resolution in an executable scenario in [exercise_2](scripts/exercises/exercise_2) script. You must execute next command to run the exercise:
 ```bash
-$ bash scripts/exercise_2
+$ bash scripts/exercises/exercise_1
 ```
 
 ##### Exercise 3: X company offer buy with points that belong to Y company clients.
