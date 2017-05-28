@@ -1,0 +1,152 @@
+#!/bin/bash
+#------------------------------------------------------------------------------
+# Shared variables
+#------------------------------------------------------------------------------
+SYSTEM_ADMIN=chewbacca@gmail.com # Platform admin user.
+ISSUER_ACCOUNT_CURRENCY="ARS" # Default issuer account currency for all exercises.
+PASSWORD=12345678910 # All accounts has the same password for all exercises.
+MIX_ENV=dev # Use development database for all exercises.
+#
+#
+#
+#------------------------------------------------------------------------------
+# Exercise preconditions
+#------------------------------------------------------------------------------
+#
+# Start points server
+bash scripts/server-restart
+#
+# Reset database
+mix ecto.reset
+#
+# Clean console
+clear
+#
+#
+#
+#------------------------------------------------------------------------------
+# Shared functions
+#------------------------------------------------------------------------------
+
+#
+# Print a message in console.
+#
+function print() {
+  # Params:
+    TEXT=$1
+
+  echo -e "\n--------------------------------------------------------------------"
+  echo $TEXT
+  echo -e "--------------------------------------------------------------------"
+}
+
+#
+# Open a user session with username and password.
+#
+function sign_in() {
+  # Params:
+    USERNAME=$1
+    PASSWORD=$2
+
+  echo $(mix cli.sessions.sign_in $USERNAME $PASSWORD | grep token | awk -F'"' '$0=$4')
+}
+
+
+#
+# Close user session.
+#
+function sign_out() {
+  # Params:
+    TOKEN=$1
+
+  echo $(mix cli.sessions.sign_out $TOKEN)
+}
+
+#
+# Create an entity with an entity admin user and a issuer account.
+#
+function create_entity_admin_user_and_issuer_account() {
+  # Params:
+    SYS_ADMIN_TOKEN=$1
+    # Entity code and name.
+    ENTITY_CODE=$2
+    ENTITY_NAME=$3
+    # Entity admin username and password.
+    ADMIN_USERNAME=$4
+    ADMIN_PASSWORD=$5
+
+  # Create an entity...
+  print "Create entity: {name: \"$ENTITY_NAME\", code: \"$ENTITY_CODE\"}"
+  mix cli.entities.create $SYS_ADMIN_TOKEN $ENTITY_CODE "$ENTITY_NAME"
+
+  # Create and entity_admin...
+  print "Create admin user: {username: \"$ADMIN_USERNAME\", password: \"$ADMIN_PASSWORD\"}"
+  mix cli.users.create $SYS_ADMIN_TOKEN $ADMIN_USERNAME $ADMIN_PASSWORD entity_admin $ADMIN_USERNAME $ADMIN_USERNAME
+
+  # Create issuer account for an issuer user under ISSUER_ACCOUNT_CURRENCY...
+  print "Create issuer account: {owner: \"$ADMIN_USERNAME\", currency: \"$ISSUER_ACCOUNT_CURRENCY\"}"
+  mix cli.accounts.create $SYS_ADMIN_TOKEN $ADMIN_USERNAME $ISSUER_ACCOUNT_CURRENCY
+}
+
+
+#
+# Create an exchange rate give two currencies and a rate value.
+#
+function create_exchange_rate() {
+  #Params:
+    TOKEN=$1
+    CURRENCY_A=$2
+    CURRENCY_B=$3
+    # VALUE: Exchange rate between CURRENCY_A and CURRENCY_B.
+    # Formula: CURRENCY_B = CURRENCY_A * RATE
+    VALUE=$4
+
+  print "Create rate: $CURRENCY_A x $VALUE = $CURRENCY_B"
+  mix cli.exchange_rates.create $TOKEN $CURRENCY_A $CURRENCY_B $VALUE
+}
+
+
+#
+# Get inverse of a given decimal number,
+#
+function inverse() {
+  echo "0$(echo 1/$1 | bc -l)"
+}
+
+
+#
+# Create exchange rates between two currencies.
+#   - From CURRENCY_A to CURRENCY_B --> CURRENCY_B = CURRENCY_A * RATE
+#   - From CURRENCY_B to CURRENCY_A --> CURRENCY_A = CURRENCY_B * 1/RATE
+#
+function create_exchange_rates() {
+  # Params:
+    TOKEN=$1
+    CURRENCY_A=$2
+    CURRENCY_B=$3
+    VALUE=$4
+
+  create_exchange_rate $TOKEN $CURRENCY_A $CURRENCY_B $VALUE
+  create_exchange_rate $TOKEN $CURRENCY_B $CURRENCY_A $(inverse $VALUE)
+}
+
+
+#
+# Create a currency and exchange rates between this and another currency.
+# Note: See create_exchange_rates function.
+#
+function create_currrency_and_exchange_rates_with_another_currency() {
+  # Params:
+    TOKEN=$1
+    CURRENCY_CODE=$2
+    CURRENCY_NAME=$3
+    OTHER_CURRENCY_CODE=$4
+    RATE=$5
+
+  # Create a currency...
+  print "Create currency: {code: \"$CURRENCY_CODE\", name: \"$CURRENCY_NAME\" }"
+  mix cli.currencies.create $TOKEN $CURRENCY_CODE "$CURRENCY_NAME"
+
+  # Create exchange rates between currencies...
+  create_exchange_rates $TOKEN $OTHER_CURRENCY_CODE $CURRENCY_CODE $RATE
+}

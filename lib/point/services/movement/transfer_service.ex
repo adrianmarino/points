@@ -19,17 +19,10 @@ defmodule Point.TransferService do
                amount:  amount) do
     assert_transfer_allowed(between: source, and: target)
 
-    backup_target = backup_account_of(target)
-    backup_source = backup_account_of(source)
-    backup_amount = Decimal.mult(amount, rate_between(source, backup_source))
-
     {:ok, result} = Multi.new
-      |> append(backup_source, backup_target, backup_amount)
       |> append(source, target, amount)
       |> transaction
 
-    backup_data = result[move_name(backup_source, backup_target)]
-    if backup_data, do: debug(backup_data)
     result[move_name(source, target)]
   end
 

@@ -67,14 +67,14 @@ insert! %Partner{entity: empire, partner: rebelion}
 initial_amount = Decimal.new(10000)
 
 insert! %Account{
-  amount: initial_amount, type: "backup", currency: ars,
+  amount: initial_amount, currency: ars,
   owner: chewbacca, issuer: chewbacca, entity: platform
 }
 insert! %Account{
-  amount: initial_amount, type: "default", currency: rebel_point,
+  amount: initial_amount, currency: rebel_point,
   owner: obiwan_kenoby, issuer: chewbacca, entity: empire
 }
 insert! %Account{
-  amount: initial_amount, type: "default", currency: empire_point,
+  amount: initial_amount, currency: empire_point,
   owner: anakin_skywalker, issuer: chewbacca, entity: empire
 }

@@ -5,7 +5,7 @@ defmodule Point.ExchangeRateControllerSpec do
 
   let source: CurrencyFactory.insert(:ars)
   let target: CurrencyFactory.insert(:rebel_point)
-  let valid_attrs: %{value: "100.00", source: source().code, target: target().code}
+  let valid_attrs: %{value: "100", source: source().code, target: target().code}
 
   describe "index" do
     it "returns exchange rates"
@@ -60,7 +60,7 @@ defmodule Point.ExchangeRateControllerSpec do
     end
 
     context "when has valid data" do
-      let attrs: %{valid_attrs() | value: "10000.00" }
+      let attrs: %{valid_attrs() | value: "10000" }
 
       it "returns created status", do: expect response().status |> to(eq 201)
       it "returns exchange rate with then updated value" do

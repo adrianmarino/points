@@ -19,8 +19,6 @@ defmodule ServiceSpecHelper do
 
   def target_id(movement), do: assoc(movement, :target).id
 
-  def backup_amount(account), do: fn-> round(AccountService.backup_account_of(account).amount, 2) end
-
   def rate(source_account, target_account, value) do
     ExchangeRateService.insert!(
       source_code: currency_code(source_account),

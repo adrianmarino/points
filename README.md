@@ -6,8 +6,8 @@
 
 ## Features
   * Use three basic transactions to increase/decrease accounts amount:
-    * Deposit an amount to backup account.
-    * Extract an amount from backup account.
+    * Deposit an amount to account.
+    * Extract an amount from account.
     * Transfer an amount between accounts (This include foreign exchange when necessary).
   * Includes a simple DSL to create custom transactions at runtime.
   * Manage currencies, exchange rates, accounts, users, transactions and entities.
@@ -52,7 +52,7 @@
 
 This guide introduces you how can interact with points platform through easy examples. Adicionally, I'll show you how to configure the server api.
 
-### User Roles
+### User Roles (under cosstruction)
 
 Each user has a role that allow perform different actions on the platform. Next I'll show each role and its associated actions.
 
@@ -65,32 +65,17 @@ Is a platform user. They can:
 Cant be created by a _system_admin_ user only and their actions modify the context of the entity.
 An entity_admin:
 * Could administrate many entities.
-* Can deposit/extract amount to/from backup accounts under an entity.
 * Can manage custom transations that belong to entity.
 * Can manage partner associations.
-* Is an account issuer, this means that can manage default accounts under an entity. Keep in mind that when an entity_admin user creates an account, **that account belong to same issuer entity**.
+* Is an account issuer, this means that can manage normal user accounts under an entity. Keep in mind that when an entity_admin user creates an account, **that account belong to same issuer entity**.
 
 #### system_admin
+
 Can perfom all functions like a root user on Linux OS.
 
-### Account types
+### Account
 
-There are two account types.
-
-#### Default accounts
-
-These accounts belongs to a _normal_user_ could be used to trasnfer amounts between accounts only.
-
-#### Backup accounts
-
-These accounts contain money in real currency only. They are used to support amounts in virtual currency in other accounts (default accounts). An emiter entity has one backup account by real currency and many default accounts by user registered in itself. These default accounts has money y real or virtual currency but all supported by entity backup accounts.
-
-#### Accounts and allow movements
-
-You can:
-  * Deposit an amount in real currency to backup account.
-  * Extract an amount in real currency from backup amount.
-  * And transfer an amount between backup/default accounts.
+Belongs to an user and contains amount in a given currency.
 
 ### Mix Tasks
 
@@ -101,7 +86,7 @@ Let's begin by run next command under _points_ path:
 ```bash
 $ mix help | grep cli                
 mix cli.accounts                   # Show accounts. Params: token
-mix cli.accounts.create            # Create an account. Params: token owner_email currency_code type(Optional: default/backup)
+mix cli.accounts.create            # Create an account. Params: token owner_email currency_code
 mix cli.accounts.delete            # Delete an account. Params: token owner_email currency_code
 mix cli.accounts.show              # Show an account. Params: token owner_email currency_code
 mix cli.currencies                 # Show currencies. Params: token
@@ -278,15 +263,14 @@ $ mix cli.currencies.delete $TOKEN PTS
 *Step 1:* Create an account for adrianmarino@gmail.com under PTS currency.
 ```bash
 $ mix help | grep cli.accounts.create  
-mix cli.accounts.create            # Create an account. Params: token owner_email currency_code type(Optional: default/backup)
+mix cli.accounts.create            # Create an account. Params: token owner_email currency_code
 $ mix cli.accounts.create $TOKEN adrianmarino@gmail.com PTS
 13:41:26.641 [info]  Response - Status: 201, Body: {
   "amount": "0.00",
   "currency": "PTS",
   "id": 4,
   "issuer_email": "chewbacca@gmail.com",
-  "owner_email": "adrianmarino@gmail.com",
-  "type": "default"
+  "owner_email": "adrianmarino@gmail.com"
 }
 ```
 
@@ -300,8 +284,7 @@ $ mix cli.accounts.show $TOKEN adrianmarino@gmail.com PTS
   "currency": "PTS",
   "id": 4,
   "issuer_email": "chewbacca@gmail.com",
-  "owner_email": "adrianmarino@gmail.com",
-  "type": "default"
+  "owner_email": "adrianmarino@gmail.com"
 }
 ```
 
@@ -385,7 +368,7 @@ $ mix cli.entities.delete $TOKEN XYZ
 
 ##### Primitive transactions
 
-*Deposit:* Deposit an amount to backup account.
+*Deposit:* Deposit an amount to account.
 ```bash
 $ mix help | grep cli.transactions.exec.deposit
 mix cli.transactions.exec.deposit  # Deposit. Params: token params(as json: '{...}')
@@ -395,14 +378,13 @@ $ mix cli.transactions.exec.deposit $TOKEN '{"to":{"email":"adrianmarino@gmail.c
   "source": "non",
   "target": {
     "amount": "19990.00",
-    "currency": "ARS",
-    "type": "backup"
+    "currency": "ARS"
   },
   "type": "deposit"
 }
 ```
 
-*Extract:* Extract an amount from backup account.
+*Extract:* Extract an amount from account.
 ```bash
 $ mix help | grep cli.transactions.exec.extract                                                                       
 mix cli.transactions.exec.extract  # Extract. Params: token params(as json: '{...}')
@@ -411,8 +393,7 @@ $ mix cli.transactions.exec.extract $TOKEN '{"from":{"email":"adrianmarino@gmail
   "amount": "100.00",
   "source": {
     "amount": "9890.00",
-    "currency": "ARS",
-    "type": "backup"
+    "currency": "ARS"
   },
   "target": "non",
   "type": "extract"
@@ -518,30 +499,40 @@ To complete
 
 ##### Exercise 1: X company offer points to its clients
 
-Suppose that X company sell flights through a web site and would like to grant points for each time that a client buy a flight giving their clients the opportunity to use these points in the following purchase.
+Suppose that _X company_ sell flights through a web site and would like to grant points for each time that a client buy a flight giving their clients the opportunity to use these points in the following purchase.
 
 _Guidelines:_
-1. The entity grant points to client from a backup amount in real money.
+1. The entity grant points to clients from an issuer account under a real currency.
 2. Points can be tranfered between clients.
+3. When a client spent N points there are transfered to an entity acount to control the amount of spent points.
+
+How we implement this with _points_?
+You can see the exercise resolution in an executable scenario in [exercise_1](scripts/exercises/exercise_1) script. You must execute next command to run the exercise:
+```bash
+$ bash scripts/exercises/exercise_1
+```
+
+##### Exercise 2: Share points between A and B companies
+
+Suppose that _A company_ sell products of any type through a web site and
+offer to _B company_ share points between their giving their clients
+the opportunity to use these points(A+B) in the following purchase
+in either company.
+
+_Guidelines:
+1. The entity grant points to clients from an issuer account under a real currency.
+2. Points can be tranfered between clients of both compaines.
 3. Then a client spent N points there are transfered to an entity acount to control the amount of spent points.
 
 How we implement this with _points_?
-You can see the exercise resolution in an executable scenario in [scripts/exercise_1](scripts/exercise_1) script. You must execute next command to run the exercise:
+You can see the exercise resolution in an executable scenario under [exercise_2](scripts/exercises/exercise_2) script. You must execute next command to run the exercise:
 ```bash
-$ bash scripts/exercise_1
+$ bash scripts/exercises/exercise_2
 ```
-
-##### Exercise 2: Share points between X and Y companies
-
-Suppose that Y company sell products of any type also through a web site and offer to X company
-share points between their giving their clients the opportunity to use these points(X+Y) in the following purchase in either company.
-
-How we implement this with _points_?
-To complete
 
 ##### Exercise 3: X company offer buy with points that belong to Y company clients.
 
-This example differs from _Exercise 1_ in that X company give their clients the opportunity to use points of Y company.
+This example differs from _Exercise 1_ in that _X company_ give their clients the opportunity to use points of _Y company_.
 
 How we implement this with _points_?
 To complete

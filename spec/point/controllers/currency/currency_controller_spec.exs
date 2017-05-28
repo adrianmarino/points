@@ -84,7 +84,7 @@ defmodule Point.CurrencyControllerSpec do
     end
 
     context "when delete an used currency" do
-      let currency_code: currency_code(AccountFactory.insert(:universe_backup))
+      let currency_code: currency_code(AccountFactory.insert(:han_solo))
       before do: response()
 
       it "returns bad request status", do: expect response().status |> to(eq 404)

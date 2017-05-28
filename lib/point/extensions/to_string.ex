@@ -15,8 +15,9 @@ defimpl String.Chars, for: Map do
   def to_string(value), do: JSON.to_pretty_json(value)
 end
 
+# Workaround to remoce a end zero in decimal number
 defimpl String.Chars, for: Decimal do
-  def to_string(value), do: Decimal.to_string(Decimal.round(value, 2))
+  def to_string(value), do: Decimal.to_string(Decimal.reduce(value), :normal)
 end
 
 # Domain types

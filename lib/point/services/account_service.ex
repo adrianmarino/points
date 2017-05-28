@@ -2,17 +2,7 @@ defmodule Point.AccountService do
   import Ecto.Query
   import Decimal
   import Point.DecimalUtil, only: [is: 2, zero: 0]
-  import Enum, only: [map: 2, reduce: 3]
-  alias Point.{Repo, Account, Currency, User, ExchangeRateService}
-
-  def system_amount(backup_account) do
-    Repo.all(from a in Account, where: a.issuer_id == ^backup_account.owner_id and a.type == "default" )
-      |> map(fn(account)->
-          {:ok, rate } = ExchangeRateService.rate_between(account, backup_account)
-          Decimal.mult(Decimal.new(account.amount), rate)
-        end)
-      |> reduce(Decimal.new(0), &Decimal.add/2)
-  end
+  alias Point.{Repo, Account, Currency, User}
 
   # Crud
   def all, do: Repo.all(Account)
@@ -53,10 +43,6 @@ defmodule Point.AccountService do
 
   def count_by(entity: entity), do: Repo.one(from a in by_entity_query(entity), select: count(a.id))
 
-  def backup_account_of(account) do
-    Repo.one(from a in Account, where: a.type == "backup" and a.owner_id == ^account.issuer_id)
-  end
-
   def increase_changeset(account, amount), do: Account.changeset(account, %{amount: add(account.amount, new(amount))})
 
   def decrease_changeset(account, amount), do: Account.changeset(account, %{amount: sub(account.amount, new(amount))})
@@ -68,5 +54,5 @@ defmodule Point.AccountService do
     where: a.issuer_id == u.id and u.id == ue.user_id and ue.entity_id == ^entity.id
   end
 
-  defp insert_changeset(params), do: Account.insert_changeset(%Account{}, Map.merge(%{"type" => "default"}, params))
+  defp insert_changeset(params), do: Account.insert_changeset(%Account{}, params)
 end

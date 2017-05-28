@@ -3,14 +3,12 @@ defmodule Point.MovementControllerSpec do
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
   import Point.DecimalUtil
-  alias Point.{AccountFactory, TransferService}
+  alias Point.{AccountFactory, EntityFactory, TransferService}
 
-  let backup: AccountFactory.insert(:revel_backup)
-  let source: AccountFactory.insert(:obiwan_kenoby,
-    issuer: backup().owner, entity: backup().entity)
-  let target: AccountFactory.insert(:han_solo,
-    issuer: backup().owner, currency: source().currency, entity: backup().entity)
   let amount: Decimal.new 10.12
+  let rebelion: EntityFactory.insert(:rebelion)
+  let source: AccountFactory.insert(:obiwan_kenoby, entity: rebelion())
+  let target: AccountFactory.insert(:han_solo, entity: rebelion())
 
   let movements: json_response(response(), 200)
   let movement: List.first(movements())
