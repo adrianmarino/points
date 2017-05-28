@@ -45,7 +45,7 @@ mix ecto.reset
 # to grant points for each time that a client buy a flight giving their
 # clients the opportunity to use these points in the following purchase.
 #  Guidelines:
-#    1. The entity grant points to client from a backup amount in real money.
+#    1. The entity grant points to client from an issuer account in real currency.
 #    2. Points can be tranfered between clients.
 #    3. Then a client spent N points there are transfered to an entity
 #      acount to control the amount of spent points.
@@ -66,8 +66,8 @@ mix cli.users.create $TOKEN $ENTITY_ADMIN $PASSWORD entity_admin Adrian Marino
 # Create X company...
 mix cli.entities.create $TOKEN X "X company"
 
-# Create backup account for issuer user under ARS currency...
-mix cli.accounts.create $TOKEN $ENTITY_ADMIN ARS backup
+# Create account for issuer user under ARS currency...
+mix cli.accounts.create $TOKEN $ENTITY_ADMIN ARS
 
 # Create two normal users...
 mix cli.users.create $TOKEN $NORMAL_USER_A $PASSWORD normal_user FirstNameA LastNameA

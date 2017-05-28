@@ -1,18 +1,17 @@
 defmodule Point.MovementSearcherSpec do
   use ESpec
   import ServiceSpecHelper
-  alias Point.{AccountFactory, TransferService}
+  alias Point.{AccountFactory, EntityFactory, TransferService}
+
+  let rebelion: EntityFactory.insert(:rebelion)
 
   describe "search account movements before timestamp" do
     let movements: described_module().search(for: account(), after: time())
     let time: Timex.shift(Timex.now, minutes: -1)
-    let backup: AccountFactory.insert(:revel_backup)
 
     context "when there is a movement within last minute" do
-      let source: AccountFactory.insert(:obiwan_kenoby,
-        issuer: backup().owner, entity: backup().entity)
-      let target: AccountFactory.insert(:han_solo,
-        issuer: backup().owner, currency: source().currency, entity: backup().entity)
+      let source: AccountFactory.insert(:obiwan_kenoby, entity: rebelion())
+      let target: AccountFactory.insert(:han_solo, entity: rebelion())
       let amount: Decimal.new 10.12
       let account: source()
       let movement: List.first(movements())
@@ -42,7 +41,7 @@ defmodule Point.MovementSearcherSpec do
     end
 
     context "when there aren't movement within last minute" do
-      let account: backup()
+      let account: AccountFactory.insert(:obiwan_kenoby, entity: rebelion())
       it "doesn't return movements", do: movements() |> to(have_length 0)
     end
   end

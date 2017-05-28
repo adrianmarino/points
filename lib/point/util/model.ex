@@ -31,19 +31,11 @@ end
 defimpl Point.ModelMap, for: Point.Account do
   alias Point.{Repo, ModelMap}
 
-  def to_map(%{type: "default"} = account) do
+  def to_map(account) do
     %{
       owner: ModelMap.to_map(Repo.assoc account, :owner),
       amount: to_string(account.amount),
       currency: ModelMap.to_map(Repo.assoc account, :currency)
-    }
-  end
-
-  def to_map(%{type: "backup"} = account) do
-    %{
-      type: account.type,
-      currency: ModelMap.to_map(Repo.assoc account, :currency),
-      amount: to_string(account.amount)
     }
   end
 end

@@ -5,7 +5,6 @@ defmodule Point.Account do
 
   schema "accounts" do
     field :amount, :decimal
-    field :type, :string
     field :owner_email, :string, virtual: true
     field :currency_code, :string, virtual: true
 
@@ -19,16 +18,15 @@ defmodule Point.Account do
 
   # Only for test purpouse!
   def changeset(model , params \\ %{}) do
-    model |> cast_and_validate_required(params, [:type, :amount, :owner_id, :issuer_id, :currency_id, :entity_id])
+    model |> cast_and_validate_required(params, [:amount, :owner_id, :issuer_id, :currency_id, :entity_id])
   end
 
   def insert_changeset(model , params \\ %{}) do
     model
-      |> cast(params, [:type, :owner_email, :issuer_id, :currency_code, :entity_id])
+      |> cast(params, [:owner_email, :issuer_id, :currency_code, :entity_id])
       |> map_from(:owner_email, to: :owner_id, resolver: &(UserService.by(email: &1)))
       |> map_from(:currency_code, to: :currency_id, resolver: &(CurrencyService.by(code: &1)))
       |> validate_required([:owner_id, :currency_id])
-      |> set_default_value_to(field: :type, value: "default")
       |> set_default_value_to(field: :amount, value: DecimalUtil.zero)
   end
 

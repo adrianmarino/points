@@ -5,8 +5,8 @@ defmodule Point.TransactionControllerSpec do
   use ESpec.Phoenix.Helper
   import ServiceSpecHelper
   import Point.DecimalUtil
-  alias Point.{AccountFactory, Transaction, EntityService}
   import String, only: [replace: 3]
+  alias Point.{AccountFactory, UserFactory, EntityFactory, Transaction, EntityService}
 
   @transfer_path "./lib/point/transaction/default/transfer.ex"
 
@@ -49,21 +49,19 @@ defmodule Point.TransactionControllerSpec do
         "amount" => 100
       }
 
-      let source_backup: AccountFactory.insert(:revel_backup)
-      let target_backup: AccountFactory.insert(:empire_backup)
+      let rebelion: EntityFactory.insert(:rebelion)
+      let empire: EntityFactory.insert(:empire)
 
-      let source_entity: source_backup().entity
-      let target_entity: target_backup().entity
+      let obiwan_kenoby: UserFactory.insert(:obiwan_kenoby)
+      let anakin_skywalker: UserFactory.insert(:anakin_skywalker)
 
-      let source: AccountFactory.insert(:obiwan_kenoby, issuer: source_backup().owner, entity: source_entity())
-      let target: AccountFactory.insert(:jango_fett, issuer: target_backup().owner, entity: target_entity())
+      let source: AccountFactory.insert(:obiwan_kenoby, issuer: obiwan_kenoby, entity: rebelion())
+      let target: AccountFactory.insert(:jango_fett, issuer: anakin_skywalker, entity: empire())
 
       before do
-        rate(source_backup(), source(), 1)
-        rate(target_backup(), target(), 2)
         rate(source(), target(), 3)
 
-        EntityService.associate(source_entity, target_entity)
+        EntityService.associate(rebelion, empire)
 
         post(content_type(sec_conn(), text_plain()), transaction_path(sec_conn(), :create, valid_attrs().name),
           valid_attrs().source)

@@ -6,8 +6,8 @@
 
 ## Features
   * Use three basic transactions to increase/decrease accounts amount:
-    * Deposit an amount to backup account.
-    * Extract an amount from backup account.
+    * Deposit an amount to account.
+    * Extract an amount from account.
     * Transfer an amount between accounts (This include foreign exchange when necessary).
   * Includes a simple DSL to create custom transactions at runtime.
   * Manage currencies, exchange rates, accounts, users, transactions and entities.
@@ -65,32 +65,17 @@ Is a platform user. They can:
 Cant be created by a _system_admin_ user only and their actions modify the context of the entity.
 An entity_admin:
 * Could administrate many entities.
-* Can deposit/extract amount to/from backup accounts under an entity.
 * Can manage custom transations that belong to entity.
 * Can manage partner associations.
-* Is an account issuer, this means that can manage default accounts under an entity. Keep in mind that when an entity_admin user creates an account, **that account belong to same issuer entity**.
+* Is an account issuer, this means that can manage normal user accounts under an entity. Keep in mind that when an entity_admin user creates an account, **that account belong to same issuer entity**.
 
 #### system_admin
+
 Can perfom all functions like a root user on Linux OS.
 
-### Account types
+### Account
 
-There are two account types.
-
-#### Default accounts
-
-These accounts belongs to a _normal_user_ could be used to trasnfer amounts between accounts only.
-
-#### Backup accounts
-
-These accounts contain money in real currency only. They are used to support amounts in virtual currency in other accounts (default accounts). An emiter entity has one backup account by real currency and many default accounts by user registered in itself. These default accounts has money y real or virtual currency but all supported by entity backup accounts.
-
-#### Accounts and allow movements
-
-You can:
-  * Deposit an amount in real currency to backup account.
-  * Extract an amount in real currency from backup amount.
-  * And transfer an amount between backup/default accounts.
+An accounts belongs to a user and contain money under given currency.
 
 ### Mix Tasks
 
@@ -101,7 +86,7 @@ Let's begin by run next command under _points_ path:
 ```bash
 $ mix help | grep cli                
 mix cli.accounts                   # Show accounts. Params: token
-mix cli.accounts.create            # Create an account. Params: token owner_email currency_code type(Optional: default/backup)
+mix cli.accounts.create            # Create an account. Params: token owner_email currency_code
 mix cli.accounts.delete            # Delete an account. Params: token owner_email currency_code
 mix cli.accounts.show              # Show an account. Params: token owner_email currency_code
 mix cli.currencies                 # Show currencies. Params: token
@@ -278,15 +263,14 @@ $ mix cli.currencies.delete $TOKEN PTS
 *Step 1:* Create an account for adrianmarino@gmail.com under PTS currency.
 ```bash
 $ mix help | grep cli.accounts.create  
-mix cli.accounts.create            # Create an account. Params: token owner_email currency_code type(Optional: default/backup)
+mix cli.accounts.create            # Create an account. Params: token owner_email currency_code
 $ mix cli.accounts.create $TOKEN adrianmarino@gmail.com PTS
 13:41:26.641 [info]  Response - Status: 201, Body: {
   "amount": "0.00",
   "currency": "PTS",
   "id": 4,
   "issuer_email": "chewbacca@gmail.com",
-  "owner_email": "adrianmarino@gmail.com",
-  "type": "default"
+  "owner_email": "adrianmarino@gmail.com"
 }
 ```
 
@@ -300,8 +284,7 @@ $ mix cli.accounts.show $TOKEN adrianmarino@gmail.com PTS
   "currency": "PTS",
   "id": 4,
   "issuer_email": "chewbacca@gmail.com",
-  "owner_email": "adrianmarino@gmail.com",
-  "type": "default"
+  "owner_email": "adrianmarino@gmail.com"
 }
 ```
 
@@ -385,7 +368,7 @@ $ mix cli.entities.delete $TOKEN XYZ
 
 ##### Primitive transactions
 
-*Deposit:* Deposit an amount to backup account.
+*Deposit:* Deposit an amount to account.
 ```bash
 $ mix help | grep cli.transactions.exec.deposit
 mix cli.transactions.exec.deposit  # Deposit. Params: token params(as json: '{...}')
@@ -395,14 +378,13 @@ $ mix cli.transactions.exec.deposit $TOKEN '{"to":{"email":"adrianmarino@gmail.c
   "source": "non",
   "target": {
     "amount": "19990.00",
-    "currency": "ARS",
-    "type": "backup"
+    "currency": "ARS"
   },
   "type": "deposit"
 }
 ```
 
-*Extract:* Extract an amount from backup account.
+*Extract:* Extract an amount from account.
 ```bash
 $ mix help | grep cli.transactions.exec.extract                                                                       
 mix cli.transactions.exec.extract  # Extract. Params: token params(as json: '{...}')
@@ -411,8 +393,7 @@ $ mix cli.transactions.exec.extract $TOKEN '{"from":{"email":"adrianmarino@gmail
   "amount": "100.00",
   "source": {
     "amount": "9890.00",
-    "currency": "ARS",
-    "type": "backup"
+    "currency": "ARS"
   },
   "target": "non",
   "type": "extract"
